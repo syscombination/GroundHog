@@ -238,6 +238,27 @@ class MainLoop(object):
 
         print "Model saved, took {}".format(time.time() - start)
 
+    def save_DIY(self):
+        start = time.time()
+        print "Saving the model..."
+
+        # ignore keyboard interrupt while saving
+        s = signal.signal(signal.SIGINT, signal.SIG_IGN)
+        numpy.savez(self.state['model_dir']+'/'+self.state['prefix']+'timing_iter%d.npz' % self.step,
+                    **self.timings)
+        if self.state['overwrite']:
+            #self.model.save(self.state['prefix']+'model.npz')
+            self.model.save(self.state['model_dir']+'/'+self.state['prefix'] +
+                            'model_iter%d.npz' % self.step)
+        else:
+            self.model.save(self.state['model_dir']+'/'+self.state['prefix'] +
+                            'model_iter%d.npz' % self.step)
+        cPickle.dump(self.state, open(self.state['model_dir']+'/'+self.state['prefix']+'state_iter%d.pkl' % self.step, 'w'))
+        self.save_iter += 1
+        signal.signal(signal.SIGINT, s)
+
+        print "Model iter saved, took {}".format(time.time() - start)
+
     # FIXME
     def load(self, model_path=None, timings_path=None):
         if model_path is None:

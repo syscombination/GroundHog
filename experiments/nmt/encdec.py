@@ -1491,6 +1491,7 @@ class RNNEncoderDecoder(object):
                 return probs
         return probs_computer
 
+
 def parse_input(state, word2idx, line, raise_unk=False, idx2word=None, unk_sym=-1, null_sym=-1):
     if unk_sym < 0:
         unk_sym = state['unk_sym_source']

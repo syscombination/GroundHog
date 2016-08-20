@@ -211,6 +211,11 @@ def prototype_state():
     # Raise exception if nan
     state['on_nan'] = 'raise'
 
+    #save
+    state['save_by_iter'] = False
+    state['saveiter'] = 10000
+    state['model_dir'] = 'models/'
+
     return state
 
 def prototype_phrase_state():
@@ -290,5 +295,25 @@ def prototype_phrase_lstm_state():
     state['dec_rec_reseting'] = False
     state['dim_mult'] = 4
     state['prefix'] = 'phrase_lstm_'
+
+    return state
+
+def prototype_syscombination_state():
+    state = prototype_search_state()
+
+    state['num_systems'] = 1
+    state['single_systems'] = [] # must define the path to single system outputs
+    state['dec_rec_layer'] = 'RecurrentLayerWithSearch'
+    state['prefix'] = 'syscombination_'
+
+    return state
+
+def prototype_syscombination_withsource_state():
+    state = prototype_syscombination_state()
+
+    state['num_systems'] = 1
+    state['single_systems'] = [] # must define the path to single system outputs
+    state['dec_rec_layer'] = 'RecurrentLayerWithSearch'
+    state['prefix'] = 'syscombination_'
 
     return state
