@@ -63,6 +63,9 @@ def create_padded_batch(state, x, y, return_dict=False):
 
     # Batch size
     n = x[0].shape[0]
+    print 'before process'
+    print x , y
+    print 'after process'
 
     X = numpy.zeros((mx, n), dtype='int64')
     Y = numpy.zeros((my, n), dtype='int64')
