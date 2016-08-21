@@ -30,6 +30,9 @@ import json
 
 logger = logging.getLogger(__name__)
 
+def read_sentences(filename):
+    return json.loads(open(filename, 'r').read())
+
 def create_padded_batch(state, x, y, return_dict=False):
     """A callback given to the iterator to transform data in suitable format
 
@@ -357,17 +360,15 @@ def get_batch_iterator_syscombination(state):
             self.next_offset = 0
 
         def load_data(self):
-            self.target = self.read_sentences(self.state['target'])
-            self.hypos = self.read_sentences(self.state['hypos'])
+            self.target = read_sentences(self.state['target'])
+            self.hypos = read_sentences(self.state['hypos'])
             assert len(self.target) == len(self.hypos)
             if len(self.state['source']) != 0:
                 self.have_source = True
-                self.source = self.read_sentences(self.state['source'])
+                self.source = read_sentences(self.state['source'])
                 assert len(self.target) == len(self.source)
             self.num_sentences = len(self.source)
 
-        def read_sentences(filename):
-            return json.loads(open(filename, 'r').read())
         '''
         def read_hypos(filenames):
             hs = []
