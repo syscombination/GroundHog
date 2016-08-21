@@ -236,7 +236,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
 
     X = numpy.zeros((mx, n), dtype='int64')
     Y = numpy.zeros((my, n), dtype='int64')
-    H = numpy.zeros((mh, n), dtype='int64')
+    H = numpy.zeros((mh, n, self.state['num_systems']), dtype='int64')
     Xmask = numpy.zeros((mx, n), dtype='float32')
     Ymask = numpy.zeros((my, n), dtype='float32')
     Hmask = numpy.zeros((mh, n), dtype='float32')
