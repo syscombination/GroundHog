@@ -181,13 +181,6 @@ class SGD(object):
 
         myL = int(1.5*len(batch['y']))
 
-        print batch['h'].shape
-        H = numpy.zeros((batch['h'].shape[0], diffN,batch['h'].shape[1]), dtype='float32')
-        batch['h'] = batch['h']+H
-        H = numpy.zeros((batch['h_mask'].shape[0], diffN), dtype='float32')
-        batch['h_mask'] = batch['h_mask']+H
-        print batch['h'].shape
-
         samples, probs = self.sampler(sampleN,myL,1,batch['x'].squeeze(),batch['h'].squeeze())
 
         y,b = getUnique(samples, batch['y'], self.state)
@@ -214,6 +207,11 @@ class SGD(object):
         X = numpy.zeros((batch['x'].shape[0], diffN), dtype='float32')
         batch['x_mask'] = batch['x_mask']+X
         
+        H = numpy.zeros((batch['h'].shape[0], diffN,batch['h'].shape[1]), dtype='float32')
+        batch['h'] = batch['h']+H
+        H = numpy.zeros((batch['h_mask'].shape[0], diffN), dtype='float32')
+        batch['h_mask'] = batch['h_mask']+H
+        print batch['h'].shape
         batch['y'] = Y
         batch['y_mask'] = YM
         batch['b'] = b
