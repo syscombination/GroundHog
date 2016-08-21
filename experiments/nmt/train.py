@@ -79,9 +79,9 @@ def main():
 
     rng = numpy.random.RandomState(state['seed'])
     enc_dec = RNNEncoderDecoder(state, rng, args.skip_init)
+    enc_dec.build()
     if state['mrt']:
         train_sampler = enc_dec.create_sampler(many_samples=True)
-    enc_dec.build()
     lm_model = enc_dec.create_lm_model()
 
     logger.debug("Load data")
