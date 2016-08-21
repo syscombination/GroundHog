@@ -181,12 +181,7 @@ class SGD(object):
 
         myL = int(1.5*len(batch['y']))
 
-        xi = []
-        for i in xrange(self.state['num_systems']):
-            xi.append(batch['x'+str(i)].squeeze())
-        samples, probs = self.sampler(sampleN,myL,1,*xi)
-
-        #samples, probs = self.sampler(sampleN,myL,1,batch['x'].squeeze())
+        samples, probs = self.sampler(sampleN,myL,1,batch['x'].squeeze())
 
         y,b = getUnique(samples, batch['y'], self.state)
 
@@ -205,11 +200,10 @@ class SGD(object):
 
         diffN = len(b)
 
-        for i in xrange(self.state['num_systems']):
-            X = numpy.zeros((batch['x'+str(i)].shape[0], diffN), dtype='int64')
-            batch['x'+str(i)] = batch['x'+str(i)]+X
-            X = numpy.zeros((batch['x'+str(i)].shape[0], diffN), dtype='float32')
-            batch['x_mask'+str(i)] = batch['x_mask'+str(i)]+X
+        X = numpy.zeros((batch['x'].shape[0], diffN), dtype='int64')
+        batch['x'] = batch['x']+X
+        X = numpy.zeros((batch['x'].shape[0], diffN), dtype='float32')
+        batch['x_mask'] = batch['x_mask']+X
 
         batch['y'] = Y
         batch['y_mask'] = YM
