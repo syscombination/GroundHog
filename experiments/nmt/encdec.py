@@ -344,15 +344,15 @@ def get_batch_iterator_syscombination(state):
                 endid -= self.num_sentences
                 x = None
                 if self.have_source:
-                    x = numpy.asarray(self.source[startid:]+self.source[:endid])
-                y = numpy.asarray(self.target[startid:]+self.target[:endid])
-                hypos = numpy.asarray(self.hypos[startid:]+self.hypos[:endid])
+                    x = numpy.asarray([self.source[startid:]+self.source[:endid]])
+                y = numpy.asarray([self.target[startid:]+self.target[:endid]])
+                hypos = numpy.asarray([self.hypos[startid:]+self.hypos[:endid]])
             else:
                 x = None
                 if self.have_source:
-                    x = numpy.asarray(self.source[startid:endid])
-                y = numpy.asarray(self.target[startid:endid])
-                hypos = numpy.asarray(self.hypos[startid:endid])
+                    x = numpy.asarray([self.source[startid:endid]])
+                y = numpy.asarray([self.target[startid:endid]])
+                hypos = numpy.asarray([self.hypos[startid:endid]])
             
             batch = create_padded_batch_syscombination(self.state, y, hypos, x=x, return_dict=True)
             self.next_offset = endid
