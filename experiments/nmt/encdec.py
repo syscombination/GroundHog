@@ -2396,7 +2396,7 @@ class Syscombination_withsource(object):
         if self.state['mrt']:
             logger.debug("Compile sampler,\t\tMany_samples:"+str(many_samples))
             sample_fn = theano.function(
-                    inputs=[self.n_samples, self.n_steps, self.T, self.sampling_x],
+                    inputs=[self.n_samples, self.n_steps, self.T, self.sampling_x, self.sampling_h],
                     outputs=[self.sample, self.sample_log_prob],
                     updates=self.sampling_updates,
                     name="sample_fn")
@@ -2410,7 +2410,7 @@ class Syscombination_withsource(object):
                 return self.sample_fn
             logger.debug("Compile sampler")
             self.sample_fn = theano.function(
-                    inputs=[self.n_samples, self.n_steps, self.T, self.sampling_x],
+                    inputs=[self.n_samples, self.n_steps, self.T, self.sampling_x, self.sampling_h],
                     outputs=[self.sample, self.sample_log_prob],
                     updates=self.sampling_updates,
                     name="sample_fn")
