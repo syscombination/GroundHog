@@ -357,12 +357,12 @@ def get_batch_iterator_syscombination(state):
             self.next_offset = 0
 
         def load_data(self):
-            self.target = read_sentences(self.state['target'])
-            self.hypos = read_sentences(self.state['hypos'])
+            self.target = self.read_sentences(self.state['target'])
+            self.hypos = self.read_sentences(self.state['hypos'])
             assert len(self.target) == len(self.hypos)
             if len(self.state['source']) != 0:
                 self.have_source = True
-                self.source = read_sentences(self.state['source'])
+                self.source = self.read_sentences(self.state['source'])
                 assert len(self.target) == len(self.source)
             self.num_sentences = len(self.source)
 
