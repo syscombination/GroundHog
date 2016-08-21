@@ -359,7 +359,10 @@ def get_batch_iterator_syscombination(state):
             return batch
 
         def start(self, offset):
-            self.next_offset = offset
+            if offset < 0:
+                self.next_offset = 0
+            else:
+                self.next_offset = offset
 
         def reset(self):
             self.next_offset = 0
