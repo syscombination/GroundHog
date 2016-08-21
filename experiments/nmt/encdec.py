@@ -1599,7 +1599,7 @@ class RNNEncoderDecoder(object):
         logger.debug("Build log-likelihood computation graph")
         self.predictions, self.alignment = self.decoder.build_decoder(
                 c=Concatenate(axis=2)(*training_c_components), c_mask=self.x_mask,
-                y=self.y, y_mask=self.y_mask)
+                y=self.y, y_mask=self.y_mask,b=self.b)
 
         # Annotation for sampling
         sampling_c_components = []
@@ -1754,7 +1754,7 @@ class RNNEncoderDecoder(object):
 
 
 
-class Decoder_syscombination(EncoderDecoderBase):
+class Decoder_syscombinationwithsource(EncoderDecoderBase):
 
     EVALUATION = 0
     SAMPLING = 1
@@ -2216,7 +2216,7 @@ class Decoder_syscombination(EncoderDecoderBase):
         return self.build_decoder(c, y, mode=Decoder.SAMPLING,
                 given_init_states=init_states, step_num=step_num)[2:]
 
-class Syscombination(object):
+class Syscombination_withsource(object):
     """This class encapsulates the translation model.
 
     The expected usage pattern is:
@@ -2312,7 +2312,7 @@ class Syscombination(object):
         logger.debug("Build log-likelihood computation graph")
         self.predictions, self.alignment = self.decoder.build_decoder(
                 c=Concatenate(axis=2)(*training_c_components), c_mask=self.x_mask,
-                y=self.y, y_mask=self.y_mask)
+                y=self.y, y_mask=self.y_mask,b=self.b)
 
         # Annotation for sampling
         sampling_c_components = []
