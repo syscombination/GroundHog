@@ -219,12 +219,12 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     print 'before process'
     print y
     print h
-    if x:
+    if x != None:
         print x
     print 'after process'
     if state['trim_batches']:
         # Similar length for all source sequences
-        if x:
+        if x != None:
             mx = numpy.minimum(state['seqlen'], max([len(xx) for xx in x[0]]))+1
         # Similar length for all target sequences
         my = numpy.minimum(state['seqlen'], max([len(xx) for xx in y[0]]))+1
@@ -242,7 +242,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     Hmask = numpy.zeros((mh, n), dtype='float32')
 
     # Fill X and Xmask
-    if x:
+    if x != None:
         for idx in xrange(len(x[0])):
             # Insert sequence idx in a column of matrix X
             if mx < len(x[0][idx]):
@@ -286,7 +286,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     for idx in xrange(Y.shape[1]):
         if numpy.sum(Xmask[:,idx]) == 0 and numpy.sum(Ymask[:,idx]) == 0:
             null_inputs[idx] = 1
-        if x:
+        if x != None:
             if Xmask[-1,idx] and X[-1,idx] != state['null_sym_source']:
                 null_inputs[idx] = 1
         if Ymask[-1,idx] and Y[-1,idx] != state['null_sym_target']:
@@ -297,7 +297,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     valid_inputs = 1. - null_inputs
 
     # Leave only valid inputs
-    if x:
+    if x != None:
         X = X[:,valid_inputs.nonzero()[0]]
         Xmask = Xmask[:,valid_inputs.nonzero()[0]]
     Y = Y[:,valid_inputs.nonzero()[0]]
@@ -308,18 +308,18 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
         return None
 
     # Unknown words
-    if x:
+    if x != None:
         X[X >= state['n_sym_source']] = state['unk_sym_source']
     Y[Y >= state['n_sym_target']] = state['unk_sym_target']
     H[H >= state['n_sym_target']] = state['unk_sym_target']
 
     if return_dict:
-        if x:
+        if x != None:
             return {'x' : X, 'x_mask' : Xmask, 'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask}
         else:
             return {'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask}
     else:
-        if x:
+        if x != None:
             return X, Xmask, Y, Ymask, H, Hmask
         else:
             return Y, Ymask, H, Hmask
