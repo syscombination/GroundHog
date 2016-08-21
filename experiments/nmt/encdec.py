@@ -293,7 +293,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
                 null_inputs[idx] = 1
         if Ymask[-1,idx] and Y[-1,idx] != state['null_sym_target']:
             null_inputs[idx] = 1
-        if Hmask[-1,idx] and numpy.array_equal(H[-1,idx],[state['null_sym_target']]*state['num_systems']):
+        if Hmask[-1,idx] and not numpy.array_equal(H[-1,idx],[state['null_sym_target']]*state['num_systems']):
             null_inputs[idx] = 1
 
     valid_inputs = 1. - null_inputs
