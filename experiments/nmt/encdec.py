@@ -1955,6 +1955,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
             sampling temperature
         """
 
+        hypo = h
         # Check parameter consistency
         if mode == Decoder.EVALUATION:
             assert not given_init_states
@@ -2180,7 +2181,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         T = next(args)
         assert T.ndim == 0
         h = next(args)
-        assert h.dim == 2
+        assert h.ndim == 2
 
         decoder_args = dict(given_init_states=prev_hidden_states, T=T, c=c, h=h)
 
