@@ -35,20 +35,22 @@ class RandomSamplePrinter(object):
         sample_idx = 0
         while sample_idx < self.state['n_examples']:
             batch = self.train_iter.next(peek=True)
-            xs, ys = batch['x'], batch['y']
+            xs, ys, hs = batch['x'], batch['y'], batch['h']
             for seq_idx in range(xs.shape[1]):
                 if sample_idx == self.state['n_examples']:
                     break
 
-                x, y = xs[:, seq_idx], ys[:, seq_idx]
+                x, y, h = xs[:, seq_idx], ys[:, seq_idx], hs[:, seq_idx, :]
                 x_words = cut_eol(map(lambda w_idx : self.model.word_indxs_src[w_idx], x))
                 y_words = cut_eol(map(lambda w_idx : self.model.word_indxs[w_idx], y))
+                h_words = map(lambda w_idx : self.model.word_indxs[w_idx], h)
                 if len(x_words) == 0:
                     continue
 
                 print "Input: {}".format(" ".join(x_words))
                 print "Target: {}".format(" ".join(y_words))
-                self.model.get_samples(self.state['seqlen'] + 1, self.state['n_samples'], x[:len(x_words)])
+                print h_words
+                self.model.get_samples(self.state['seqlen'] + 1, self.state['n_samples'], x[:len(x_words)],h[:,:])
                 sample_idx += 1
 
 def parse_args():
