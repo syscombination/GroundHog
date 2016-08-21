@@ -283,6 +283,8 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     # - either source sequence or target sequence is non-empty
     # - source sequence and target sequence have null_sym ending
     # Why did not we filter them earlier?
+    print 'H:', H
+    print 'Hmask:', Hmask
     for idx in xrange(Y.shape[1]):
         if numpy.sum(Xmask[:,idx]) == 0 and numpy.sum(Ymask[:,idx]) == 0:
             null_inputs[idx] = 1
