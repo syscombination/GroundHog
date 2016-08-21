@@ -317,6 +317,14 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     Y[Y >= state['n_sym_target']] = state['unk_sym_target']
     H[H >= state['n_sym_target']] = state['unk_sym_target']
 
+    Ht = H
+    H = numpy.zeros((Ht.shape[0], Ht.shape[1], state['n_sym_target']), dtype='float32')
+    for i in xrange(Ht.shape[0]):
+        for j in xrange(Ht.shape[0]):
+            for k in xrange(state['num_systems']):
+                H[i][j][Ht[i][j][k]] += 1.  
+
+    print H
     if return_dict:
         if x != None:
             return {'x' : X, 'x_mask' : Xmask, 'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask}
