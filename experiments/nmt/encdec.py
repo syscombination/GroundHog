@@ -272,7 +272,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     for idx in xrange(len(h[0])):
         H[:len(h[0][idx]), idx] = h[0][idx][:mh]
         if len(h[0][idx]) < mh:
-            H[len(h[0][idx]):, idx] = state['null_sym_target']
+            H[len(h[0][idx]):, idx] = [state['null_sym_target']]*state['num_systems']
         Hmask[:len(h[0][idx]), idx] = 1.
         if len(h[0][idx]) < mh:
             Hmask[len(h[0][idx]), idx] = 1.
@@ -291,7 +291,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
                 null_inputs[idx] = 1
         if Ymask[-1,idx] and Y[-1,idx] != state['null_sym_target']:
             null_inputs[idx] = 1
-        if Hmask[-1,idx] and H[-1,idx] != state['null_sym_target']:
+        if Hmask[-1,idx] and H[-1,idx] != [state['null_sym_target']]*state['num_systems']:
             null_inputs[idx] = 1
 
     valid_inputs = 1. - null_inputs
@@ -302,7 +302,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
         Xmask = Xmask[:,valid_inputs.nonzero()[0]]
     Y = Y[:,valid_inputs.nonzero()[0]]
     Ymask = Ymask[:,valid_inputs.nonzero()[0]]
-    H = H[:,valid_inputs.nonzero()[0]]
+    H = H[:,valid_inputs.nonzero()[0],:]
     Hmask = Hmask[:,valid_inputs.nonzero()[0]]
     if len(valid_inputs.nonzero()[0]) <= 0:
         return None
