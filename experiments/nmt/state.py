@@ -301,9 +301,9 @@ def prototype_phrase_lstm_state():
 def prototype_syscombination_state():
     state = prototype_search_state()
 
-    state['source'] = []
-    state['indx_word'] = []
-    state['word_indx'] = []
+    state['source'] = ''
+    state['indx_word'] = ''
+    state['word_indx'] = ''
     state['num_systems'] = 2
     state['empty_sym_source'] = 30000
     state['empty_sym_target'] = 30000

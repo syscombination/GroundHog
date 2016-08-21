@@ -332,11 +332,14 @@ def get_batch_iterator_syscombination(state):
             self.state = state
             self.next_offset = 0
             self.have_source = False
+            print 'loading train data'
             self.load_data()
+            print 'train data loaded'
 
         def next(self, peek=False):
             startid = self.next_offset
             endid = self.next_offset+self.state['bs']
+            print 'start:',startid,'end:',endid
             if endid >= self.num_sentences:
                 endid -= self.num_sentences
                 x = None
@@ -362,10 +365,13 @@ def get_batch_iterator_syscombination(state):
             self.next_offset = 0
 
         def load_data(self):
+            print 'loading target data'
             self.target = read_sentences(self.state['target'])
+            print 'loading hypos data'
             self.hypos = read_sentences(self.state['hypos'])
             assert len(self.target) == len(self.hypos)
-            if len(self.state['source']) != 0:
+            if len(self.state['source']) != '':
+                print 'loading source data'
                 self.have_source = True
                 self.source = read_sentences(self.state['source'])
                 assert len(self.target) == len(self.source)
