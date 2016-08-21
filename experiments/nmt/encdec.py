@@ -2265,7 +2265,7 @@ class Syscombination_withsource(object):
         logger.debug("Create input variables")
         self.x = TT.lmatrix('x')
         self.x_mask = TT.matrix('x_mask')
-        self.h = TT.lmatrix('h')
+        self.h = TT.matrix('h')
         self.h_mask = TT.matrix('h_mask')
         self.y = TT.lmatrix('y')
         self.y_mask = TT.matrix('y_mask')
@@ -2333,7 +2333,7 @@ class Syscombination_withsource(object):
 
         logger.debug("Build sampling computation graph")
         self.sampling_x = TT.lvector("sampling_x")
-        self.sampling_h = TT.lmatrix("sampling_h")
+        self.sampling_h = TT.matrix("sampling_h")
         self.n_samples = TT.lscalar("n_samples")
         self.n_steps = TT.lscalar("n_steps")
         self.T = TT.scalar("T")
