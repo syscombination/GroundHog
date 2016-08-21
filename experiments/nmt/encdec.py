@@ -2265,7 +2265,7 @@ class Syscombination_withsource(object):
         logger.debug("Create input variables")
         self.x = TT.lmatrix('x')
         self.x_mask = TT.matrix('x_mask')
-        self.h = TT.matrix('h')
+        self.h = TT.tensor3('h')
         self.h_mask = TT.matrix('h_mask')
         self.y = TT.lmatrix('y')
         self.y_mask = TT.matrix('y_mask')
@@ -2362,7 +2362,7 @@ class Syscombination_withsource(object):
 
         logger.debug("Create auxiliary variables")
         self.c = TT.matrix("c")
-        self.ha = TT.lmatrix("ha")
+        self.ha = TT.matrix("ha")
         self.step_num = TT.lscalar("step_num")
         self.current_states = [TT.matrix("cur_{}".format(i))
                 for i in range(self.decoder.num_levels)]
