@@ -10,7 +10,7 @@ import numpy
 from groundhog.trainer.SGD_adadelta import SGD as SGD_adadelta
 from groundhog.trainer.SGD import SGD as SGD
 from groundhog.trainer.SGD_momentum import SGD as SGD_momentum
-from groundhog.trainer.SGD_adadeltamrt_syscombinationwithsource import SGD as SGD_adadeltamrt_syscombinationwithsource
+from groundhog.trainer.SGD_adadeltamrt_syscombinationwithsource import SGD as SGD_adadeltamrt
 from groundhog.mainLoop import MainLoop
 from experiments.nmt import\
         RNNEncoderDecoder, Syscombination_withsource, prototype_state, get_batch_iterator, get_batch_iterator_syscombination
