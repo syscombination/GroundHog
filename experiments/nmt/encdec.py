@@ -2139,26 +2139,26 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         if mode == Decoder.SAMPLING:
             sample = self.output_layer.get_sample(
                     state_below=readout,
-                    temp=T)
+                    temp=T, h=hypo)
             # Current SoftmaxLayer.get_cost is stupid,
             # that's why we have to reshape a lot.
             self.output_layer.get_cost(
                     state_below=readout.out,
                     temp=T,
-                    target=sample)
+                    target=sample, h=hypo)
             log_prob = self.output_layer.cost_per_sample
             return [sample] + [log_prob] + hidden_layers
         elif mode == Decoder.BEAM_SEARCH:
             return self.output_layer(
                     state_below=readout.out,
-                    temp=T).out
+                    temp=T, h=hypo).out
         elif mode == Decoder.EVALUATION:
             return (self.output_layer.train(
                     state_below=readout,
                     target=y,
                     mask=y_mask,
                     reg=None,
-                    b = b),
+                    b = b, h=hypo),
                     alignment)
         else:
             raise Exception("Unknown mode for build_decoder")

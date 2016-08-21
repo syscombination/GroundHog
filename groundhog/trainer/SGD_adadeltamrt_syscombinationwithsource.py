@@ -200,13 +200,13 @@ class SGD(object):
 #        print YM
 
         diffN = len(b)
-        print batch['x']
-        print batch['h'].shape
+        #print batch['x']
+        #print batch['h'].shape
         X = numpy.zeros((batch['x'].shape[0], diffN), dtype='int64')
         batch['x'] = batch['x']+X
         X = numpy.zeros((batch['x'].shape[0], diffN), dtype='float32')
         batch['x_mask'] = batch['x_mask']+X
-        print batch['x'].shape
+        #print batch['x'].shape
         H = numpy.zeros((batch['h'].shape[0], diffN,batch['h'].shape[1]), dtype='float32')
         batch['h'] = batch['h']+H
         H = numpy.zeros((batch['h_mask'].shape[0], diffN), dtype='float32')
