@@ -10,6 +10,7 @@ import numpy
 from groundhog.trainer.SGD_adadelta import SGD as SGD_adadelta
 from groundhog.trainer.SGD import SGD as SGD
 from groundhog.trainer.SGD_momentum import SGD as SGD_momentum
+from groundhog.trainer.SGD_adadeltamrt import SGD as SGD_adadeltamrt
 from groundhog.mainLoop import MainLoop
 from experiments.nmt import\
         RNNEncoderDecoder, prototype_state, get_batch_iterator, get_batch_iterator_syscombination
@@ -78,13 +79,18 @@ def main():
 
     rng = numpy.random.RandomState(state['seed'])
     enc_dec = RNNEncoderDecoder(state, rng, args.skip_init)
+    if state['mrt']:
+        train_sampler = enc_dec.create_sampler(many_samples=True)
     enc_dec.build()
     lm_model = enc_dec.create_lm_model()
 
     logger.debug("Load data")
     train_data = get_batch_iterator_syscombination(state)
     logger.debug("Compile trainer")
-    algo = eval(state['algo'])(lm_model, state, train_data)
+    if state['mrt']:
+        algo = eval(state['algo'])(lm_model, state, train_data, train_sampler)
+    else:
+        algo = eval(state['algo'])(lm_model, state, train_data)
     logger.debug("Run training")
     main = MainLoop(train_data, None, None, lm_model, algo, state, None,
             reset=state['reset'],

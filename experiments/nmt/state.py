@@ -212,6 +212,7 @@ def prototype_state():
     state['on_nan'] = 'raise'
 
     #save
+    state['mrt'] = False
     state['save_by_iter'] = False
     state['saveiter'] = 10000
     state['model_dir'] = 'models/'
@@ -301,17 +302,17 @@ def prototype_phrase_lstm_state():
 def prototype_syscombination_state():
     state = prototype_search_state()
 
+
     state['source'] = ''
     state['indx_word'] = ''
     state['word_indx'] = ''
     state['num_systems'] = 2
-    state['empty_sym_source'] = 30000
-    state['empty_sym_target'] = 30000
-    state['null_sym_source'] = 30001
-    state['null_sym_target'] = 30001
+    state['empty_sym_source'] = 29999
+    state['empty_sym_target'] = 29999
+    state['null_sym_source'] = 30000
+    state['null_sym_target'] = 30000
     state['n_sym_source'] = state['null_sym_source'] + 1
     state['n_sym_target'] = state['null_sym_target'] + 1
-    state['single_systems'] = [] # must define the path to single system outputs
     state['dec_rec_layer'] = 'RecurrentLayer'
     state['prefix'] = 'syscombination_'
 
@@ -323,6 +324,6 @@ def prototype_syscombination_withsource_state():
     state['num_systems'] = 1
     state['single_systems'] = [] # must define the path to single system outputs
     state['dec_rec_layer'] = 'RecurrentLayerWithSearch'
-    state['prefix'] = 'syscombination_'
+    state['prefix'] = 'syscombinationwithsource_'
 
     return state

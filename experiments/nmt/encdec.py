@@ -779,6 +779,30 @@ def prefix_lookup(state, p, s):
         return state['%s_%s'%(p, s)]
     return state[s]
 
+def parse_input(state, word2idx, line, raise_unk=False, idx2word=None, unk_sym=-1, null_sym=-1):
+    if unk_sym < 0:
+        unk_sym = state['unk_sym_source']
+    if null_sym < 0:
+        null_sym = state['null_sym_source']
+    seqin = line.split()
+    seqlen = len(seqin)
+    seq = numpy.zeros(seqlen+1, dtype='int64')
+    for idx,sx in enumerate(seqin):
+        seq[idx] = word2idx.get(sx, unk_sym)
+        if seq[idx] >= state['n_sym_source']:
+            seq[idx] = unk_sym
+        if seq[idx] == unk_sym and raise_unk:
+            raise Exception("Unknown word {}".format(sx))
+
+    seq[-1] = null_sym
+    if idx2word:
+        idx2word[null_sym] = '<eos>'
+        idx2word[unk_sym] = state['oov']
+        parsed_in = [idx2word[sx] for sx in seq]
+        return seq, " ".join(parsed_in)
+
+    return seq, seqin
+
 class EncoderDecoderBase(object):
 
     def _create_embedding_layers(self):
@@ -1183,7 +1207,8 @@ class Decoder(EncoderDecoderBase):
             step_num=None,
             mode=EVALUATION,
             given_init_states=None,
-            T=1):
+            T=1,
+            b = None):
         """Create the computational graph of the RNN Decoder.
 
         :param c:
@@ -1409,7 +1434,8 @@ class Decoder(EncoderDecoderBase):
                     state_below=readout,
                     target=y,
                     mask=y_mask,
-                    reg=None),
+                    reg=None,
+                    b = b),
                     alignment)
         else:
             raise Exception("Unknown mode for build_decoder")
@@ -1517,6 +1543,11 @@ class RNNEncoderDecoder(object):
         self.y = TT.lmatrix('y')
         self.y_mask = TT.matrix('y_mask')
         self.inputs = [self.x, self.y, self.x_mask, self.y_mask]
+        if self.state['mrt']:
+            self.b = TT.vector('b')
+            self.inputs += [self.b]
+        else:
+            self.b = None
 
         # Annotation for the log-likelihood computation
         training_c_components = []
@@ -1641,19 +1672,32 @@ class RNNEncoderDecoder(object):
         return self.init_fn
 
     def create_sampler(self, many_samples=False):
-        if hasattr(self, 'sample_fn'):
+        if self.state['mrt']:
+            logger.debug("Compile sampler,\t\tMany_samples:"+str(many_samples))
+            sample_fn = theano.function(
+                    inputs=[self.n_samples, self.n_steps, self.T, self.sampling_x],
+                    outputs=[self.sample, self.sample_log_prob],
+                    updates=self.sampling_updates,
+                    name="sample_fn")
+            if not many_samples:
+                def sampler(*args):
+                    return map(lambda x : x.squeeze(), sample_fn(1, *args))
+                return sampler
+            return sample_fn
+        else:
+            if hasattr(self, 'sample_fn'):
+                return self.sample_fn
+            logger.debug("Compile sampler")
+            self.sample_fn = theano.function(
+                    inputs=[self.n_samples, self.n_steps, self.T, self.sampling_x],
+                    outputs=[self.sample, self.sample_log_prob],
+                    updates=self.sampling_updates,
+                    name="sample_fn")
+            if not many_samples:
+                def sampler(*args):
+                    return map(lambda x : x.squeeze(), self.sample_fn(1, *args))
+                return sampler
             return self.sample_fn
-        logger.debug("Compile sampler")
-        self.sample_fn = theano.function(
-                inputs=[self.n_samples, self.n_steps, self.T, self.sampling_x],
-                outputs=[self.sample, self.sample_log_prob],
-                updates=self.sampling_updates,
-                name="sample_fn")
-        if not many_samples:
-            def sampler(*args):
-                return map(lambda x : x.squeeze(), self.sample_fn(1, *args))
-            return sampler
-        return self.sample_fn
 
     def create_scorer(self, batch=False):
         if not hasattr(self, 'score_fn'):
@@ -1707,28 +1751,3 @@ class RNNEncoderDecoder(object):
             else:
                 return probs
         return probs_computer
-
-
-def parse_input(state, word2idx, line, raise_unk=False, idx2word=None, unk_sym=-1, null_sym=-1):
-    if unk_sym < 0:
-        unk_sym = state['unk_sym_source']
-    if null_sym < 0:
-        null_sym = state['null_sym_source']
-    seqin = line.split()
-    seqlen = len(seqin)
-    seq = numpy.zeros(seqlen+1, dtype='int64')
-    for idx,sx in enumerate(seqin):
-        seq[idx] = word2idx.get(sx, unk_sym)
-        if seq[idx] >= state['n_sym_source']:
-            seq[idx] = unk_sym
-        if seq[idx] == unk_sym and raise_unk:
-            raise Exception("Unknown word {}".format(sx))
-
-    seq[-1] = null_sym
-    if idx2word:
-        idx2word[null_sym] = '<eos>'
-        idx2word[unk_sym] = state['oov']
-        parsed_in = [idx2word[sx] for sx in seq]
-        return seq, " ".join(parsed_in)
-
-    return seq, seqin
