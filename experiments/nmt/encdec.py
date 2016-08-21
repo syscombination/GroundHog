@@ -2179,8 +2179,10 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         assert c.ndim == 2
         T = next(args)
         assert T.ndim == 0
+        h = next(args)
+        assert h.dim == 2
 
-        decoder_args = dict(given_init_states=prev_hidden_states, T=T, c=c)
+        decoder_args = dict(given_init_states=prev_hidden_states, T=T, c=c, h=h)
 
         sample, log_prob = self.build_decoder(y=prev_word, step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[:2]
         hidden_states = self.build_decoder(y=sample, step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[2:]
@@ -2189,7 +2191,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
     def build_initializers(self, c):
         return [init(c).out for init in self.initializers]
 
-    def build_sampler(self, n_samples, n_steps, T, c):
+    def build_sampler(self, n_samples, n_steps, T, c, h):
         states = [TT.zeros(shape=(n_samples,), dtype='int64'),
                 TT.zeros(shape=(n_samples,), dtype='float32')]
         init_c = c[0, -self.state['dim']:]
@@ -2199,7 +2201,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
             c = PadLayer(n_steps)(c).out
 
         # Pad with final states
-        non_sequences = [c, T]
+        non_sequences = [c, T, h]
 
         outputs, updates = theano.scan(self.sampling_step,
                 outputs_info=states,
