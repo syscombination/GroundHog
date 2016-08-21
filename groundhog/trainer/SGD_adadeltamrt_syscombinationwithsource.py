@@ -207,7 +207,7 @@ class SGD(object):
         X = numpy.zeros((batch['x'].shape[0], diffN), dtype='float32')
         batch['x_mask'] = batch['x_mask']+X
         print batch['x'].shape
-        H = numpy.zeros((batch['h'].shape[0], batch['h'].shape[1],diffN), dtype='float32')
+        H = numpy.zeros((batch['h'].shape[0], diffN,batch['h'].shape[1]), dtype='float32')
         batch['h'] = batch['h']+H
         H = numpy.zeros((batch['h_mask'].shape[0], diffN), dtype='float32')
         batch['h_mask'] = batch['h_mask']+H
