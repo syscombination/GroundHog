@@ -967,7 +967,8 @@ class SoftmaxLayer(CostLayer):
               additional_inputs=None,
               no_noise_bias=False,
               target=None,
-              full_softmax=True):
+              full_softmax=True,
+              h = None):
         """
         Forward pass through the cost layer.
 
@@ -1042,6 +1043,10 @@ class SoftmaxLayer(CostLayer):
             emb_val = TT.nnet.sigmoid(emb_val)
         self.out = emb_val
         print 'inside softmax:', emb_val.ndim
+        if h:
+            emb_val = emb_val*h
+            normalizer = emb_val.sum(axis=0)
+            emb_val = emb_val/normalizer
         self.state_below = state_below
         self.model_output = emb_val
         return emb_val
@@ -1050,12 +1055,12 @@ class SoftmaxLayer(CostLayer):
                        state_below,
                        temp=1,
                        use_noise=False,
-                       additional_inputs=None):
+                       additional_inputs=None,h=None):
 
         class_probs = self.fprop(state_below,
                                  temp=temp,
                                  additional_inputs=additional_inputs,
-                                 use_noise=use_noise)
+                                 use_noise=use_noise,h=h)
         pvals = class_probs
         if pvals.ndim == 1:
             pvals = pvals.dimshuffle('x', 0)
@@ -1078,7 +1083,7 @@ class SoftmaxLayer(CostLayer):
                  additional_inputs=None,
                  use_noise=True,
                  b = None,
-                 alpha = 0.005):
+                 alpha = 0.005,h=None):
         """
         See parent class
         """
@@ -1112,7 +1117,7 @@ class SoftmaxLayer(CostLayer):
                                      additional_inputs=additional_inputs,
                                      no_noise_bias=no_noise_bias,
                                      target=target.flatten(),
-                                     full_softmax=False)
+                                     full_softmax=False,h=h)
             # negative samples: a single uniform random sample per training sample
             nsamples = TT.cast(self.trng.uniform(class_probs.shape[0].reshape([1])) * self.n_out, 'int64')
             neg_probs = self.fprop(state_below,
@@ -1121,7 +1126,7 @@ class SoftmaxLayer(CostLayer):
                                      additional_inputs=additional_inputs,
                                      no_noise_bias=no_noise_bias,
                                      target=nsamples.flatten(),
-                                     full_softmax=False)
+                                     full_softmax=False,h=h)
 
             cost_target = class_probs
             cost_nsamples = 1. - neg_probs
@@ -1133,7 +1138,7 @@ class SoftmaxLayer(CostLayer):
                                      temp=temp,
                                      use_noise=use_noise,
                                      additional_inputs=additional_inputs,
-                                     no_noise_bias=no_noise_bias)
+                                     no_noise_bias=no_noise_bias,h=h)
             cost = -TT.log(_grab_probs(class_probs, target))
 
         self.word_probs = TT.exp(-cost.reshape(target_shape))
