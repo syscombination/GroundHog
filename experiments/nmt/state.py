@@ -301,6 +301,7 @@ def prototype_phrase_lstm_state():
 def prototype_syscombination_state():
     state = prototype_search_state()
 
+    state['source'] = []
     state['num_systems'] = 1
     state['single_systems'] = [] # must define the path to single system outputs
     state['dec_rec_layer'] = 'RecurrentLayerWithSearch'

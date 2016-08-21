@@ -290,5 +290,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     base_filenames = open_files()
     combined_counter, sentence_counts, counters, vocab = create_dictionary()
+    vocab = cPickle.load(open(args.dictionary))
     if args.ngram or args.pickle:
         corpora2index()

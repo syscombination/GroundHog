@@ -26,6 +26,7 @@ from groundhog.models import LM_Model
 from groundhog.datasets import PytablesBitextIterator
 from groundhog.utils import sample_zeros, sample_weights_orth, init_bias, sample_weights_classic
 import groundhog.utils as utils
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -63,9 +64,6 @@ def create_padded_batch(state, x, y, return_dict=False):
 
     # Batch size
     n = x[0].shape[0]
-    print 'before process'
-    print x , y
-    print 'after process'
 
     X = numpy.zeros((mx, n), dtype='int64')
     Y = numpy.zeros((my, n), dtype='int64')
@@ -186,6 +184,206 @@ def get_batch_iterator(state):
         shuffle=state['shuffle'],
         use_infinite_loop=state['use_infinite_loop'],
         max_len=state['seqlen'])
+    return train_data
+
+def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
+    """A callback given to the iterator to transform data in suitable format
+
+    :type x: list
+    :param x: list of numpy.array's, each array is a batch of phrases
+        in some of source languages
+
+    :type y: list
+    :param y: same as x but for target languages
+
+    :param new_format: a wrapper to be applied on top of returned value
+
+    :returns: a tuple (X, Xmask, Y, Ymask) where
+        - X is a matrix, each column contains a source sequence
+        - Xmask is 0-1 matrix, each column marks the sequence positions in X
+        - Y and Ymask are matrices of the same format for target sequences
+        OR new_format applied to the tuple
+
+    Notes:
+    * actually works only with x[0] and y[0]
+    * len(x[0]) thus is just the minibatch size
+    * len(x[0][idx]) is the size of sequence idx
+    """
+
+    mx = state['seqlen']
+    my = state['seqlen']
+    mh = state['seqlen']
+    if state['trim_batches']:
+        # Similar length for all source sequences
+        mx = numpy.minimum(state['seqlen'], max([len(xx) for xx in x[0]]))+1
+        # Similar length for all target sequences
+        my = numpy.minimum(state['seqlen'], max([len(xx) for xx in y[0]]))+1
+        mh = numpy.minimum(state['seqlen'], max([len(xx) for xx in h[0]]))+1
+
+    # Batch size
+    n = y[0].shape[0]
+    print 'before process'
+    print y
+    print h
+    if x:
+        print x
+    print 'after process'
+
+    X = numpy.zeros((mx, n), dtype='int64')
+    Y = numpy.zeros((my, n), dtype='int64')
+    H = numpy.zeros((mh, n), dtype='int64')
+    Xmask = numpy.zeros((mx, n), dtype='float32')
+    Ymask = numpy.zeros((my, n), dtype='float32')
+    Hmask = numpy.zeros((mh, n), dtype='float32')
+
+    # Fill X and Xmask
+    if x:
+        for idx in xrange(len(x[0])):
+            # Insert sequence idx in a column of matrix X
+            if mx < len(x[0][idx]):
+                X[:mx, idx] = x[0][idx][:mx]
+            else:
+                X[:len(x[0][idx]), idx] = x[0][idx][:mx]
+
+            # Mark the end of phrase
+            if len(x[0][idx]) < mx:
+                X[len(x[0][idx]):, idx] = state['null_sym_source']
+
+            # Initialize Xmask column with ones in all positions that
+            # were just set in X
+            Xmask[:len(x[0][idx]), idx] = 1.
+            if len(x[0][idx]) < mx:
+                Xmask[len(x[0][idx]), idx] = 1.
+
+    # Fill Y and Ymask in the same way as X and Xmask in the previous loop
+    for idx in xrange(len(y[0])):
+        Y[:len(y[0][idx]), idx] = y[0][idx][:my]
+        if len(y[0][idx]) < my:
+            Y[len(y[0][idx]):, idx] = state['null_sym_target']
+        Ymask[:len(y[0][idx]), idx] = 1.
+        if len(y[0][idx]) < my:
+            Ymask[len(y[0][idx]), idx] = 1.
+
+    for idx in xrange(len(h[0])):
+        H[:len(h[0][idx]), idx] = h[0][idx][:mh]
+        if len(h[0][idx]) < mh:
+            H[len(h[0][idx]):, idx] = state['null_sym_target']
+        Hmask[:len(h[0][idx]), idx] = 1.
+        if len(h[0][idx]) < mh:
+            Hmask[len(h[0][idx]), idx] = 1.
+
+    null_inputs = numpy.zeros(Y.shape[1])
+
+    # We say that an input pair is valid if both:
+    # - either source sequence or target sequence is non-empty
+    # - source sequence and target sequence have null_sym ending
+    # Why did not we filter them earlier?
+    for idx in xrange(Y.shape[1]):
+        if numpy.sum(Xmask[:,idx]) == 0 and numpy.sum(Ymask[:,idx]) == 0:
+            null_inputs[idx] = 1
+        if x:
+            if Xmask[-1,idx] and X[-1,idx] != state['null_sym_source']:
+                null_inputs[idx] = 1
+        if Ymask[-1,idx] and Y[-1,idx] != state['null_sym_target']:
+            null_inputs[idx] = 1
+        if Hmask[-1,idx] and H[-1,idx] != state['null_sym_target']:
+            null_inputs[idx] = 1
+
+    valid_inputs = 1. - null_inputs
+
+    # Leave only valid inputs
+    if x:
+        X = X[:,valid_inputs.nonzero()[0]]
+        Xmask = Xmask[:,valid_inputs.nonzero()[0]]
+    Y = Y[:,valid_inputs.nonzero()[0]]
+    Ymask = Ymask[:,valid_inputs.nonzero()[0]]
+    H = H[:,valid_inputs.nonzero()[0]]
+    Hmask = Hmask[:,valid_inputs.nonzero()[0]]
+    if len(valid_inputs.nonzero()[0]) <= 0:
+        return None
+
+    # Unknown words
+    if x:
+        X[X >= state['n_sym_source']] = state['unk_sym_source']
+    Y[Y >= state['n_sym_target']] = state['unk_sym_target']
+    H[H >= state['n_sym_target']] = state['unk_sym_target']
+
+    if return_dict:
+        if x:
+            return {'x' : X, 'x_mask' : Xmask, 'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask}
+        else:
+            return {'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask}
+    else:
+        if x:
+            return X, Xmask, Y, Ymask, H, Hmask
+        else:
+            return Y, Ymask, H, Hmask
+
+def get_batch_iterator_syscombination(state):
+
+    class Iterator():
+
+        def __init__(self, state):
+            self.state = state
+            self.next_offset = 0
+            self.have_source = False
+            self.load_data()
+
+        def next(self, peek=False):
+            startid = self.next_offset
+            endid = self.next_offset+self.state['bs']
+            if endid >= self.num_sentences:
+                endid -= self.num_sentences
+                x = None
+                if self.have_source:
+                    x = numpy.asarray(self.source[startid:]+self.source[:endid])
+                y = numpy.asarray(self.target[startid:]+self.target[:endid])
+                hypos = numpy.asarray(self.hypos[startid:]+self.hypos[:endid])
+            else:
+                x = None
+                if self.have_source:
+                    x = numpy.asarray(self.source[startid:endid])
+                y = numpy.asarray(self.target[startid:endid])
+                hypos = numpy.asarray(self.hypos[startid:endid])
+            
+            batch = create_padded_batch_syscombination(self.state, y, hypos, x=x, return_dict=True)
+            self.next_offset = endid
+            return batch
+
+        def start(self, offset):
+            self.next_offset = offset
+
+        def reset(self):
+            self.next_offset = 0
+
+        def load_data(self):
+            self.target = read_sentences(self.state['target'])
+            self.hypos = read_sentences(self.state['hypos'])
+            assert len(self.target) == len(self.hypos)
+            if len(self.state['source']) != 0:
+                self.have_source = True
+                self.source = read_sentences(self.state['source'])
+                assert len(self.target) == len(self.source)
+            self.num_sentences = len(self.source)
+
+        def read_sentences(filename):
+            return json.loads(open(filename, 'r').read())
+        '''
+        def read_hypos(filenames):
+            hs = []
+            for i in xrange(filenames):
+                filename = filenames[i]
+                hs.append(json.loads(open(filename, 'r').read()))
+                assert len(hs[0]) == len(hs[i])
+            result = []
+            for i in xrange(len(hs[0])):
+                sentence = []
+                for 
+                result.append([for  in])
+            return
+        '''
+
+    train_data = Iterator(state)
     return train_data
 
 class RecurrentLayerWithSearch(Layer):

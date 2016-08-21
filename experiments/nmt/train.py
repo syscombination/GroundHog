@@ -12,7 +12,7 @@ from groundhog.trainer.SGD import SGD as SGD
 from groundhog.trainer.SGD_momentum import SGD as SGD_momentum
 from groundhog.mainLoop import MainLoop
 from experiments.nmt import\
-        RNNEncoderDecoder, prototype_state, get_batch_iterator
+        RNNEncoderDecoder, prototype_state, get_batch_iterator, get_batch_iterator_syscombination
 import experiments.nmt
 
 logger = logging.getLogger(__name__)
@@ -82,7 +82,7 @@ def main():
     lm_model = enc_dec.create_lm_model()
 
     logger.debug("Load data")
-    train_data = get_batch_iterator(state)
+    train_data = get_batch_iterator_syscombination(state)
     logger.debug("Compile trainer")
     algo = eval(state['algo'])(lm_model, state, train_data)
     logger.debug("Run training")
