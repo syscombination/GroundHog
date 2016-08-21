@@ -2217,7 +2217,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
                 outputs_info=states,
                 non_sequences=non_sequences,
                 sequences=[TT.arange(n_steps, dtype="int64"),h],
-                n_steps=n_steps,
+                n_steps=h.shape[0],
                 name="{}_sampler_scan".format(self.prefix))
         return (outputs[0], outputs[1]), updates
 
