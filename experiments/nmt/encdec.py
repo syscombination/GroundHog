@@ -324,7 +324,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
             for k in xrange(state['num_systems']):
                 H[i][j][Ht[i][j][k]] += 1.  
 
-    print H
+    #print H
     if return_dict:
         if x != None:
             return {'x' : X, 'x_mask' : Xmask, 'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask}
