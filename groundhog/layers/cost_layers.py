@@ -318,7 +318,7 @@ class CostLayer(Layer):
                   use_noise=True,
                   additional_inputs=None,
                   no_noise_bias=False,
-                  b = None):
+                  b = None, h=None):
         """
         Computes the expression of the gradients of the cost with respect to
         all parameters of the model.
@@ -376,7 +376,7 @@ class CostLayer(Layer):
                              use_noise=use_noise,
                              additional_inputs=additional_inputs,
                              no_noise_bias=no_noise_bias,
-                             b = b)
+                             b = b, h = h)
         logger.debug("Get grads")
         grads = TT.grad(cost.mean(), self.params)
         logger.debug("Got grads")
