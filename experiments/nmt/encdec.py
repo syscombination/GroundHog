@@ -2174,6 +2174,8 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         # Arguments that correspond to scan's "sequences" parameteter:
         step_num = next(args)
         assert step_num.ndim == 0
+        h = next(args)
+        assert h.ndim == 1
 
         # Arguments that correspond to scan's "outputs" parameteter:
         prev_word = next(args)
@@ -2188,8 +2190,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         assert c.ndim == 2
         T = next(args)
         assert T.ndim == 0
-        h = next(args)
-        assert h.ndim == 2
+        
 
         decoder_args = dict(given_init_states=prev_hidden_states, T=T, c=c, h=h)
 
@@ -2210,12 +2211,12 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
             c = PadLayer(n_steps)(c).out
 
         # Pad with final states
-        non_sequences = [c, T, h]
+        non_sequences = [c, T]
 
         outputs, updates = theano.scan(self.sampling_step,
                 outputs_info=states,
                 non_sequences=non_sequences,
-                sequences=[TT.arange(n_steps, dtype="int64")],
+                sequences=[TT.arange(n_steps, dtype="int64"),h],
                 n_steps=n_steps,
                 name="{}_sampler_scan".format(self.prefix))
         return (outputs[0], outputs[1]), updates
