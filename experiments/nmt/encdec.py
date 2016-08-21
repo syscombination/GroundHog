@@ -1914,9 +1914,10 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
                     use_nce=self.state['use_nce'] if 'use_nce' in self.state else False,
                     **self.default_kwargs)
 
-    def build_decoder(self, c, y,
+    def build_decoder(self, c, y, h,
             c_mask=None,
             y_mask=None,
+            h_mask=None,
             step_num=None,
             mode=EVALUATION,
             given_init_states=None,
@@ -2253,9 +2254,11 @@ class Syscombination_withsource(object):
         logger.debug("Create input variables")
         self.x = TT.lmatrix('x')
         self.x_mask = TT.matrix('x_mask')
+        self.h = TT.lmatrix('h')
+        self.h_mask = TT.matrix('h_mask')
         self.y = TT.lmatrix('y')
         self.y_mask = TT.matrix('y_mask')
-        self.inputs = [self.x, self.y, self.x_mask, self.y_mask]
+        self.inputs = [self.x, self.y, self.h, self.x_mask, self.y_mask, self.h_mask]
         if self.state['mrt']:
             self.b = TT.vector('b')
             self.inputs += [self.b]
@@ -2306,19 +2309,20 @@ class Syscombination_withsource(object):
         self.state['c_dim'] = len(training_c_components) * self.state['dim']
 
         logger.debug("Create decoder")
-        self.decoder = Decoder(self.state, self.rng,
+        self.decoder = Decoder_syscombinationwithsource(self.state, self.rng,
                 skip_init=self.skip_init, compute_alignment=self.compute_alignment)
         self.decoder.create_layers()
         logger.debug("Build log-likelihood computation graph")
         self.predictions, self.alignment = self.decoder.build_decoder(
                 c=Concatenate(axis=2)(*training_c_components), c_mask=self.x_mask,
-                y=self.y, y_mask=self.y_mask,b=self.b)
+                y=self.y, y_mask=self.y_mask,h=self.h,h_mask=self.h_mask,b=self.b)
 
         # Annotation for sampling
         sampling_c_components = []
 
         logger.debug("Build sampling computation graph")
         self.sampling_x = TT.lvector("sampling_x")
+        self.sampling_h = TT.lmatrix("sampling_h")
         self.n_samples = TT.lscalar("n_samples")
         self.n_steps = TT.lscalar("n_steps")
         self.T = TT.scalar("T")
@@ -2343,10 +2347,11 @@ class Syscombination_withsource(object):
         self.sampling_c = Concatenate(axis=1)(*sampling_c_components).out
         (self.sample, self.sample_log_prob), self.sampling_updates =\
             self.decoder.build_sampler(self.n_samples, self.n_steps, self.T,
-                    c=self.sampling_c)
+                    c=self.sampling_c,h=self.sampling_h)
 
         logger.debug("Create auxiliary variables")
         self.c = TT.matrix("c")
+        self.ha = TT.lmatrix("ha")
         self.step_num = TT.lscalar("step_num")
         self.current_states = [TT.matrix("cur_{}".format(i))
                 for i in range(self.decoder.num_levels)]

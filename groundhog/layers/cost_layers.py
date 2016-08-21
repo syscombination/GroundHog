@@ -1041,6 +1041,7 @@ class SoftmaxLayer(CostLayer):
         else:
             emb_val = TT.nnet.sigmoid(emb_val)
         self.out = emb_val
+        print 'inside softmax:', emb_val.ndim
         self.state_below = state_below
         self.model_output = emb_val
         return emb_val
