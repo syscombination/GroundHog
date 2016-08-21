@@ -1044,7 +1044,7 @@ class SoftmaxLayer(CostLayer):
         self.out = emb_val
         print 'inside softmax:', emb_val.ndim
         if h:
-            emb_val = emb_val*h.reshape([emb_val.shape[0]*emb_val.shape[1], emb_val.shape[2]])
+            emb_val = emb_val*h.reshape([emb_val.shape[0], emb_val.shape[1]])
             normalizer = emb_val.sum(axis=0)
             emb_val = emb_val/normalizer
         self.state_below = state_below
