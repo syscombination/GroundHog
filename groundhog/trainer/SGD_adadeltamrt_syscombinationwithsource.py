@@ -186,7 +186,7 @@ class SGD(object):
         y,b = getUnique(samples, batch['y'], self.state)
 
         b = numpy.array(b,dtype='float32')
-        print b
+        #print b
 #        p = probs.sum(axis=0)
 #        p = [math.exp(-i) for i in p]
 #        p = [i/sum(p) for i in p]

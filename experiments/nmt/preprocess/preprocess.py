@@ -170,7 +170,10 @@ def create_dictionary():
     vocab = {'UNK': 1, '<s>': 0, '</s>': 0}
     for i, (word, count) in enumerate(vocab_count):
         vocab[word] = i + 2
-    vocab['$'] = i+3
+    if i+3 >= args.vocab: 
+        vocab['$'] = i+2
+    else:
+        vocab['$'] = i+3
     safe_pickle(vocab, args.dictionary)
     return combined_counter, sentence_counts, counters, vocab
 
