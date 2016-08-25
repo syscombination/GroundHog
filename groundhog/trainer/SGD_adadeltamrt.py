@@ -184,7 +184,7 @@ class SGD(object):
         samples, probs = self.sampler(sampleN,myL,1,batch['x'].squeeze())
         print '---mrt testzone---'
         print samples
-        print probs
+        #print probs
         print batch['y']
         y,b = getUnique(samples, batch['y'], self.state)
 
@@ -277,6 +277,8 @@ def getUnique(samples, y, state):
     dic[' '.join(words)]=1.0
     
     n = len(samples[0])
+    print '-----bleu testzone----'
+    print 'samples:', n
     for i in range(n):
         sen = samples[:,i]
         sen = cutSen(sen.tolist(), state)
@@ -338,6 +340,9 @@ def getRefDict(words):
 
 def calBleu(x,ref_dict,lens):
 
+    print '----calbleu----'
+    print x
+    print ref_dict 
     length_trans = len(x)
     words = x
     closet_length = lens

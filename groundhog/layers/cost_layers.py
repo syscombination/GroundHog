@@ -1005,6 +1005,7 @@ class SoftmaxLayer(CostLayer):
             emb_val = state_below
 
         if full_softmax:
+            print 'full softmax'
             if self.weight_noise and use_noise and self.noise_params:
                 emb_val = TT.dot(emb_val, W_em + nW_em)
             else:
@@ -1025,12 +1026,12 @@ class SoftmaxLayer(CostLayer):
             else:
                 emb_val = temp * (emb_val + self.b_em)
         else:
+            print 'not full softmax'
             W_em = W_em[:, target]
             if self.weight_noise:
                 nW_em = nW_em[:, target]
                 W_em += nW_em
             if emb_val.ndim == 3:
-                leng = emb_val.shape[0]
                 emb_val = emb_val.reshape([emb_val.shape[0]*emb_val.shape[1], emb_val.shape[2]])
             emb_val = (W_em.T * emb_val).sum(1) + self.b_em[target]
             if self.weight_noise and use_noise:
@@ -1046,7 +1047,7 @@ class SoftmaxLayer(CostLayer):
         print 'inside softmax:', emb_val.ndim
         if h:
             if h.ndim == 3:
-                h = h[leng,:,:].reshape([emb_val.shape[0], emb_val.shape[1]])
+                h = h[leng,:,:].reshape([state_below.shape[0], emb_val.shape[1]])
             epsilon = 1e-6
             #epsilon = TT.min(emb_val,axis=0)
             emb_val = emb_val*h
