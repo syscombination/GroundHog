@@ -268,11 +268,16 @@ class SGD(object):
 
 
 
-def getUnique(samples, y, state):
+def getUnique(samples, y, state, empty=-1):
     dic = {}
     ty = y.squeeze().tolist()
     words = cutSen(ty, state)
+
     words = [str(i) for i in words]
+    if empty >= 0:
+        while str(empty) in words:
+            words.remove(str(empty))
+
     ref,lens = getRefDict(words)
     dic[' '.join(words)]=1.0
     
@@ -284,6 +289,9 @@ def getUnique(samples, y, state):
         sen = samples[:,i]
         sen = cutSen(sen.tolist(), state)
         words = [str(i) for i in sen]
+        if empty >= 0:
+            while str(empty) in words:
+                words.remove(str(empty))
         tmp = ' '.join(words)
         if tmp in dic:
             continue
