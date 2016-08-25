@@ -279,6 +279,7 @@ def getUnique(samples, y, state):
     n = len(samples[0])
     print '-----bleu testzone----'
     print 'samples:', n
+    print words
     for i in range(n):
         sen = samples[:,i]
         sen = cutSen(sen.tolist(), state)
