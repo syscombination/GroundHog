@@ -19,12 +19,7 @@ for i in xrange(num_systems):
 result = []
 for i in xrange(len(system[0])):
 	for j in xrange(num_systems):
-		print len(system[j][i]), 
-		if len(system[j][i]) != len(system[0][i]):
-			print system[0][i]
-			print system[j][i]
 		assert len(system[j][i]) == len(system[0][i])
-	print ''
 	result.append([[system[n][i][k] for n in xrange(num_systems)] for k in xrange(len(system[0][i]))])
 
 output = open(args.output_file, 'w')

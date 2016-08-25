@@ -39,14 +39,14 @@ for i in xrange(num_sentence):
 	for j in range(2, num_systems):
 		index = num_align*i+j-1
 		#print 'index:', index
-		print '-----'+str(j)+'-----'
+		#print '-----'+str(j)+'-----'
 		pos = 0
 		nodes = aligns[index].split(' ')
 		for k in xrange(len(nodes)):
 			node = nodes[k]
 			bone = node.split('|')[1]
 			newh = node.split('|')[0]
-			print node,str(k)+'/'+str(len(nodes)), pos, len(tmpresult[0]), len(tmpresult[1])
+			#print node,str(k)+'/'+str(len(nodes)), pos, len(tmpresult[0]), len(tmpresult[1])
 			if bone == '$':
 				if pos == len(tmpresult[0]): 
 					for h in xrange(j):
