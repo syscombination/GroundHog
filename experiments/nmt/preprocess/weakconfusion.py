@@ -63,6 +63,9 @@ for i in xrange(num_sentence):
 					tmpresult[j].append('$')
 				tmpresult[j].append(newh)
 				pos+=1
+		while pos != len(tmpresult[0]):
+			tmpresult[j].append('$')
+			pos += 1
 	#print tmpresult
 	for i in xrange(num_systems):
 		result[i].append(' '.join(tmpresult[i]))
