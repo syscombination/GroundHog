@@ -217,6 +217,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     my = state['seqlen']
     mh = state['seqlen']
 
+
     if state['trim_batches']:
         # Similar length for all source sequences
         if x != None:
@@ -225,16 +226,17 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
         my = numpy.minimum(state['seqlen'], max([len(xx) for xx in y[0]]))+1
         mh = numpy.minimum(state['seqlen'], max([len(xx) for xx in h[0]]))+1
 
+    mhy = numpy.maximum(mh, my)
     # Batch size
     n = y[0].shape[0]
     
 
     X = numpy.zeros((mx, n), dtype='int64')
-    Y = numpy.zeros((my, n), dtype='int64')
-    H = numpy.zeros((mh, n, state['num_systems']), dtype='int64')
+    Y = numpy.zeros((mhy, n), dtype='int64')
+    H = numpy.zeros((mhy, n, state['num_systems']), dtype='int64')
     Xmask = numpy.zeros((mx, n), dtype='float32')
-    Ymask = numpy.zeros((my, n), dtype='float32')
-    Hmask = numpy.zeros((mh, n), dtype='float32')
+    Ymask = numpy.zeros((mhy, n), dtype='float32')
+    Hmask = numpy.zeros((mhy, n), dtype='float32')
 
     # Fill X and Xmask
     if x != None:
