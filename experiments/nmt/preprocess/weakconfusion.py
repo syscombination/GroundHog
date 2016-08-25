@@ -34,6 +34,8 @@ for i in xrange(num_sentence):
 		node = nodes[k]
 		tmpresult[0].append(node.split('|')[1])
 		tmpresult[1].append(node.split('|')[0])
+	print len(tmpresult[0])
+	print len(tmpresult[1])
 	for j in range(2, num_systems):
 		index = num_align*i+j-1
 		print 'index:', index
@@ -43,12 +45,18 @@ for i in xrange(num_sentence):
 			node = nodes[k]
 			bone = node.split('|')[1]
 			newh = node.split('|')[0]
+			print node,str(k)+'/'+str(len(nodes)), pos, len(tmpresult[0]), len(tmpresult[1])
 			if bone == '$':
-				if tmpresult[0][pos] != '$':
+				if pos == len(tmpresult[0]): 
 					for h in xrange(j):
 						tmpresult[h].insert(pos,'$')
-				tmpresult[j].append(newh)
-				pos += 1
+					tmpresult[j].append(newh)
+				else:
+					if tmpresult[0][pos] != '$':
+						for h in xrange(j):
+							tmpresult[h].insert(pos,'$')
+					tmpresult[j].append(newh)
+					pos += 1
 			else:
 				while tmpresult[0][pos] == '$':
 					pos += 1
