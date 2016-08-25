@@ -284,11 +284,12 @@ def getUnique(samples, y, state, empty=-1):
     n = len(samples[0])
     print '-----bleu testzone----'
     print 'samples:', n
-    print words
+    
     for i in range(n):
         sen = samples[:,i]
         sen = cutSen(sen.tolist(), state)
         words = [str(i) for i in sen]
+        print words
         if empty >= 0:
             while str(empty) in words:
                 words.remove(str(empty))
