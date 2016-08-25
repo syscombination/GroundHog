@@ -182,12 +182,15 @@ class SGD(object):
         myL = int(1.5*len(batch['y']))
 
         samples, probs = self.sampler(sampleN,myL,1,batch['x'].squeeze())
-
+        print '---mrt testzone---'
+        print samples
+        print probs
+        print batch['y']
         y,b = getUnique(samples, batch['y'], self.state)
 
         b = numpy.array(b,dtype='float32')
-        print '---mrt testzone---'
-        print batch['y']
+        
+
 #        p = probs.sum(axis=0)
 #        p = [math.exp(-i) for i in p]
 #        p = [i/sum(p) for i in p]
@@ -196,9 +199,9 @@ class SGD(object):
 #        print b.mean()
 #        print (b*p).mean()
         Y,YM = getYM(y, self.state)
-        print b
-        print Y
-        print YM
+#        print b
+#        print Y
+#        print YM
 
         diffN = len(b)
 
