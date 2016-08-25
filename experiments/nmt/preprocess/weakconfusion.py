@@ -22,7 +22,8 @@ for i in xrange(num_systems):
 	result.append([])
 
 for i in xrange(num_sentence):
-	print 'sentence:',i
+	if i % 10000 == 0:
+		print 'sentence:',i
 	index = num_align*i
 	#print 'index:', index
 	tmpresult = []
