@@ -186,7 +186,7 @@ class SGD(object):
         print samples
         #print probs
         print batch['y']
-        y,b = getUnique(samples, batch['y'], self.state)
+        y,b = getUnique(samples, batch['y'], self.state, empty=self.state['empty_sym_target'])
 
         b = numpy.array(b,dtype='float32')
         
