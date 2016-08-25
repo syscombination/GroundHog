@@ -162,7 +162,9 @@ class SGD(object):
     def __call__(self):
         batch = self.data.next()
         assert batch
-        print batch['h'].shape
+        print 'input x shape:',batch['x'].shape
+        print 'input y shape:',batch['y'].shape
+        print 'input h shape:',batch['h'].shape
 
         # Perturb the data (! and the model)
         if isinstance(batch, dict):
