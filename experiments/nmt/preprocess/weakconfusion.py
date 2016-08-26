@@ -54,6 +54,12 @@ for i in xrange(num_sentence):
 					elif  node.split('|')[-1] != '':
 						bone = node.split('|')[-1]
 						newh = '|'
+					elif node.split('|')[0] == '$':
+						newh = '$'
+						bone = node.split('|')[1]+'|'+node.split('|')[2]
+					elif  node.split('|')[-1] == '$':
+						bone = node.split('|')[-2]+'|'+node.split('|')[-1]
+						newh = '$'
 				else:
 					bone = node.split('|')[1]
 					newh = node.split('|')[0]
