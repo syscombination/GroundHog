@@ -309,6 +309,8 @@ class MainLoop(object):
                 if self.channel is not None:
                     self.channel.save()
                 self.save_time = time.time()
+            if self.state['save_by_iter'] and self.step % self.state['saveiter']:
+                save_DIY()
             st = time.time()
             try:
                 rvals = self.algo()

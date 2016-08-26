@@ -359,6 +359,7 @@ def get_batch_iterator_syscombination(state):
                 y = numpy.asarray([self.target[startid:endid]])
                 hypos = numpy.asarray([self.hypos[startid:endid]])
             
+            print 'prepare batch...'
             batch = create_padded_batch_syscombination(self.state, y, hypos, x=x, return_dict=True)
             self.next_offset = endid
             return batch
