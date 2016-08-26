@@ -58,8 +58,8 @@ for i in xrange(num_sentence):
 						newh = '$'
 						bone = node.split('|')[1]+'|'+node.split('|')[2]
 					elif  node.split('|')[-1] == '$':
-						bone = node.split('|')[-2]+'|'+node.split('|')[-1]
-						newh = '$'
+						newh = node.split('|')[-2]+'|'+node.split('|')[-1]
+						bone = '$'
 				else:
 					bone = node.split('|')[1]
 					newh = node.split('|')[0]
