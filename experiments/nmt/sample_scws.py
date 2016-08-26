@@ -74,7 +74,7 @@ class BeamSearch(object):
             last_words = (numpy.array(map(lambda t : t[-1], trans))
                     if k > 0
                     else numpy.zeros(beam_size, dtype="int64"))
-            log_probs = numpy.log(self.comp_next_probs(c, h, k, last_words, *states)[0])
+            log_probs = numpy.log(self.comp_next_probs(c, h0, k, last_words, *states)[0])
             print last_words
             print log_probs
 
