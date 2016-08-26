@@ -13,8 +13,8 @@ grs = open(grfile, 'r').read().split('\n')[:-1]
 print len(aligns)
 print len(grs)
 
-for i in range(15399,len(grs)):
-	index = 12*i+1+5
+for i in range(14600,len(grs)):
+	index = 12*i+1
 	align =aligns[index]
 	nodes = align.split(' ')
 	s = [node.split('|')[1] for node in nodes]
