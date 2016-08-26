@@ -77,6 +77,7 @@ for i in xrange(num_sentence):
 	except:
 		print traceback.print_exc()
 		print 'fail:', i
+		print aligns[index]
 		exit()
 
 for i in xrange(num_systems):
