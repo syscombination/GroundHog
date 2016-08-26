@@ -47,8 +47,16 @@ for i in xrange(num_sentence):
 			nodes = aligns[index].split(' ')
 			for k in xrange(len(nodes)):
 				node = nodes[k]
-				bone = node.split('|')[1]
-				newh = node.split('|')[0]
+				if len(node.split('|')) == 3:
+					if node.split('|')[0] != '':
+						bone = '|'
+						newh = node.split('|')[0]
+					elif  node.split('|')[-1] != '':
+						bone = node.split('|')[-1]
+						newh = '|'
+				else:
+					bone = node.split('|')[1]
+					newh = node.split('|')[0]
 				#print node,str(k)+'/'+str(len(nodes)), pos, len(tmpresult[0]), len(tmpresult[1])
 				if bone == '$':
 					if pos == len(tmpresult[0]): 
@@ -63,7 +71,7 @@ for i in xrange(num_sentence):
 						tmpresult[j].append(newh)
 						pos += 1
 				else:
-					while tmpresult[0][pos] == '$':
+					while tmpresult[0][pos] != bone:
 						pos += 1
 						tmpresult[j].append('$')
 					tmpresult[j].append(newh)
@@ -77,7 +85,13 @@ for i in xrange(num_sentence):
 	except:
 		print traceback.print_exc()
 		print 'fail:', i
+		print index
 		print aligns[index]
+		print tmpresult
+		print len(tmpresult[0])
+		print len(tmpresult[j])
+		print bone, newh
+		print pos
 		exit()
 
 for i in xrange(num_systems):
