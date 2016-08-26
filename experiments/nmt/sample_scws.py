@@ -46,7 +46,9 @@ class BeamSearch(object):
         self.comp_next_probs = self.enc_dec.create_next_probs_computer()
         self.comp_next_states = self.enc_dec.create_next_states_computer()
 
-    def search(self, seq, n_samples, ignore_unk=False, minlen=1):
+    def search(self, seq, systems, n_samples, ignore_unk=False, minlen=1):
+        print seq, systems
+
         c = self.comp_repr(seq)[0]
         states = map(lambda x : x[None, :], self.comp_init_states(c))
         dim = states[0].shape[1]
@@ -144,13 +146,13 @@ def indices_to_words(i2w, seq):
         sen.append(i2w[seq[k]])
     return sen
 
-def sample(lm_model, seq, n_samples,
+def sample(lm_model, seq, systems, n_samples,
         sampler=None, beam_search=None,
         ignore_unk=False, normalize=False,
         alpha=1, verbose=False):
     if beam_search:
         sentences = []
-        trans, costs = beam_search.search(seq, n_samples,
+        trans, costs = beam_search.search(seq, systems, n_samples,
                 ignore_unk=ignore_unk, minlen=len(seq) / 2)
         if normalize:
             counts = [len(s) for s in trans]
@@ -240,6 +242,7 @@ def main():
     lm_model = enc_dec.create_lm_model()
     lm_model.load(args.model_path)
     indx_word = cPickle.load(open(state['word_indx'],'rb'))
+    indx_word_t = cPickle.load(open(state['word_indx_target'],'rb'))
 
     sampler = None
     beam_search = None
@@ -250,6 +253,7 @@ def main():
         sampler = enc_dec.create_sampler(many_samples=True)
 
     idict_src = cPickle.load(open(state['indx_word'],'r'))
+    idict_tgt = cPickle.load(open(state['indx_word_target'],'r'))
 
     if args.source and args.trans and args.system:
         # Actually only beam search is currently supported here
@@ -272,9 +276,12 @@ def main():
         for i, line in enumerate(fsrc):
             seqin = line.strip()
             seq, parsed_in = parse_input(state, indx_word, seqin, idx2word=idict_src)
+            systems = []
+            for i in xrange(state['num_systems']):
+                systems.append(parse_input(state, indx_word_t, fsystems[i].readline(), idx2word=idict_tgt))
             if args.verbose:
                 print "Parsed Input:", parsed_in
-            trans, costs, _ = sample(lm_model, seq, n_samples, sampler=sampler,
+            trans, costs, _ = sample(lm_model, seq, systems, n_samples, sampler=sampler,
                     beam_search=beam_search, ignore_unk=args.ignore_unk, normalize=args.normalize)
             best = numpy.argmin(costs)
             print >>ftrans, trans[best]
