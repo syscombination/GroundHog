@@ -363,6 +363,8 @@ def get_batch_iterator_syscombination(state):
             print 'prepare batch...'
             batch = create_padded_batch_syscombination(self.state, y, hypos, x=x, return_dict=True)
             self.next_offset = endid
+            if not batch:
+                return self.next()
             return batch
 
         def start(self, offset):
