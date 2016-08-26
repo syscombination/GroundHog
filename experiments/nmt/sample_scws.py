@@ -12,6 +12,7 @@ import numpy
 import experiments.nmt
 from experiments.nmt import\
     RNNEncoderDecoder,\
+    Syscombination_withsource,\
     prototype_state,\
     parse_input
 
@@ -35,6 +36,7 @@ class BeamSearch(object):
     def __init__(self, enc_dec):
         self.enc_dec = enc_dec
         state = self.enc_dec.state
+        self.state = state
         self.eos_id = state['null_sym_target']
         self.unk_id = state['unk_sym_target']
 
@@ -204,6 +206,8 @@ def parse_args():
             help="Ignore unknown words")
     parser.add_argument("--source",
             help="File of source sentences")
+    parser.add_argument("--system",
+            help="File of single system outputs", nargs="+")
     parser.add_argument("--trans",
             help="File to save translations in")
     parser.add_argument("--normalize",
@@ -221,6 +225,7 @@ def parse_args():
 
 def main():
     args = parse_args()
+    print args.system
 
     state = prototype_state()
     with open(args.state) as src:
@@ -230,7 +235,7 @@ def main():
     logging.basicConfig(level=getattr(logging, state['level']), format="%(asctime)s: %(name)s: %(levelname)s: %(message)s")
 
     rng = numpy.random.RandomState(state['seed'])
-    enc_dec = RNNEncoderDecoder(state, rng, skip_init=True)
+    enc_dec = Syscombination_withsource(state, rng, skip_init=True)
     enc_dec.build()
     lm_model = enc_dec.create_lm_model()
     lm_model.load(args.model_path)
@@ -246,15 +251,20 @@ def main():
 
     idict_src = cPickle.load(open(state['indx_word'],'r'))
 
-    if args.source and args.trans:
+    if args.source and args.trans and args.system:
         # Actually only beam search is currently supported here
         assert beam_search
         assert args.beam_size
+        assert len(args.system) == state['num_systems']
 
         fsrc = open(args.source, 'r')
         ftrans = open(args.trans, 'w')
+        fsystems = []
+        for i in xrange(state['num_systems']):
+            fsystems.append(open(args.system[i],'r'))
 
         start_time = time.time()
+
 
         n_samples = args.beam_size
         total_cost = 0.0
