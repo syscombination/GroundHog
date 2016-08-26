@@ -217,7 +217,6 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     my = state['seqlen']
     mh = state['seqlen']
 
-
     if state['trim_batches']:
         # Similar length for all source sequences
         if x != None:
@@ -321,9 +320,9 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     
     if return_dict:
         if x != None:
-            return {'x' : X, 'x_mask' : Xmask, 'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask}
+            return {'x' : X, 'x_mask' : Xmask, 'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask, 'oh':Ht}
         else:
-            return {'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask}
+            return {'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask, 'oh':Ht}
     else:
         if x != None:
             return X, Xmask, Y, Ymask, H, Hmask
