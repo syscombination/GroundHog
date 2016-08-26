@@ -47,7 +47,7 @@ for i in xrange(num_sentence):
 			nodes = aligns[index].split(' ')
 			for k in xrange(len(nodes)):
 				node = nodes[k]
-				if len(node.split('|')) == 3:
+				if len(node.split('|')) >= 3:
 					if node.split('|')[0] == '$':
 						newh = '$'
 						bone = '|'.join(node.split('|')[1:])
