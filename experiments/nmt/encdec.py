@@ -310,6 +310,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     Y[Y >= state['n_sym_target']] = state['unk_sym_target']
     H[H >= state['n_sym_target']] = state['unk_sym_target']
 
+    print 'generating H mask'
     Ht = H
     H = numpy.zeros((Ht.shape[0], Ht.shape[1], state['n_sym_target']), dtype='float32')
     for i in xrange(Ht.shape[0]):
@@ -1667,7 +1668,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
                     use_nce=self.state['use_nce'] if 'use_nce' in self.state else False,
                     **self.default_kwargs)
 
-    def build_decoder(self, c, y, h,
+    def build_decoder(self, c, y, hypo,
             c_mask=None,
             y_mask=None,
             h_mask=None,
@@ -1708,7 +1709,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
             sampling temperature
         """
 
-        hypo = h
+        #hypo = h
         # Check parameter consistency
         if mode == Decoder.EVALUATION:
             assert not given_init_states
@@ -1937,7 +1938,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         assert T.ndim == 0
         
 
-        decoder_args = dict(given_init_states=prev_hidden_states, T=T, c=c, h=h)
+        decoder_args = dict(given_init_states=prev_hidden_states, T=T, c=c, hypo=h)
 
         sample, log_prob = self.build_decoder(y=prev_word, step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[:2]
         hidden_states = self.build_decoder(y=sample, step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[2:]
@@ -1967,11 +1968,11 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         return (outputs[0], outputs[1]), updates
 
     def build_next_probs_predictor(self, c, ha, step_num, y, init_states):
-        return self.build_decoder(c, y, h=ha, mode=Decoder.BEAM_SEARCH,
+        return self.build_decoder(c, y, hypo=ha, mode=Decoder.BEAM_SEARCH,
                 given_init_states=init_states, step_num=step_num)
 
     def build_next_states_computer(self, c, ha, step_num, y, init_states):
-        return self.build_decoder(c, y, h=ha, mode=Decoder.SAMPLING,
+        return self.build_decoder(c, y, hypo=ha, mode=Decoder.SAMPLING,
                 given_init_states=init_states, step_num=step_num)[2:]
 
 class Syscombination_withsource(object):
@@ -2072,7 +2073,7 @@ class Syscombination_withsource(object):
         logger.debug("Build log-likelihood computation graph")
         self.predictions, self.alignment = self.decoder.build_decoder(
                 c=Concatenate(axis=2)(*training_c_components), c_mask=self.x_mask,
-                y=self.y, y_mask=self.y_mask,h=self.h,h_mask=self.h_mask,b=self.b)
+                y=self.y, y_mask=self.y_mask,hypo=self.h,h_mask=self.h_mask,b=self.b)
 
         # Annotation for sampling
         sampling_c_components = []

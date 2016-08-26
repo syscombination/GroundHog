@@ -310,7 +310,7 @@ class MainLoop(object):
                     self.channel.save()
                 self.save_time = time.time()
             if self.state['save_by_iter'] and self.step % self.state['saveiter']:
-                save_DIY()
+                self.save_DIY()
             st = time.time()
             try:
                 rvals = self.algo()
