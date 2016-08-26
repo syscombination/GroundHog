@@ -169,7 +169,8 @@ def create_dictionary():
         vocab_count = counter.most_common()
     vocab = {'UNK': 1, '<s>': 0, '</s>': 0}
     for i, (word, count) in enumerate(vocab_count):
-        vocab[word] = i + 2
+        if i+3 < args.vocab:
+            vocab[word] = i + 2
     print i, args.vocab
     if i+3 >= args.vocab: 
         vocab['$'] = i+2
