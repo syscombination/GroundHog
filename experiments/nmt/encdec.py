@@ -1966,7 +1966,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         return (outputs[0], outputs[1]), updates
 
     def build_next_probs_predictor(self, c, ha, step_num, y, init_states):
-        return self.build_decoder(c, y, h=ha mode=Decoder.BEAM_SEARCH,
+        return self.build_decoder(c, y, h=ha, mode=Decoder.BEAM_SEARCH,
                 given_init_states=init_states, step_num=step_num)
 
     def build_next_states_computer(self, c, ha, step_num, y, init_states):
