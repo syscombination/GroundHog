@@ -61,13 +61,15 @@ class BeamSearch(object):
         trans = [[]]
         costs = [0.0]
 
-        for k in range(3 * len(seq)):
+        for k in xrange(len(systems[0])):
             if n_samples == 0:
                 break
 
             beam_size = len(trans)
             h0 = numpy.zeros((beam_size, self.state['n_sym_target']), dtype="float32")
-
+            for i in xrange(self.state['num_systems']):
+                for j in xrange(beam_size):
+                    h0[j][systems[i][k]] += 1.
             # Compute probabilities of the next words for
             # all the elements of the beam.
             
