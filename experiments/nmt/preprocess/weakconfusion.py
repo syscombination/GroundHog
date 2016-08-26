@@ -48,18 +48,18 @@ for i in xrange(num_sentence):
 			for k in xrange(len(nodes)):
 				node = nodes[k]
 				if len(node.split('|')) == 3:
-					if node.split('|')[0] != '':
-						bone = '|'
-						newh = node.split('|')[0]
-					elif  node.split('|')[-1] != '':
-						bone = node.split('|')[-1]
-						newh = '|'
-					elif node.split('|')[0] == '$':
+					if node.split('|')[0] == '$':
 						newh = '$'
 						bone = node.split('|')[1]+'|'+node.split('|')[2]
 					elif  node.split('|')[-1] == '$':
 						newh = node.split('|')[-2]+'|'+node.split('|')[-1]
 						bone = '$'
+					elif node.split('|')[0] != '':
+						bone = '|'
+						newh = node.split('|')[0]
+					elif  node.split('|')[-1] != '':
+						bone = node.split('|')[-1]
+						newh = '|'		
 				else:
 					bone = node.split('|')[1]
 					newh = node.split('|')[0]
@@ -97,6 +97,7 @@ for i in xrange(num_sentence):
 		print len(tmpresult[0])
 		print len(tmpresult[j])
 		print bone, newh
+		print node.split('|')
 		print pos
 		exit()
 
