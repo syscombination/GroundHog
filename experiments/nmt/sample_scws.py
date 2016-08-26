@@ -65,15 +65,18 @@ class BeamSearch(object):
             if n_samples == 0:
                 break
 
+            beam_size = len(trans)
             h0 = numpy.ones((beam_size, self.state['n_sym_target']), dtype="float32")
 
             # Compute probabilities of the next words for
             # all the elements of the beam.
-            beam_size = len(trans)
+            
             last_words = (numpy.array(map(lambda t : t[-1], trans))
                     if k > 0
                     else numpy.zeros(beam_size, dtype="int64"))
             log_probs = numpy.log(self.comp_next_probs(c, h, k, last_words, *states)[0])
+            print last_words
+            print log_probs
 
             # Adjust log probs according to search restrictions
             if ignore_unk:
