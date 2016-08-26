@@ -8,4 +8,4 @@ for i in vocab:
 		del vocab[i]
 		break
 vocab['$'] = string.atoi(sys.argv[3])-1
-cPickle.dump(vocab, sys.argv[2], protocol=cPickle.HIGHEST_PROTOCOL)
+cPickle.dump(vocab, open(sys.argv[2], 'wb'), protocol=cPickle.HIGHEST_PROTOCOL)
