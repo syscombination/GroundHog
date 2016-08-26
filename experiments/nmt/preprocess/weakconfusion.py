@@ -50,9 +50,9 @@ for i in xrange(num_sentence):
 				if len(node.split('|')) == 3:
 					if node.split('|')[0] == '$':
 						newh = '$'
-						bone = node.split('|')[1]+'|'+node.split('|')[2]
+						bone = '|'.join(node.split('|')[1:])
 					elif  node.split('|')[-1] == '$':
-						newh = node.split('|')[-2]+'|'+node.split('|')[-1]
+						newh = '|'.join(node.split('|')[:-1])
 						bone = '$'
 					elif node.split('|')[0] != '':
 						bone = '|'
