@@ -1046,6 +1046,7 @@ class SoftmaxLayer(CostLayer):
         self.out = emb_val
         print 'inside softmax:', emb_val.ndim
         if h:
+            print 'h!!!!!'
             if h.ndim == 3:
                 h = h.reshape([h.shape[0]*h.shape[1], emb_val.shape[1]])
                 #h = h[:emb_val.shape[0],emb_val.shape[1]]
