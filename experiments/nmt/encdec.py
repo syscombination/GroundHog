@@ -1965,11 +1965,11 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
                 name="{}_sampler_scan".format(self.prefix))
         return (outputs[0], outputs[1]), updates
 
-    def build_next_probs_predictor(self, c, step_num, y, init_states):
+    def build_next_probs_predictor(self, c, ha, step_num, y, init_states):
         return self.build_decoder(c, y, mode=Decoder.BEAM_SEARCH,
                 given_init_states=init_states, step_num=step_num)
 
-    def build_next_states_computer(self, c, step_num, y, init_states):
+    def build_next_states_computer(self, c, ha, step_num, y, init_states):
         return self.build_decoder(c, y, mode=Decoder.SAMPLING,
                 given_init_states=init_states, step_num=step_num)[2:]
 
@@ -2192,18 +2192,18 @@ class Syscombination_withsource(object):
     def create_next_probs_computer(self):
         if not hasattr(self, 'next_probs_fn'):
             self.next_probs_fn = theano.function(
-                    inputs=[self.c, self.step_num, self.gen_y] + self.current_states,
+                    inputs=[self.c, self.ha, self.step_num, self.gen_y] + self.current_states,
                     outputs=[self.decoder.build_next_probs_predictor(
-                        self.c, self.step_num, self.gen_y, self.current_states)],
+                        self.c, self.ha,self.step_num, self.gen_y, self.current_states)],
                     name="next_probs_fn")
         return self.next_probs_fn
 
     def create_next_states_computer(self):
         if not hasattr(self, 'next_states_fn'):
             self.next_states_fn = theano.function(
-                    inputs=[self.c, self.step_num, self.gen_y] + self.current_states,
+                    inputs=[self.c, self.ha, self.step_num, self.gen_y] + self.current_states,
                     outputs=self.decoder.build_next_states_computer(
-                        self.c, self.step_num, self.gen_y, self.current_states),
+                        self.c, self.ha,self.step_num, self.gen_y, self.current_states),
                     name="next_states_fn")
         return self.next_states_fn
 

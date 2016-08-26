@@ -41,7 +41,8 @@ class RandomSamplePrinter(object):
                     break
 
                 x, y, h, oh= xs[:, seq_idx], ys[:, seq_idx], hs[:, seq_idx, :], ohs[:, seq_idx, :]
-                print oh
+                #print oh
+
                 x_words = cut_eol(map(lambda w_idx : self.model.word_indxs_src[w_idx], x))
                 y_words = cut_eol(map(lambda w_idx : self.model.word_indxs[w_idx], y))
                 #h_words = map(lambda w_idx : self.model.word_indxs[w_idx], h)
@@ -49,6 +50,10 @@ class RandomSamplePrinter(object):
                     continue
 
                 print "Input: {}".format(" ".join(x_words))
+                for i in xrange(self.state['num_systems']):
+                    oh_tmp = oh[:,i]
+                    oh_words = cut_eol(map(lambda w_idx : self.model.word_indxs[w_idx], oh_tmp))
+                    print "System "+str(i)+':'," ".join(oh_words)
                 print "Target: {}".format(" ".join(y_words))
                 #print h_words
                 self.model.get_samples(self.state['seqlen'] + 1, self.state['n_samples'], x[:len(x_words)],h[:,:])
