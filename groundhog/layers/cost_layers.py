@@ -1056,7 +1056,8 @@ class SoftmaxLayer(CostLayer):
             
             #epsilon = TT.min(emb_val,axis=0)
             emb_val = emb_val*h
-            emb_val = emb_val.reshape([emb_val.shape[0]*emb_val.shape[1], emb_val.shape[2]])
+            if h.ndim == 3:
+                emb_val = emb_val.reshape([emb_val.shape[0]*emb_val.shape[1], emb_val.shape[2]])
             #emb_val = TT.clip(emb_val,epsilon,1.)
             #*1e-6
             emb_val = emb_val+epsilon
