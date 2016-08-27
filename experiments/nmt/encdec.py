@@ -312,7 +312,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     Y[Y >= state['n_sym_target']] = state['unk_sym_target']
     H[H >= state['n_sym_target']] = state['unk_sym_target']
 
-    print 'generating H mask'
+    #print 'generating H mask'
     a = time.time()
     
     Ht = H
@@ -324,8 +324,8 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
                 H[i][j][Ht[i][j][k]] += 1.  
 
     b = time.time()
-    print 'batch prepare time', c-a,'sec'
-    print 'generate time:',b-a,'sec'
+    print 'batch prepare time', b-c,'sec'
+    #print 'generate time:',b-a,'sec'
 
     
     if return_dict:

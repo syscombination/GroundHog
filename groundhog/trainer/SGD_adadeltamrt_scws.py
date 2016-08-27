@@ -180,9 +180,10 @@ class SGD(object):
         sampleN = self.state['sampleN']
 
         myL = int(1.5*len(batch['y']))
-
+        t1 = time.time()
         samples, probs = self.sampler(sampleN,myL,1,batch['x'].squeeze(),batch['h'].squeeze())
-
+        t2 = time.time()
+        print 'sample time:', t2-t1, 'sec'
         y,b = getUnique(samples, batch['y'], self.state)
 
         b = numpy.array(b,dtype='float32')
@@ -198,7 +199,8 @@ class SGD(object):
 #        print b
 #        print Y
 #        print YM
-
+        t3 = time.time()
+        print 'bleu time:', t3-t2, 'sec'
         diffN = len(b)
         #print batch['x']
         #print batch['h'].shape
@@ -215,6 +217,9 @@ class SGD(object):
         batch['y'] = Y
         batch['y_mask'] = YM
         batch['b'] = b
+
+        t4 = time.time()
+        print 'prepare time:', t4-t3, 'sec'
 
 #        if not hasattr(self,'Last'):
 #            self.Last = True
