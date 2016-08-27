@@ -210,8 +210,8 @@ class SGD(object):
         X = numpy.zeros((batch['x'].shape[0], diffN), dtype='float32')
         batch['x_mask'] = batch['x_mask']+X
         
-        H = numpy.zeros((batch['h'].shape[0], diffN,batch['h'].shape[1]), dtype='float32')
-        batch['h'] = batch['h']+H
+        H = numpy.zeros((diffN,batch['h'].shape[0], batch['h'].shape[1]), dtype='float32')
+        batch['h'] = (batch['h'].dimshuffle(1,0,2)+H).dimshuffle(1,0,2)
         H = numpy.zeros((batch['h_mask'].shape[0], diffN), dtype='float32')
         batch['h_mask'] = batch['h_mask']+H
         print 'output x shape:',batch['x'].shape
