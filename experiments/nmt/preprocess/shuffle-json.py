@@ -11,7 +11,8 @@ print length
 assert(len(target)) == length
 assert(len(hypo)) == length
 
-idx = random.shuffle(range(length))
+idx = range(length)
+random.shuffle(idx)
 newsource = []
 newtarget = []
 newhypo = []
