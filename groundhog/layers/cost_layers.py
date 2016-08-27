@@ -1051,7 +1051,8 @@ class SoftmaxLayer(CostLayer):
                 print 'h reshape'
                 h = h.reshape([h.shape[0]*h.shape[1], emb_val.shape[1]])
                 #h = h[:emb_val.shape[0],emb_val.shape[1]]
-            epsilon = 1e-6
+            epsilon = 1e-10
+            emb_val = emb_val+epsilon
             #epsilon = TT.min(emb_val,axis=0)
             emb_val = emb_val*h
             #emb_val = TT.clip(emb_val,epsilon,1.)
