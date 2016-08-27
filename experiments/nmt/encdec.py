@@ -217,6 +217,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     mx = state['seqlen']
     my = state['seqlen']
     mh = state['seqlen']
+    c = time.time()
 
     if state['trim_batches']:
         # Similar length for all source sequences
@@ -323,6 +324,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
                 H[i][j][Ht[i][j][k]] += 1.  
 
     b = time.time()
+    print 'batch prepare time', c-a,'sec'
     print 'generate time:',b-a,'sec'
 
     
