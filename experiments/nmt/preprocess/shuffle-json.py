@@ -18,6 +18,8 @@ newtarget = []
 newhypo = []
 
 for i in xrange(len(idx)):
+	if i % 10000 == 0:
+		print i
 	index = idx[i]
 	newsource.append(source[index])
 	newtarget.append(target[index])
