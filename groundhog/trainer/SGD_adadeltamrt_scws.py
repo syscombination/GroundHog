@@ -199,12 +199,10 @@ class SGD(object):
 #        print b
 #        print Y
 #        print YM
-        t3 = time.time()
-        print 'bleu time:', t3-t2, 'sec'
+        #t3 = time.time()
+        #print 'bleu time:', t3-t2, 'sec'
         diffN = len(b)
-        print 'input x shape:',batch['x'].shape
-        print 'input y shape:',batch['y'].shape
-        print 'input h shape:',batch['h'].shape
+
         X = numpy.zeros((batch['x'].shape[0], diffN), dtype='int64')
         batch['x'] = batch['x']+X
         X = numpy.zeros((batch['x'].shape[0], diffN), dtype='float32')
@@ -217,15 +215,13 @@ class SGD(object):
         H = numpy.zeros((batch['h_mask'].shape[0], diffN), dtype='float32')
         batch['h_mask'] = batch['h_mask']+H
         '''
-        print 'output x shape:',batch['x'].shape
-        print 'output y shape:',batch['y'].shape
-        print 'output h shape:',batch['h'].shape
+
         batch['y'] = Y
         batch['y_mask'] = YM
         batch['b'] = b
 
-        t4 = time.time()
-        print 'prepare time:', t4-t3, 'sec'
+        #t4 = time.time()
+        #print 'prepare time:', t4-t3, 'sec'
 
 #        if not hasattr(self,'Last'):
 #            self.Last = True
