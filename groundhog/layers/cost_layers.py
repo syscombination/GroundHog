@@ -1057,8 +1057,8 @@ class SoftmaxLayer(CostLayer):
             #emb_val = TT.clip(emb_val,epsilon,1.)
             #*1e-6
             #emb_val = emb_val+epsilon
-            #normalizer = emb_val.sum(axis=0)
-            #emb_val = emb_val/normalizer
+            normalizer = emb_val.sum(axis=1).reshape((emb_val.shape[0],))
+            emb_val = emb_val/normalizer
         self.out = emb_val
         self.state_below = state_below
         self.model_output = emb_val
