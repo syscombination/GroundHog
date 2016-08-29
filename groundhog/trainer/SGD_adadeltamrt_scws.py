@@ -13,6 +13,7 @@ import math
 import numpy
 import time
 import logging
+import copy
 
 import theano
 import theano.tensor as TT
@@ -299,10 +300,11 @@ def getUnique(samples, y, state, empty=-1):
         sen = cutSen(sen.tolist(), state)
         words = [str(i) for i in sen]
         #print words
+        
+        tmp = ' '.join(words)
         if empty >= 0:
             while str(empty) in words:
                 words.remove(str(empty))
-        tmp = ' '.join(words)
         if tmp in dic:
             continue
         else:

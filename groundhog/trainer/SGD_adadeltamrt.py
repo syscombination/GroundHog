@@ -13,6 +13,7 @@ import math
 import numpy
 import time
 import logging
+import copy
 
 import theano
 import theano.tensor as TT
