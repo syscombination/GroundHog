@@ -317,7 +317,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     
     Ht = H
     H = numpy.zeros((Ht.shape[0], Ht.shape[1], state['n_sym_target']), dtype='float32')
-    print 'shape:', Ht.shape[0], Ht.shape[1], state['n_sym_target']
+    #print 'shape:', Ht.shape[0], Ht.shape[1], state['n_sym_target']
     for i in xrange(Ht.shape[0]):
         for j in xrange(Ht.shape[1]):
             for k in xrange(state['num_systems']):
@@ -354,7 +354,7 @@ def get_batch_iterator_syscombination(state):
         def next(self, peek=False):
             startid = self.next_offset
             endid = self.next_offset+self.state['bs']
-            print 'start:',startid,'end:',endid
+            #print 'start:',startid,'end:',endid
             if endid >= self.num_sentences:
                 endid -= self.num_sentences
                 x = None
@@ -369,7 +369,7 @@ def get_batch_iterator_syscombination(state):
                 y = numpy.asarray([self.target[startid:endid]])
                 hypos = numpy.asarray([self.hypos[startid:endid]])
             
-            print 'prepare batch...'
+            #print 'prepare batch...'
             batch = create_padded_batch_syscombination(self.state, y, hypos, x=x, return_dict=True)
             self.next_offset = endid
             if not batch:
