@@ -2476,7 +2476,9 @@ class Decoder_syscombination(EncoderDecoderBase):
         #   (n_samples, dim)
         init_states = given_init_states
         if not init_states:
-            init_states = TT.zeros((y.shape[1],self.state['dim']))
+            init_states = []
+            for level in range(self.num_levels):
+                init_states.append(TT.zeros((y.shape[1],self.state['dim'])))
 
         # Hidden layers' states.
         # Shapes if mode == evaluation:
@@ -2484,9 +2486,6 @@ class Decoder_syscombination(EncoderDecoderBase):
         # Shapes if mode != evaluation:
         #  (n_samples, dim)
         hidden_layers = []
-        contexts = []
-        # Default value for alignment must be smth computable
-        alignment = TT.zeros((1,))
         for level in range(self.num_levels):
             if level > 0:
                 input_signals[level] += self.inputers[level](hidden_layers[level - 1])
