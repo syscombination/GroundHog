@@ -307,6 +307,7 @@ def prototype_syscombination_state():
     state['indx_word'] = ''
     state['word_indx'] = ''
     state['num_systems'] = 2
+    state['search'] = False
     state['empty_sym_source'] = 29999
     state['empty_sym_target'] = 29999
     state['null_sym_source'] = 30000
@@ -321,6 +322,7 @@ def prototype_syscombination_state():
 def prototype_syscombination_withsource_state():
     state = prototype_syscombination_state()
 
+    state['search'] = True
     state['num_systems'] = 1
     state['single_systems'] = [] # must define the path to single system outputs
     state['dec_rec_layer'] = 'RecurrentLayerWithSearch'

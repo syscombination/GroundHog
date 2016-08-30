@@ -1051,7 +1051,7 @@ class SoftmaxLayer(CostLayer):
                 print 'h reshape'
                 #h = h.reshape([h.shape[0]*h.shape[1], emb_val.shape[1]])
                 emb_val = emb_val.reshape([h.shape[0],emb_val.shape[0]/h.shape[0],emb_val.shape[1]])
-                # for mrt
+                # for mrt only
                 h = h.reshape([h.shape[0],h.shape[2]]).dimshuffle(0,'x',1)#TT.switch(TT.eq(h.shape[1],1), h.reshape([h.shape[0],h.shape[2]]).dimshuffle(0,'x',1), h)
                 #h = h[:emb_val.shape[0],emb_val.shape[1]]
             epsilon = 1e-10
@@ -1062,7 +1062,9 @@ class SoftmaxLayer(CostLayer):
                 emb_val = emb_val.reshape([emb_val.shape[0]*emb_val.shape[1], emb_val.shape[2]])
             #emb_val = TT.clip(emb_val,epsilon,1.)
             #*1e-6
+            #for non-mrt only
             emb_val = emb_val+epsilon
+
             normalizer = emb_val.sum(axis=1).dimshuffle(0,'x')
             emb_val = emb_val/normalizer
         self.out = emb_val
