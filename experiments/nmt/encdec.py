@@ -2526,7 +2526,7 @@ class Decoder_syscombination(EncoderDecoderBase):
         #   (n_samples, dim_r)
         # ... where dim_r depends on 'deep_out' option.
         if y.ndim == 2:
-            readout = ZeroLayer()(TT.zeros((y.shape[0],y.shape[1],self.state['dim'])))#self.repr_readout(contexts[0])
+            readout = ZeroLayer()(TT.zeros((y.shape[0]*y.shape[1],self.state['dim'])))#self.repr_readout(contexts[0])
         else:
             readout = ZeroLayer()(TT.zeros((y.shape[0],self.state['dim'])))
         for level in range(self.num_levels):
