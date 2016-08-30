@@ -2542,7 +2542,7 @@ class Decoder_syscombination(EncoderDecoderBase):
                 read_from.out = read_from_var
             else:
                 read_from = read_from_var
-            readout += self.hidden_readouts[level](read_from)
+            readout += self.hidden_readouts[level](read_from).out
         if self.state['bigram']:
             if mode != Decoder.EVALUATION:
                 check_first_word = (y > 0
