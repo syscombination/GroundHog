@@ -2433,8 +2433,8 @@ class Decoder_syscombination(EncoderDecoderBase):
             sampling temperature
         """
 
-        assert self.states['dec_rec_layer'] == 'RecurrentLayer'
-        assert not self.states['search']
+        assert self.state['dec_rec_layer'] == 'RecurrentLayer'
+        assert not self.state['search']
         #hypo = h
         # Check parameter consistency
         if mode == Decoder.EVALUATION:
