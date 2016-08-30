@@ -2478,7 +2478,7 @@ class Decoder_syscombination(EncoderDecoderBase):
         if not init_states:
             init_states = []
             for level in range(self.num_levels):
-                init_states.append(ZeroLayer(TT.zeros((y.shape[1],self.state['dim']))))
+                init_states.append(ZeroLayer()(TT.zeros((y.shape[1],self.state['dim']))))
 
         # Hidden layers' states.
         # Shapes if mode == evaluation:
