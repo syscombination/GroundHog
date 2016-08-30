@@ -2522,7 +2522,7 @@ class Decoder_syscombination(EncoderDecoderBase):
         # Shape if mode != evaluation
         #   (n_samples, dim_r)
         # ... where dim_r depends on 'deep_out' option.
-        readout = TT.zeros((y.shape[1],self.states['dim']))#self.repr_readout(contexts[0])
+        readout = TT.zeros((y.shape[1],self.state['dim']))#self.repr_readout(contexts[0])
         for level in range(self.num_levels):
             if mode != Decoder.EVALUATION:
                 read_from = init_states[level]
