@@ -36,7 +36,7 @@ class RandomSamplePrinter(object):
         while sample_idx < self.state['n_examples']:
             batch = self.train_iter.next(peek=True)
             ys, hs, ohs = batch['y'], batch['h'], batch['oh']
-            for seq_idx in range(xs.shape[1]):
+            for seq_idx in range(ys.shape[1]):
                 if sample_idx == self.state['n_examples']:
                     break
 
@@ -48,7 +48,7 @@ class RandomSamplePrinter(object):
                 if len(x_words) == 0:
                     continue
 
-                print "Input: {}".format(" ".join(x_words))
+                #print "Input: {}".format(" ".join(x_words))
                 for i in xrange(self.state['num_systems']):
                     oh_tmp = oh[:,i]
                     oh_words = cut_eol(map(lambda w_idx : self.model.word_indxs[w_idx], oh_tmp))
