@@ -85,7 +85,7 @@ def main():
     logger.debug("State:\n{}".format(pprint.pformat(state)))
 
     rng = numpy.random.RandomState(state['seed'])
-    enc_dec = Syscombination_withsource(state, rng, args.skip_init)
+    enc_dec = Syscombination(state, rng, args.skip_init)
     enc_dec.build()
     if state['mrt']:
         train_sampler = enc_dec.create_sampler(many_samples=True)
