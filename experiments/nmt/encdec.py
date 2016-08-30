@@ -2631,7 +2631,7 @@ class Decoder_syscombination(EncoderDecoderBase):
     def build_sampler(self, n_samples, n_steps, T, h):
         states = [TT.zeros(shape=(n_samples,), dtype='int64'),
                 TT.zeros(shape=(n_samples,), dtype='float32')]
-        states += [ReplicateLayer(n_samples)(TT.zeros(self.states['dim']),).out for init in self.initializers]
+        states += [ReplicateLayer(n_samples)(TT.zeros((self.states['dim']))).out for i in range(self.num_levels)]
 
     
         # Pad with final states
