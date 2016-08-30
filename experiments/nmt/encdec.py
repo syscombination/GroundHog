@@ -2480,6 +2480,7 @@ class Decoder_syscombination(EncoderDecoderBase):
             for level in range(self.num_levels):
                 init_states.append(ZeroLayer()(TT.zeros((y.shape[1],self.state['dim']))))
 
+        #print 1
         # Hidden layers' states.
         # Shapes if mode == evaluation:
         #  (seq_len, batch_size, dim)
@@ -2508,14 +2509,14 @@ class Decoder_syscombination(EncoderDecoderBase):
                     **add_kwargs)
             h = result
             hidden_layers.append(h)
-
+        #print 2
         # In hidden_layers we do no have the initial state, but we need it.
         # Instead of it we have the last one, which we do not need.
         # So what we do is discard the last one and prepend the initial one.
         if mode == Decoder.EVALUATION:
             for level in range(self.num_levels):
                 hidden_layers[level].out = TT.concatenate([
-                    TT.shape_padleft(init_states[level]),
+                    TT.shape_padleft(init_states[level].out),
                         hidden_layers[level].out])[:-1]
 
         # The output representation to be fed in softmax.
