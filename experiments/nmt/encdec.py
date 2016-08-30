@@ -2274,7 +2274,7 @@ class Decoder_syscombination(EncoderDecoderBase):
         self._create_transition_layers()
         self._create_inter_level_layers()
         #self._create_initialization_layers()
-        self._create_decoding_layers()
+        #self._create_decoding_layers()
         self._create_readout_layers()
 
         if self.state['search']:
