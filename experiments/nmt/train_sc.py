@@ -45,7 +45,7 @@ class RandomSamplePrinter(object):
 
                 y_words = cut_eol(map(lambda w_idx : self.model.word_indxs[w_idx], y))
                 #h_words = map(lambda w_idx : self.model.word_indxs[w_idx], h)
-                if len(h_words) == 0:
+                if len(y_words) == 0:
                     continue
 
                 #print "Input: {}".format(" ".join(x_words))
