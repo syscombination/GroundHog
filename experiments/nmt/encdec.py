@@ -2522,7 +2522,7 @@ class Decoder_syscombination(EncoderDecoderBase):
         # Shape if mode != evaluation
         #   (n_samples, dim_r)
         # ... where dim_r depends on 'deep_out' option.
-        readout = ZeroLayer(TT.zeros((y.shape[1],self.state['dim'])))#self.repr_readout(contexts[0])
+        readout = TT.zeros((y.shape[1],self.state['dim']))#self.repr_readout(contexts[0])
         for level in range(self.num_levels):
             if mode != Decoder.EVALUATION:
                 read_from = init_states[level]
@@ -2557,7 +2557,7 @@ class Decoder_syscombination(EncoderDecoderBase):
                     # reshape it back.
                     readout += Shift()(self.prev_word_readout(approx_embeddings).reshape(
                         (y.shape[0], y.shape[1], self.state['dim']))).reshape(
-                                readout.out.shape)
+                                readout.shape)
         for fun in self.output_nonlinearities:
             readout = fun(readout)
 
