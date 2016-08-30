@@ -2345,13 +2345,14 @@ class Decoder_syscombination(EncoderDecoderBase):
                 n_hids=self.state['dim'],
                 activation='lambda x: x',
             ))
-
+        '''
         self.repr_readout = MultiLayer(
                 self.rng,
                 n_in=self.state['c_dim'],
                 learn_bias=False,
                 name='{}_repr_readout'.format(self.prefix),
                 **readout_kwargs)
+        '''
 
         # Attention - this is the only readout layer
         # with trainable bias. Should be careful with that.
