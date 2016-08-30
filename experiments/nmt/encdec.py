@@ -2486,6 +2486,8 @@ class Decoder_syscombination(EncoderDecoderBase):
         # Shapes if mode != evaluation:
         #  (n_samples, dim)
         hidden_layers = []
+        # Default value for alignment must be smth computable
+        alignment = TT.zeros((1,))
         for level in range(self.num_levels):
             if level > 0:
                 input_signals[level] += self.inputers[level](hidden_layers[level - 1])
