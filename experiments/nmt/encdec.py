@@ -2476,7 +2476,7 @@ class Decoder_syscombination(EncoderDecoderBase):
         #   (n_samples, dim)
         init_states = given_init_states
         if not init_states:
-            init_states = TT.zeros((y.shape[1],self.states['dim']))
+            init_states = TT.zeros((y.shape[1],self.state['dim']))
 
         # Hidden layers' states.
         # Shapes if mode == evaluation:
