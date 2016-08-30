@@ -2525,9 +2525,9 @@ class Decoder_syscombination(EncoderDecoderBase):
         #   (n_samples, dim_r)
         # ... where dim_r depends on 'deep_out' option.
         if y.ndim == 2:
-            readout = TT.zeros((y.shape[1],self.state['dim']))#self.repr_readout(contexts[0])
+            readout = ZeroLayer()(TT.zeros((y.shape[1],self.state['dim'])))#self.repr_readout(contexts[0])
         else:
-            readout = TT.zeros((y.shape[0],self.state['dim']))
+            readout = ZeroLayer()(TT.zeros((y.shape[0],self.state['dim'])))
         for level in range(self.num_levels):
             if mode != Decoder.EVALUATION:
                 read_from = init_states[level]
@@ -2542,7 +2542,7 @@ class Decoder_syscombination(EncoderDecoderBase):
                 read_from.out = read_from_var
             else:
                 read_from = read_from_var
-            readout += self.hidden_readouts[level](read_from).out
+            readout += self.hidden_readouts[level](read_from)
         if self.state['bigram']:
             if mode != Decoder.EVALUATION:
                 check_first_word = (y > 0
