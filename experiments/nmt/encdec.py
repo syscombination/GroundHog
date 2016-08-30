@@ -2514,7 +2514,7 @@ class Decoder_syscombination(EncoderDecoderBase):
             for level in range(self.num_levels):
                 hidden_layers[level].out = TT.concatenate([
                     TT.shape_padleft(init_states[level].out),
-                        hidden_layers[level].out])[:-1]
+                        hidden_layers[level]])[:-1]
 
         # The output representation to be fed in softmax.
         # Shape if mode == evaluation
