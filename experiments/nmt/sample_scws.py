@@ -47,7 +47,7 @@ class BeamSearch(object):
         self.comp_next_states = self.enc_dec.create_next_states_computer()
 
     def search(self, seq, systems, n_samples, ignore_unk=False, minlen=1):
-        print seq, systems
+        #print seq, systems
 
         c = self.comp_repr(seq)[0]
         states = map(lambda x : x[None, :], self.comp_init_states(c))
@@ -77,12 +77,12 @@ class BeamSearch(object):
                     if k > 0
                     else numpy.zeros(beam_size, dtype="int64"))
             probs = self.comp_next_probs(c, h0, k, last_words, *states)[0]
-            print probs
+            #print probs
             #print probs.sum(axis=0)
             #print probs/probs.sum(axis=0).reshape((probs.))
             log_probs = numpy.log(probs)
-            print last_words
-            print log_probs
+            #print last_words
+            #print log_probs
 
             # Adjust log probs according to search restrictions
             if ignore_unk:
@@ -118,7 +118,7 @@ class BeamSearch(object):
                     new_states[level][i] = states[level][orig_idx]
                 inputs[i] = next_word
             new_states = self.comp_next_states(c, h0, k, inputs, *new_states)
-            print new_trans
+            #print new_trans
 
             # Filter the sequences that end with end-of-sequence character
             trans = []
