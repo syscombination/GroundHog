@@ -323,8 +323,6 @@ def prototype_syscombination_withsource_state():
     state = prototype_syscombination_state()
 
     state['search'] = True
-    state['num_systems'] = 1
-    state['single_systems'] = [] # must define the path to single system outputs
     state['dec_rec_layer'] = 'RecurrentLayerWithSearch'
     state['prefix'] = 'syscombinationwithsource_'
 

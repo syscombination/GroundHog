@@ -1,5 +1,5 @@
 from encdec import RNNEncoderDecoder
-#from encdec import Syscombination
+from encdec import Syscombination
 from encdec import Syscombination_withsource
 from encdec import get_batch_iterator
 from encdec import get_batch_iterator_syscombination
