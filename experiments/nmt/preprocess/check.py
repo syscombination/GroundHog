@@ -7,7 +7,7 @@ alignfile='meteor.alignment'
 
 aligns = open(alignfile, 'r').read().split('\n')[:-1]
 
-grfile = 'nist.search30k.tr_delfail'
+grfile = sys.argv[1]
 grs = open(grfile, 'r').read().split('\n')[:-1]
 
 print len(aligns)
