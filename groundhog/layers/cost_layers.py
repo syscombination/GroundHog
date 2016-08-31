@@ -1069,7 +1069,7 @@ class SoftmaxLayer(CostLayer):
             #*1e-6
             exepsilon = 1e-100
             #for non-mrt only
-            emb_val = emb_val+epsilon
+            #emb_val = emb_val+epsilon
 
             normalizer = emb_val.sum(axis=1).dimshuffle(0,'x')
             emb_val = emb_val/normalizer

@@ -289,7 +289,7 @@ def getUnique(samples, y, state, empty=-1):
             words.remove(str(empty))
 
     ref,lens = getRefDict(words)
-    dic[' '.join(words)]=1.0
+    #dic[' '.join(words)]=1.0
     
     n = len(samples[0])
     #print '-----bleu testzone----'
