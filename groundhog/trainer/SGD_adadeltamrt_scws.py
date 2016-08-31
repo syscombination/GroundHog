@@ -196,9 +196,9 @@ class SGD(object):
 #        print p
 #        print b.mean()
 #        print (b*p).mean()
-        print y,b 
+        #print y,b 
         Y,YM, Yl = getYM(y, self.state, empty=self.state['empty_sym_target'])
-        print Y, YM, Yl
+        #print Y, YM, Yl
 #        print b
 #        print Y
 #        print YM
