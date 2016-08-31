@@ -293,7 +293,8 @@ def getUnique(samples, y,  state, H = None,empty=-1):
     ref,lens = getRefDict(words)
     #dic[' '.join(words)]=1.0
     print H.shape
-    for i in range(len(H[0])):
+    for i in range(len(H[0,0])):
+        print ' '.join(H[:,0,i])
         dic[' '.join(H[:,0,i])]
     
     n = len(samples[0])
