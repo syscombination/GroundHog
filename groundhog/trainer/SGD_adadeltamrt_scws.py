@@ -185,7 +185,7 @@ class SGD(object):
         samples, probs = self.sampler(sampleN,myL,1,batch['x'].squeeze(),batch['h'].squeeze())
         t2 = time.time()
         print 'sample time:', t2-t1, 'sec'
-        y,b = getUnique(samples, batch['y'], self.state, H=batch['h'],empty=self.state['empty_sym_target'])
+        y,b = getUnique(samples, batch['y'], self.state, H=batch['oh'],empty=self.state['empty_sym_target'])
 
         b = numpy.array(b,dtype='float32')
         #print b
@@ -294,7 +294,7 @@ def getUnique(samples, y,  state, H = None,empty=-1):
     #dic[' '.join(words)]=1.0
     print H.shape
     for i in range(len(H[0])):
-        dic[' '.join(H[:,i])]
+        dic[' '.join(H[:,0,i])]
     
     n = len(samples[0])
     #print '-----bleu testzone----'
