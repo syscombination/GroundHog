@@ -1953,8 +1953,8 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
 
         decoder_args = dict(given_init_states=prev_hidden_states, T=T, c=c, hypo=h)
 
-        sample, log_prob = self.build_decoder(y=prev_word, step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[:2]
-        hidden_states = self.build_decoder(y=sample, step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[2:]
+        sample, log_prob = self.build_decoder(y=prev_word, ylast=prev_word,step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[:2]
+        hidden_states = self.build_decoder(y=sample,ylast=sample, step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[2:]
         return [sample, log_prob] + hidden_states
 
     def build_initializers(self, c):
