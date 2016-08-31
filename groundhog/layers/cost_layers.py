@@ -939,10 +939,13 @@ class SoftmaxLayer(CostLayer):
                     sen.append(model.word_indxs_src[inps[0][k]])
                 print "".join(sen),
             else:
+                pass
+                '''
                 for k in xrange(inps[0].shape[0]):
                     print model.word_indxs_src[inps[0][k]],
                     if model.word_indxs_src[inps[0][k]] == '<eol>':
                         break
+                '''
             print ''
             print 'Output: ',
             if character_level:
@@ -1063,7 +1066,7 @@ class SoftmaxLayer(CostLayer):
             #emb_val = TT.clip(emb_val,epsilon,1.)
             #*1e-6
             #for non-mrt only
-            emb_val = emb_val+epsilon
+            #emb_val = emb_val+epsilon
 
             normalizer = emb_val.sum(axis=1).dimshuffle(0,'x')
             emb_val = emb_val/normalizer
