@@ -294,8 +294,8 @@ def getUnique(samples, y,  state, H = None,empty=-1):
     #dic[' '.join(words)]=1.0
     print H.shape
     for i in range(len(H[0,0])):
-        print ' '.join(H[:,0,i])
-        dic[' '.join(H[:,0,i])]
+        #print H[:,0,i]
+        dic[' '.join(str(t) for t in H[:,0,i])] = calBleu(' '.join(str(t) for t in H[:,0,i]), ref, lens)
     
     n = len(samples[0])
     #print '-----bleu testzone----'
