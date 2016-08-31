@@ -340,7 +340,10 @@ def getYM(y,state,empty=-1):
         si = y[i]
         ly = len(si)
         Y[0:ly,i] = y[i]
-        Ylast[0,i] = y[i][0]
+        if y[i][0] == empty:
+            Ylast[0,i] = 0
+        else:
+            Ylast[0,i] = y[i][0]
         Ymask[0,i] = 1
         for j in range(1,ly):
             if Y[j-1,i] != empty:
