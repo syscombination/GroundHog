@@ -293,7 +293,7 @@ def getUnique(samples, y,  state, H = None,empty=-1):
 
     ref,lens = getRefDict(words)
     #dic[' '.join(words)]=1.0
-    print H.shape
+    #print H.shape
     for i in range(len(H[0,0])):
         #print H[:,0,i]
         dic[' '.join(str(t) for t in H[:,0,i])] = calBleu(' '.join(str(t) for t in H[:,0,i]), ref, lens)
@@ -340,7 +340,7 @@ def getYM(y,state,empty=-1):
         si = y[i]
         ly = len(si)
         Y[0:ly,i] = y[i]
-        print 
+        #print 
         if Y[0,i] == empty:
             Ylast[0,i] = 0
         else:
