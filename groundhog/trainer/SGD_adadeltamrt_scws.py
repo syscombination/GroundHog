@@ -185,7 +185,7 @@ class SGD(object):
         samples, probs = self.sampler(sampleN,myL,1,batch['x'].squeeze(),batch['h'].squeeze())
         t2 = time.time()
         print 'sample time:', t2-t1, 'sec'
-        y,b = getUnique(samples, batch['y'], self.state, empty=self.state['empty_sym_target'])
+        y,b = getUnique(samples, batch['y'], self.state, H=batch['H'],empty=self.state['empty_sym_target'])
 
         b = numpy.array(b,dtype='float32')
         #print b
@@ -196,7 +196,9 @@ class SGD(object):
 #        print p
 #        print b.mean()
 #        print (b*p).mean()
-        Y,YM = getYM(y, self.state)
+        print y,b 
+        Y,YM = getYM(y, self.state, empty=self.state['empty_sym_target'])
+        print Y, YM
 #        print b
 #        print Y
 #        print YM
@@ -278,7 +280,7 @@ class SGD(object):
 
 
 
-def getUnique(samples, y, state, empty=-1):
+def getUnique(samples, y,  state, H = None,empty=-1):
     dic = {}
     ty = y.squeeze().tolist()
     words = cutSen(ty, state)
@@ -290,6 +292,9 @@ def getUnique(samples, y, state, empty=-1):
 
     ref,lens = getRefDict(words)
     #dic[' '.join(words)]=1.0
+    print H.shape
+    for i in range(len(H[0])):
+        dic[' '.join(H[:,i])]
     
     n = len(samples[0])
     #print '-----bleu testzone----'
@@ -317,7 +322,7 @@ def getUnique(samples, y, state, empty=-1):
         b.append(dic[sen])
     return l,b
 
-def getYM(y,state):
+def getYM(y,state,empty=-1):
     n = len(y)
     max = 0
     for i in range(n):
@@ -332,7 +337,10 @@ def getYM(y,state):
         si = y[i]
         ly = len(si)
         Y[0:ly,i] = y[i]
-        Ymask[0:ly,i] = 1
+        Ymask[0,i] = 1
+        for j in range(1,ly):
+            if Y[j-1,i] != empty:
+                Ymask[j,i] = 1
 
     return Y, Ymask
         
