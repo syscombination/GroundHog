@@ -1680,6 +1680,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
                     **self.default_kwargs)
 
     def build_decoder(self, c, y, hypo,
+            ylast=None,
             c_mask=None,
             y_mask=None,
             h_mask=None,
@@ -1750,6 +1751,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         # Shape if mode != evaluation
         #   (n_samples, rank_n_approx)
         approx_embeddings = self.approx_embedder(y)
+        last_embeddings = self.approx_embedder(ylast)
 
         # Low rank embeddings are projected to contribute
         # to input, reset and update signals.
@@ -1879,7 +1881,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
                 readout += TT.shape_padright(check_first_word) * self.prev_word_readout(approx_embeddings).out
             else:
                 if y.ndim == 1:
-                    readout += Shift()(self.prev_word_readout(approx_embeddings).reshape(
+                    readout += Shift()(self.prev_word_readout(last_embeddings).reshape(
                         (y.shape[0], 1, self.state['dim'])))
                 else:
                     # This place needs explanation. When prev_word_readout is applied to
@@ -1887,7 +1889,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
                     # (n_batches * sequence_length, repr_dimensionality). We first
                     # transform it into 3D tensor to shift forward in time. Then
                     # reshape it back.
-                    readout += Shift()(self.prev_word_readout(approx_embeddings).reshape(
+                    readout += Shift()(self.prev_word_readout(last_embeddings).reshape(
                         (y.shape[0], y.shape[1], self.state['dim']))).reshape(
                                 readout.out.shape)
         for fun in self.output_nonlinearities:
@@ -2027,8 +2029,8 @@ class Syscombination_withsource(object):
         self.h_mask = TT.matrix('h_mask')
         self.y = TT.lmatrix('y')
         self.y_mask = TT.matrix('y_mask')
-        #self.ylast = TT.matrix('ylast')
-        self.inputs = [self.x, self.y, self.h, self.x_mask, self.y_mask, self.h_mask]
+        self.ylast = TT.matrix('ylast')
+        self.inputs = [self.x, self.y, self.h, self.ylast, self.x_mask, self.y_mask, self.h_mask]
         if self.state['mrt']:
             self.b = TT.vector('b')
             self.inputs += [self.b]
@@ -2085,7 +2087,7 @@ class Syscombination_withsource(object):
         logger.debug("Build log-likelihood computation graph")
         self.predictions, self.alignment = self.decoder.build_decoder(
                 c=Concatenate(axis=2)(*training_c_components), c_mask=self.x_mask,
-                y=self.y, y_mask=self.y_mask,hypo=self.h,h_mask=self.h_mask,b=self.b)
+                y=self.y,ylast=self.ylast, y_mask=self.y_mask,hypo=self.h,h_mask=self.h_mask,b=self.b)
 
         # Annotation for sampling
         sampling_c_components = []

@@ -197,8 +197,8 @@ class SGD(object):
 #        print b.mean()
 #        print (b*p).mean()
         print y,b 
-        Y,YM = getYM(y, self.state, empty=self.state['empty_sym_target'])
-        print Y, YM
+        Y,YM, Yl = getYM(y, self.state, empty=self.state['empty_sym_target'])
+        print Y, YM, Yl
 #        print b
 #        print Y
 #        print YM
@@ -221,6 +221,7 @@ class SGD(object):
 
         batch['y'] = Y
         batch['y_mask'] = YM
+        batch['ylast'] = Yl
         batch['b'] = b
 
         #t4 = time.time()
@@ -332,18 +333,23 @@ def getYM(y,state,empty=-1):
             max = tmp
 
     Y = numpy.ones((max,n), dtype='int64')*state['null_sym_target']
+    Ylast = numpy.ones((max,n), dtype='int64')*state['null_sym_target']
     Ymask = numpy.zeros((max, n), dtype='float32')
 
     for i in range(n):
         si = y[i]
         ly = len(si)
         Y[0:ly,i] = y[i]
+        Ylast[0,i] = y[i][0]
         Ymask[0,i] = 1
         for j in range(1,ly):
             if Y[j-1,i] != empty:
                 Ymask[j,i] = 1
+                Ylast[j,i] = y[i][j]
+            else:
+                Ylast[j,i] = Ylast[j-1,i]
 
-    return Y, Ymask
+    return Y, Ymask, Ylast
         
 
 def my_log(a):
