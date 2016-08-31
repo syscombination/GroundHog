@@ -1939,6 +1939,8 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         # Arguments that correspond to scan's "outputs" parameteter:
         prev_word = next(args)
         assert prev_word.ndim == 1
+        last_word = next(args)
+        assert last_word.ndim == 1
         # skip the previous word log probability
         assert next(args).ndim == 1
         prev_hidden_states = [next(args) for k in range(self.num_levels)]
@@ -1953,15 +1955,17 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
 
         decoder_args = dict(given_init_states=prev_hidden_states, T=T, c=c, hypo=h)
 
-        sample, log_prob = self.build_decoder(y=prev_word, ylast=prev_word,step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[:2]
-        hidden_states = self.build_decoder(y=sample,ylast=sample, step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[2:]
-        return [sample, log_prob] + hidden_states
+        sample, log_prob = self.build_decoder(y=prev_word, ylast=last_word,step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[:2]
+        lastword = TT.switch(TT.eq(sample, self.state['empty_sym_target']),last_word,sample)
+        hidden_states = self.build_decoder(y=sample,ylast=lastword, step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[2:]
+        return [sample, lastword, log_prob] + hidden_states
 
     def build_initializers(self, c):
         return [init(c).out for init in self.initializers]
 
     def build_sampler(self, n_samples, n_steps, T, c, h):
         states = [TT.zeros(shape=(n_samples,), dtype='int64'),
+                TT.zeros(shape=(n_samples,), dtype='int64'),
                 TT.zeros(shape=(n_samples,), dtype='float32')]
         init_c = c[0, -self.state['dim']:]
         states += [ReplicateLayer(n_samples)(init(init_c).out).out for init in self.initializers]
@@ -1978,7 +1982,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
                 sequences=[TT.arange(n_steps, dtype="int64"),h],
                 n_steps=h.shape[0],
                 name="{}_sampler_scan".format(self.prefix))
-        return (outputs[0], outputs[1]), updates
+        return (outputs[0], outputs[2]), updates
 
     def build_next_probs_predictor(self, c, ha, step_num, y, init_states):
         return self.build_decoder(c, y, hypo=ha, mode=Decoder.BEAM_SEARCH,

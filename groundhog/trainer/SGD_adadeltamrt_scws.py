@@ -340,7 +340,8 @@ def getYM(y,state,empty=-1):
         si = y[i]
         ly = len(si)
         Y[0:ly,i] = y[i]
-        if y[i][0] == empty:
+        print 
+        if Y[0,i] == empty:
             Ylast[0,i] = 0
         else:
             Ylast[0,i] = y[i][0]
