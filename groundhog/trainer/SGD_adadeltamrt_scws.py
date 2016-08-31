@@ -185,7 +185,7 @@ class SGD(object):
         samples, probs = self.sampler(sampleN,myL,1,batch['x'].squeeze(),batch['h'].squeeze())
         t2 = time.time()
         print 'sample time:', t2-t1, 'sec'
-        y,b = getUnique(samples, batch['y'], self.state, H=batch['H'],empty=self.state['empty_sym_target'])
+        y,b = getUnique(samples, batch['y'], self.state, H=batch['h'],empty=self.state['empty_sym_target'])
 
         b = numpy.array(b,dtype='float32')
         #print b
