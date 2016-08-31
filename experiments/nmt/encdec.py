@@ -2029,7 +2029,7 @@ class Syscombination_withsource(object):
         self.h_mask = TT.matrix('h_mask')
         self.y = TT.lmatrix('y')
         self.y_mask = TT.matrix('y_mask')
-        self.ylast = TT.matrix('ylast')
+        self.ylast = TT.lmatrix('ylast')
         self.inputs = [self.x, self.y, self.h, self.ylast, self.x_mask, self.y_mask, self.h_mask]
         if self.state['mrt']:
             self.b = TT.vector('b')
