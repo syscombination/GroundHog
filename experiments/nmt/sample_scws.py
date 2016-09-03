@@ -79,7 +79,7 @@ class BeamSearch(object):
                     if k > 0
                     else numpy.zeros(beam_size, dtype="int64"))
             if k > 0:
-                for n in range(last_ref.shape[0]):
+                for n in range(last_refs.shape[0]):
                     if last_words[n] != self.state['empty_sym_target']:
                         last_refs[n] = last_words[n]
             else:
