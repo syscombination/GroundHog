@@ -83,8 +83,10 @@ class BeamSearch(object):
                     if last_words[n] != self.state['empty_sym_target']:
                         last_refs[n] = last_words[n]
             else:
-                last_refs = numpy.zeros(beam_size, dtype="int64"))
+                last_refs = numpy.zeros(beam_size, dtype="int64")
             probs = self.comp_next_probs(c, h0, k, last_refs,last_words, *states)[0]
+            print last_words
+            print last_refs
             #print probs
             #print probs.sum(axis=0)
             #print probs/probs.sum(axis=0).reshape((probs.))
