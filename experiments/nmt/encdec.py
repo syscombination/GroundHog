@@ -1958,7 +1958,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         sample, log_prob = self.build_decoder(y=prev_word, ylast=last_word,step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[:2]
         lastword = TT.switch(TT.eq(sample, self.state['empty_sym_target']),last_word,sample)
         hidden_states = self.build_decoder(y=sample,ylast=lastword, step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[2:]
-        hidden_states = TT.switch(TT.eq(sample, self.state['empty_sym_target']),prev_hidden_states,hidden_states)
+        #hidden_states = TT.switch(TT.eq(sample, self.state['empty_sym_target']),prev_hidden_states,hidden_states)
         return [sample, lastword, log_prob] + hidden_states
 
     def build_initializers(self, c):
