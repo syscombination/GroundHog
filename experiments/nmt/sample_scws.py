@@ -119,7 +119,7 @@ class BeamSearch(object):
             new_costs = numpy.zeros(n_samples)
             new_states = [numpy.zeros((n_samples, dim), dtype="float32") for level
                     in range(num_levels)]
-            new_last_refs = numpy.zeros(n_samples)
+            new_last_refs = numpy.zeros(n_samples, dtype="int64")
             inputs = numpy.zeros(n_samples, dtype="int64")
             for i, (orig_idx, next_word, next_cost) in enumerate(
                     zip(trans_indices, word_indices, costs)):
