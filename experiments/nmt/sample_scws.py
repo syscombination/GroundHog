@@ -148,6 +148,7 @@ class BeamSearch(object):
                     fin_trans.append(new_trans[i])
                     fin_costs.append(new_costs[i])
             states = map(lambda x : x[indices], new_states)
+            last_refs = numpy.asarray(last_refs, dtype='int64')
 
         # Dirty tricks to obtain any translation
         if not len(fin_trans):
