@@ -1958,6 +1958,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         sample, log_prob = self.build_decoder(y=prev_word, ylast=last_word,step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[:2]
         lastword = TT.switch(TT.eq(sample, self.state['empty_sym_target']),last_word,sample)
         hidden_states = self.build_decoder(y=sample,ylast=lastword, step_num=step_num, mode=Decoder.SAMPLING, **decoder_args)[2:]
+        hidden_states = TT.switch(TT.eq(sample, self.state['empty_sym_target']),prev_hidden_states,hidden_states)
         return [sample, lastword, log_prob] + hidden_states
 
     def build_initializers(self, c):
@@ -1984,12 +1985,12 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
                 name="{}_sampler_scan".format(self.prefix))
         return (outputs[0], outputs[2]), updates
 
-    def build_next_probs_predictor(self, c, ha, step_num, y, init_states):
-        return self.build_decoder(c, y, hypo=ha, mode=Decoder.BEAM_SEARCH,
+    def build_next_probs_predictor(self, c, ha, step_num, last_y, y, init_states):
+        return self.build_decoder(c, y, ylast=last_y,hypo=ha, mode=Decoder.BEAM_SEARCH,
                 given_init_states=init_states, step_num=step_num)
 
-    def build_next_states_computer(self, c, ha, step_num, y, init_states):
-        return self.build_decoder(c, y, hypo=ha, mode=Decoder.SAMPLING,
+    def build_next_states_computer(self, c, ha, step_num, last_y, y, init_states):
+        return self.build_decoder(c, y, ylast=last_y,hypo=ha, mode=Decoder.SAMPLING,
                 given_init_states=init_states, step_num=step_num)[2:]
 
 class Syscombination_withsource(object):
@@ -2132,6 +2133,7 @@ class Syscombination_withsource(object):
         self.current_states = [TT.matrix("cur_{}".format(i))
                 for i in range(self.decoder.num_levels)]
         self.gen_y = TT.lvector("gen_y")
+        self.last_y = TT.lvector("last_y")
 
     def create_lm_model(self):
         if hasattr(self, 'lm_model'):
@@ -2212,18 +2214,18 @@ class Syscombination_withsource(object):
     def create_next_probs_computer(self):
         if not hasattr(self, 'next_probs_fn'):
             self.next_probs_fn = theano.function(
-                    inputs=[self.c, self.ha, self.step_num, self.gen_y] + self.current_states,
+                    inputs=[self.c, self.ha,  self.step_num, self.last_y,self.gen_y] + self.current_states,
                     outputs=[self.decoder.build_next_probs_predictor(
-                        self.c, self.ha,self.step_num, self.gen_y, self.current_states)],
+                        self.c, self.ha,self.step_num, self.last_y,self.gen_y, self.current_states)],
                     name="next_probs_fn")
         return self.next_probs_fn
 
     def create_next_states_computer(self):
         if not hasattr(self, 'next_states_fn'):
             self.next_states_fn = theano.function(
-                    inputs=[self.c, self.ha, self.step_num, self.gen_y] + self.current_states,
+                    inputs=[self.c, self.ha,  self.step_num, self.last_y,self.gen_y] + self.current_states,
                     outputs=self.decoder.build_next_states_computer(
-                        self.c, self.ha,self.step_num, self.gen_y, self.current_states),
+                        self.c, self.ha,self.step_num, self.last_y,self.gen_y, self.current_states),
                     name="next_states_fn")
         return self.next_states_fn
 

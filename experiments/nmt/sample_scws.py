@@ -59,6 +59,7 @@ class BeamSearch(object):
         fin_costs = []
 
         trans = [[]]
+
         costs = [0.0]
 
         for k in xrange(len(systems[0])):
@@ -73,10 +74,17 @@ class BeamSearch(object):
             # Compute probabilities of the next words for
             # all the elements of the beam.
             
+
             last_words = (numpy.array(map(lambda t : t[-1], trans))
                     if k > 0
                     else numpy.zeros(beam_size, dtype="int64"))
-            probs = self.comp_next_probs(c, h0, k, last_words, *states)[0]
+            if k > 0:
+                for n in range(last_ref.shape[0]):
+                    if last_words[n] != self.state['empty_sym_target']:
+                        last_refs[n] = last_words[n]
+            else:
+                last_refs = numpy.zeros(beam_size, dtype="int64"))
+            probs = self.comp_next_probs(c, h0, k, last_refs,last_words, *states)[0]
             #print probs
             #print probs.sum(axis=0)
             #print probs/probs.sum(axis=0).reshape((probs.))
@@ -109,25 +117,29 @@ class BeamSearch(object):
             new_costs = numpy.zeros(n_samples)
             new_states = [numpy.zeros((n_samples, dim), dtype="float32") for level
                     in range(num_levels)]
+            new_last_refs = numpy.zeros(n_samples)
             inputs = numpy.zeros(n_samples, dtype="int64")
             for i, (orig_idx, next_word, next_cost) in enumerate(
                     zip(trans_indices, word_indices, costs)):
                 new_trans[i] = trans[orig_idx] + [next_word]
                 new_costs[i] = next_cost
+                new_last_refs[i] = last_refs[orig_idx]
                 for level in range(num_levels):
                     new_states[level][i] = states[level][orig_idx]
                 inputs[i] = next_word
-            new_states = self.comp_next_states(c, h0, k, inputs, *new_states)
+            new_states = self.comp_next_states(c, h0, k, new_last_refs,inputs, *new_states)
             #print new_trans
 
             # Filter the sequences that end with end-of-sequence character
             trans = []
             costs = []
             indices = []
+            last_refs = []
             for i in range(n_samples):
                 if new_trans[i][-1] != self.enc_dec.state['null_sym_target']:
                     trans.append(new_trans[i])
                     costs.append(new_costs[i])
+                    last_refs.append(new_last_refs[i])
                     indices.append(i)
                 else:
                     n_samples -= 1
