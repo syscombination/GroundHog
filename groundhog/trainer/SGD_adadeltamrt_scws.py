@@ -191,7 +191,7 @@ class SGD(object):
         samples = samples.transpose()
         t2 = time.time()
         print 'beam_search:', t2-t1, 'sec'
-        y,b = getUnique([samples], batch['y'],costs, self.state, H=batch['oh'],empty=self.state['empty_sym_target'])
+        y,b = getUnique(samples, batch['y'],costs, self.state, H=batch['oh'],empty=self.state['empty_sym_target'])
 
         b = numpy.array(b,dtype='float32')
         #print b
