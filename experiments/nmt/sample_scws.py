@@ -135,7 +135,7 @@ class BeamSearch(object):
                     old_states[level][i] = states[level][orig_idx]
                 inputs[i] = next_word
             new_states = self.comp_next_states(c, h0, k, new_last_refs,inputs, *old_states)
-            print new_states.shape
+            print new_states[0].shape
             #print new_trans
 
             # Filter the sequences that end with end-of-sequence character
