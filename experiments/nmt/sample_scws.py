@@ -138,7 +138,7 @@ class BeamSearch(object):
             
             print new_last_refs
             for i in range(n_samples):
-                if new_last_refs[i] == self.state['empty_sym_target']:
+                if new_trans[i][-1] == self.state['empty_sym_target']:
                     print i
                     for level in range(num_levels): 
                         new_states[level][i] = old_states[level][i] 
