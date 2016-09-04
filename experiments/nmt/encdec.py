@@ -2248,6 +2248,125 @@ class Syscombination_withsource(object):
                 return probs
         return probs_computer
 
+class Outsyscomb(object):
+
+    def __init__(self, state, rng,
+            skip_init=False,
+            compute_alignment=False):
+
+        self.state = state
+        self.rng = rng
+        self.skip_init = skip_init
+        self.compute_alignment = compute_alignment
+
+    def build(self):
+        logger.debug("Create input variables")
+        self.p = TT.matrix('p')
+        self.readout = TT.matrix('readout')
+        self.h = TT.matrix('readout')
+        self.b = TT.vector('b')
+
+        self.inputs = [self.p, self.readout, self.h, self.b]
+
+        self.predictions, self.alignment = self.decoder.build_decoder(
+                c=Concatenate(axis=2)(*training_c_components), c_mask=self.x_mask,
+                y=self.y,ylast=self.ylast, y_mask=self.y_mask,hypo=self.h,h_mask=self.h_mask,b=self.b)
+
+
+        logger.debug("Create auxiliary variables")
+        self.c = TT.matrix("c")
+        self.ha = TT.matrix("ha")
+        self.step_num = TT.lscalar("step_num")
+        self.current_states = [TT.matrix("cur_{}".format(i))
+                for i in range(self.decoder.num_levels)]
+        self.gen_y = TT.lvector("gen_y")
+        self.last_y = TT.lvector("last_y")
+
+    def create_lm_model(self):
+        if hasattr(self, 'lm_model'):
+            return self.lm_model
+        self.lm_model = LM_Model(
+            cost_layer=self.predictions,
+            sample_fn=self.create_sampler(),
+            weight_noise_amount=self.state['weight_noise_amount'],
+            indx_word=self.state['indx_word_target'],
+            indx_word_src=self.state['indx_word'],
+            rng=self.rng)
+        self.lm_model.load_dict(self.state)
+        logger.debug("Model params:\n{}".format(
+            pprint.pformat(sorted([p.name for p in self.lm_model.params]))))
+        return self.lm_model
+
+    def create_representation_computer(self):
+        if not hasattr(self, "repr_fn"):
+            self.repr_fn = theano.function(
+                    inputs=[self.sampling_x],
+                    outputs=[self.sampling_c],
+                    name="repr_fn")
+        return self.repr_fn
+
+    def create_initializers(self):
+        if not hasattr(self, "init_fn"):
+            init_c = self.sampling_c[0, -self.state['dim']:]
+            self.init_fn = theano.function(
+                    inputs=[self.sampling_c],
+                    outputs=self.decoder.build_initializers(init_c),
+                    name="init_fn")
+        return self.init_fn
+
+    def create_scorer(self, batch=False):
+        if not hasattr(self, 'score_fn'):
+            logger.debug("Compile scorer")
+            self.score_fn = theano.function(
+                    inputs=self.inputs,
+                    outputs=[-self.predictions.cost_per_sample],
+                    name="score_fn")
+        if batch:
+            return self.score_fn
+        def scorer(x, y):
+            x_mask = numpy.ones(x.shape[0], dtype="float32")
+            y_mask = numpy.ones(y.shape[0], dtype="float32")
+            return self.score_fn(x[:, None], y[:, None],
+                    x_mask[:, None], y_mask[:, None])
+        return scorer
+
+    def create_next_probs_computer(self):
+        if not hasattr(self, 'next_probs_fn'):
+            self.next_probs_fn = theano.function(
+                    inputs=[self.c, self.ha,  self.step_num, self.last_y,self.gen_y] + self.current_states,
+                    outputs=[self.decoder.build_next_probs_predictor(
+                        self.c, self.ha,self.step_num, self.last_y,self.gen_y, self.current_states)],
+                    name="next_probs_fn")
+        return self.next_probs_fn
+
+    def create_next_states_computer(self):
+        if not hasattr(self, 'next_states_fn'):
+            self.next_states_fn = theano.function(
+                    inputs=[self.c, self.ha,  self.step_num, self.last_y,self.gen_y] + self.current_states,
+                    outputs=self.decoder.build_next_states_computer(
+                        self.c, self.ha,self.step_num, self.last_y,self.gen_y, self.current_states),
+                    name="next_states_fn")
+        return self.next_states_fn
+
+
+    def create_probs_computer(self, return_alignment=False):
+        if not hasattr(self, 'probs_fn'):
+            logger.debug("Compile probs computer")
+            self.probs_fn = theano.function(
+                    inputs=self.inputs,
+                    outputs=[self.predictions.word_probs, self.alignment],
+                    name="probs_fn")
+        def probs_computer(x, y):
+            x_mask = numpy.ones(x.shape[0], dtype="float32")
+            y_mask = numpy.ones(y.shape[0], dtype="float32")
+            probs, alignment = self.probs_fn(x[:, None], y[:, None],
+                    x_mask[:, None], y_mask[:, None])
+            if return_alignment:
+                return probs, alignment
+            else:
+                return probs
+        return probs_computer
+
 
 class Decoder_syscombination(EncoderDecoderBase):
 
