@@ -1067,7 +1067,7 @@ class SoftmaxLayer(CostLayer):
                 emb_val = emb_val.reshape([emb_val.shape[0]*emb_val.shape[1], emb_val.shape[2]])
             #emb_val = TT.clip(emb_val,epsilon,1.)
             #*1e-6
-            exepsilon = 1e-100
+            #exepsilon = 1e-100
             #for non-mrt only
             emb_val = emb_val+epsilon
 
