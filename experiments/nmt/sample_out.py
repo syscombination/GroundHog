@@ -86,7 +86,7 @@ class BeamSearch(object):
                         last_refs[n] = last_words[n]
             else:
                 last_refs = numpy.zeros(beam_size, dtype="int64")
-            probs = self.comp_next_probs(c, h0, k, last_words, *states)[0]
+            probs = self.comp_next_probs(c, k, last_words, *states)[0]
             #print trans
             #print last_words
             #print last_refs
@@ -134,7 +134,7 @@ class BeamSearch(object):
                 for level in range(num_levels): 
                     old_states[level][i] = states[level][orig_idx]
                 inputs[i] = next_word
-            new_states = self.comp_next_states(c, h0, k,inputs, *old_states)
+            new_states = self.comp_next_states(c, k,inputs, *old_states)
             
             #print new_last_refs
             for i in range(n_samples):
