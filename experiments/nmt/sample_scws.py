@@ -90,8 +90,8 @@ class BeamSearch(object):
             #print trans
             #print last_words
             #print last_refs
-            if k > 0:
-                print costs
+            #if k > 0:
+            #    print costs
             #print probs
             #print probs.sum(axis=0)
             #print probs/probs.sum(axis=0).reshape((probs.))
@@ -142,7 +142,7 @@ class BeamSearch(object):
                     print i
                     for level in range(num_levels): 
                         new_states[level][i] = old_states[level][i] 
-            print new_states[0].shape
+            #print new_states[0].shape
             #print new_trans
 
             # Filter the sequences that end with end-of-sequence character
@@ -178,6 +178,7 @@ class BeamSearch(object):
 
         fin_trans = numpy.array(fin_trans)[numpy.argsort(fin_costs)]
         fin_costs = numpy.array(sorted(fin_costs))
+        print fin_trans.shape
         return fin_trans, fin_costs
 
 def indices_to_words(i2w, seq):
