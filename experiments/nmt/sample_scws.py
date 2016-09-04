@@ -131,10 +131,16 @@ class BeamSearch(object):
                 new_trans[i] = trans[orig_idx] + [next_word]
                 new_costs[i] = next_cost
                 new_last_refs[i] = last_refs[orig_idx]
-                for level in range(num_levels):
+                for level in range(num_levels): 
                     old_states[level][i] = states[level][orig_idx]
                 inputs[i] = next_word
             new_states = self.comp_next_states(c, h0, k, new_last_refs,inputs, *old_states)
+            
+            for i in range(n_samples):
+                if new_last_refs[i] == self.state['empty_sym_target']:
+                    for level in range(num_levels): 
+                        print i
+                        new_states[level][i] = old_states[level][i] 
             print new_states[0].shape
             #print new_trans
 
