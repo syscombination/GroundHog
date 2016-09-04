@@ -92,6 +92,7 @@ def main():
     if state['mrt']:
         train_sampler = enc_dec.create_sampler(many_samples=True)
         beam_search = BeamSearch(enc_dec)
+        beam_search.compile()
     lm_model = enc_dec.create_lm_model()
 
     logger.debug("Load data")
