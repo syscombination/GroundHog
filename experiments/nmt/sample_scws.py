@@ -90,6 +90,8 @@ class BeamSearch(object):
             print trans
             print last_words
             print last_refs
+            if k > 0:
+                print costs
             #print probs
             #print probs.sum(axis=0)
             #print probs/probs.sum(axis=0).reshape((probs.))
@@ -120,7 +122,7 @@ class BeamSearch(object):
             # Form a beam for the next iteration
             new_trans = [[]] * n_samples
             new_costs = numpy.zeros(n_samples)
-            new_states = [numpy.zeros((n_samples, dim), dtype="float32") for level
+            old_states = [numpy.zeros((n_samples, dim), dtype="float32") for level
                     in range(num_levels)]
             new_last_refs = numpy.zeros(n_samples, dtype="int64")
             inputs = numpy.zeros(n_samples, dtype="int64")
@@ -130,9 +132,10 @@ class BeamSearch(object):
                 new_costs[i] = next_cost
                 new_last_refs[i] = last_refs[orig_idx]
                 for level in range(num_levels):
-                    new_states[level][i] = states[level][orig_idx]
+                    old_states[level][i] = states[level][orig_idx]
                 inputs[i] = next_word
-            new_states = self.comp_next_states(c, h0, k, new_last_refs,inputs, *new_states)
+            new_states = self.comp_next_states(c, h0, k, new_last_refs,inputs, *old_states)
+            print new_states.shape
             #print new_trans
 
             # Filter the sequences that end with end-of-sequence character
