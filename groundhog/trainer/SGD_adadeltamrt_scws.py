@@ -53,6 +53,7 @@ class SGD(object):
 
 
         self.sampler = sampler
+        self.beam_search = beam_search
         #####################################
         # Step 0. Constructs shared variables
         #####################################
