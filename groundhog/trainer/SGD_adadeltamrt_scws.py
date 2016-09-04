@@ -188,7 +188,7 @@ class SGD(object):
         samples, costs = self.beam_search.search(batch['x'].squeeze(), batch['oh'].squeeze(),sampleN)
         t2 = time.time()
         print 'beam_search:', t2-t1, 'sec'
-        y,b = getUnique(samples, batch['y'], self.state, H=batch['oh'],empty=self.state['empty_sym_target'])
+        y,b = getUnique([samples], batch['y'],costs, self.state, H=batch['oh'],empty=self.state['empty_sym_target'])
 
         b = numpy.array(b,dtype='float32')
         #print b
@@ -284,7 +284,7 @@ class SGD(object):
 
 
 
-def getUnique(samples, y,  state, H = None,empty=-1):
+def getUnique(samples, y, co, state, H = None,empty=-1):
     dic = {}
     ty = y.squeeze().tolist()
     words = cutSen(ty, state)
@@ -306,6 +306,8 @@ def getUnique(samples, y,  state, H = None,empty=-1):
     #print 'samples:', n
     
     for i in range(n):
+        if co[i] < -1000000.:
+            continue
         sen = samples[:,i]
         sen = cutSen(sen.tolist(), state)
         words = [str(i) for i in sen]
