@@ -15,6 +15,7 @@ from groundhog.mainLoop import MainLoop
 from experiments.nmt import\
         RNNEncoderDecoder, Syscombination_withsource, prototype_state, get_batch_iterator, get_batch_iterator_syscombination
 import experiments.nmt
+from sample_scws import BeamSearch
 
 logger = logging.getLogger(__name__)
 
@@ -90,13 +91,14 @@ def main():
     enc_dec.build()
     if state['mrt']:
         train_sampler = enc_dec.create_sampler(many_samples=True)
+        beam_search = BeamSearch(enc_dec)
     lm_model = enc_dec.create_lm_model()
 
     logger.debug("Load data")
     train_data = get_batch_iterator_syscombination(state)
     logger.debug("Compile trainer")
     if state['mrt']:
-        algo = eval(state['algo'])(lm_model, state, train_data, train_sampler)
+        algo = eval(state['algo'])(lm_model, state, train_data, train_sampler, beam_search)
     else:
         algo = eval(state['algo'])(lm_model, state, train_data)
     logger.debug("Run training")

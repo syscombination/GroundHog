@@ -164,6 +164,7 @@ class BeamSearch(object):
             last_refs = numpy.asarray(last_refs, dtype='int64')
 
         # Dirty tricks to obtain any translation
+        '''
         if not len(fin_trans):
             if ignore_unk:
                 logger.warning("Did not manage without UNK")
@@ -173,6 +174,7 @@ class BeamSearch(object):
                 return self.search(seq, n_samples * 2, False, minlen)
             else:
                 logger.error("Translation failed")
+        '''
 
         fin_trans = numpy.array(fin_trans)[numpy.argsort(fin_costs)]
         fin_costs = numpy.array(sorted(fin_costs))

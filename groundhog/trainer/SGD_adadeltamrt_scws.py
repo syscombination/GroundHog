@@ -29,7 +29,8 @@ class SGD(object):
                  model,
                  state,
                  data,
-                 sampler):
+                 sampler,
+                 beam_search):
         """
         Parameters:
             :param model:
@@ -182,9 +183,10 @@ class SGD(object):
 
         myL = int(1.5*len(batch['y']))
         t1 = time.time()
-        samples, probs = self.sampler(sampleN,myL,1,batch['x'].squeeze(),batch['h'].squeeze())
+        #samples, probs = self.sampler(sampleN,myL,1,batch['x'].squeeze(),batch['h'].squeeze())
+        samples = self.beam_search.search(batch['x'].squeeze(), batch['oh'].squeeze(),sampleN)
         t2 = time.time()
-        print 'sample time:', t2-t1, 'sec'
+        print 'beam_search:', t2-t1, 'sec'
         y,b = getUnique(samples, batch['y'], self.state, H=batch['oh'],empty=self.state['empty_sym_target'])
 
         b = numpy.array(b,dtype='float32')
