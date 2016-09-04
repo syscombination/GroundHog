@@ -61,8 +61,10 @@ class BeamSearch(object):
         trans = [[]]
 
         costs = [0.0]
+        print systems
 
         for k in xrange(len(systems[0])):
+            print '-----',k,'-----'
             if n_samples == 0:
                 break
 
