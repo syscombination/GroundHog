@@ -1750,7 +1750,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         #   (n_words, rank_n_approx),
         # Shape if mode != evaluation
         #   (n_samples, rank_n_approx)
-        approx_embeddings = self.approx_embedder(y)
+        #approx_embeddings = self.approx_embedder(y)
         last_embeddings = self.approx_embedder(ylast)
 
         # Low rank embeddings are projected to contribute
@@ -1765,9 +1765,9 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
         update_signals = []
         for level in range(self.num_levels):
             # Contributions directly from input words.
-            input_signals.append(self.input_embedders[level](approx_embeddings))
-            update_signals.append(self.update_embedders[level](approx_embeddings))
-            reset_signals.append(self.reset_embedders[level](approx_embeddings))
+            input_signals.append(self.input_embedders[level](last_embeddings))
+            update_signals.append(self.update_embedders[level](last_embeddings))
+            reset_signals.append(self.reset_embedders[level](last_embeddings))
 
             # Contributions from the encoded source sentence.
             if not self.state['search']:
@@ -1878,7 +1878,7 @@ class Decoder_syscombinationwithsource(EncoderDecoderBase):
                     if self.state['check_first_word']
                     else TT.ones((y.shape[0]), dtype="float32"))
                 # padright is necessary as we want to multiply each row with a certain scalar
-                readout += TT.shape_padright(check_first_word) * self.prev_word_readout(approx_embeddings).out
+                readout += TT.shape_padright(check_first_word) * self.prev_word_readout(last_embeddings).out
             else:
                 if y.ndim == 1:
                     readout += Shift()(self.prev_word_readout(last_embeddings).reshape(
