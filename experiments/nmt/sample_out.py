@@ -89,7 +89,7 @@ class BeamSearch(object):
             else:
                 last_refs = numpy.zeros(beam_size, dtype="int64")
             probs = self.comp_next_probs(c, k, last_words, *states)[0]
-            for i in range(n_samples):
+            for i in range(probs.shape[0]):
             	probs[i][self.state['empty_sym_target']] = 0.
             #print trans
             #print last_words
@@ -101,11 +101,11 @@ class BeamSearch(object):
             probs = probs * h0
             #print probs
             psum = probs.sum(axis=1)
-            for i in range(n_samples):
+            for i in range(probs.shape[0]):
             	probs[i][self.state['empty_sym_target']] = 1- psum[i]
             probs *= h
             psum = probs.sum(axis=1)
-            for i in range(n_samples):
+            for i in range(probs.shape[0]):
             	probs[i] /= psum[i]
             print probs
             print probs.sum(axis=1)
