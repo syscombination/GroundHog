@@ -93,9 +93,10 @@ class BeamSearch(object):
             #if k > 0:
             #    print costs
             print probs.shape, h0.shape
+            print probs
             probs = probs * h0
             print probs
-            print probs.sum(axis=0)
+            print probs.sum(axis=1)
             #print probs/probs.sum(axis=0).reshape((probs.))
             log_probs = numpy.log(probs)
             #print last_words
