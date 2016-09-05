@@ -93,8 +93,9 @@ class BeamSearch(object):
             for i in range(probs.shape[0]):
             	probs[i][self.state['empty_sym_target']] = 1.0/self.state['num_systems']
             print trans
+            print states
             #print last_words
-            #print last_refs
+            print last_refs
             if k > 0:
                 print costs
             #print probs.shape, h0.shape

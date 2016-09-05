@@ -71,6 +71,7 @@ class BeamSearch(object):
             probs = self.comp_next_probs(c, k, last_words, *states)[0]
             print probs
             print trans
+            print states
             #print last_words
             #print last_refs
             if k > 0:
