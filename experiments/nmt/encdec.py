@@ -2269,8 +2269,10 @@ class Outsyscomb(object):
         self.inputs = [self.p, self.readout, self.h, self.b]
         #self.
 
+        
 
-        self.predictions = self.p
+
+        self.predictions = (cost, grads)
 
 
     def create_lm_model(self):
