@@ -70,8 +70,12 @@ class BeamSearch(object):
                     else numpy.zeros(beam_size, dtype="int64"))
             probs = self.comp_next_probs(c, k, last_words, *states)[0]
             print probs
+            probs = numpy.exp(probs)
+            norm = probs.sum(axis=1)
+            probs = probs/norm
+            print probs
             print trans
-            print states
+            #print states
             #print last_words
             #print last_refs
             if k > 0:
