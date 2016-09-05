@@ -64,7 +64,7 @@ class BeamSearch(object):
         #print systems
 
         for k in xrange(len(systems[0])):
-            #print '-----',k,'-----'
+            print '-----',k,'-----'
             if n_samples == 0:
                 break
 
@@ -88,11 +88,11 @@ class BeamSearch(object):
                         last_refs[n] = last_words[n]
             else:
                 last_refs = numpy.zeros(beam_size, dtype="int64")
-            probs = self.comp_next_probs(c, k, last_words, *states)[0]
+            probs = self.comp_next_probs(c, k, last_refs, *states)[0]
             print probs
             for i in range(probs.shape[0]):
             	probs[i][self.state['empty_sym_target']] = 0.
-            #print trans
+            print trans
             #print last_words
             #print last_refs
             #if k > 0:
@@ -150,7 +150,7 @@ class BeamSearch(object):
                 for level in range(num_levels): 
                     old_states[level][i] = states[level][orig_idx]
                 inputs[i] = next_word
-            new_states = self.comp_next_states(c, k,inputs, *old_states)
+            new_states = self.comp_next_states(c, k,new_last_refs, *old_states)
             
             #print new_last_refs
             for i in range(n_samples):
