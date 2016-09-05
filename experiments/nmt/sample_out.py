@@ -47,7 +47,7 @@ class BeamSearch(object):
         self.comp_next_states = self.enc_dec.create_next_states_computer()
 
     def search(self, seq, systems, n_samples, ignore_unk=False, minlen=1):
-        print seq, systems
+        #print seq, systems
 
         c = self.comp_repr(seq)[0]
         states = map(lambda x : x[None, :], self.comp_init_states(c))
@@ -107,8 +107,8 @@ class BeamSearch(object):
             psum = probs.sum(axis=1)
             for i in range(probs.shape[0]):
             	probs[i] /= psum[i]
-            print probs
-            print probs.sum(axis=1)
+            #print probs
+            #print probs.sum(axis=1)
             #print probs/probs.sum(axis=0).reshape((probs.))
             log_probs = numpy.log(probs)
             #print last_words
