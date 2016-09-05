@@ -58,6 +58,7 @@ class BeamSearch(object):
         costs = [0.0]
 
         for k in range(3 * len(seq)):
+            print '-----',k,'-----'
             if n_samples == 0:
                 break
 
