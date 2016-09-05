@@ -2263,7 +2263,7 @@ class Outsyscomb(object):
         logger.debug("Create input variables")
         self.p = TT.matrix('p')
         self.readout = TT.matrix('readout')
-        self.h = TT.matrix('readout')
+        self.h = TT.matrix('h')
         self.b = TT.vector('b')
 
         self.inputs = [self.p, self.readout, self.h, self.b]

@@ -89,6 +89,7 @@ class BeamSearch(object):
             else:
                 last_refs = numpy.zeros(beam_size, dtype="int64")
             probs = self.comp_next_probs(c, k, last_words, *states)[0]
+            print probs
             for i in range(probs.shape[0]):
             	probs[i][self.state['empty_sym_target']] = 0.
             #print trans
@@ -97,7 +98,7 @@ class BeamSearch(object):
             #if k > 0:
             #    print costs
             #print probs.shape, h0.shape
-            #print probs
+            
             probs = probs * h0
             #print probs
             psum = probs.sum(axis=1)
@@ -193,7 +194,7 @@ class BeamSearch(object):
 
         fin_trans = numpy.array(fin_trans)[numpy.argsort(fin_costs)]
         fin_costs = numpy.array(sorted(fin_costs))
-        print fin_trans.shape
+        #print fin_trans.shape
         return fin_trans, fin_costs
 
 def indices_to_words(i2w, seq):
