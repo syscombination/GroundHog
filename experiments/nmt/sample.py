@@ -72,6 +72,7 @@ class BeamSearch(object):
             print probs
             probs = numpy.exp(probs)
             norm = probs.sum(axis=1)
+            norm = norm.reshape((norm.shape[0],1))
             probs = probs/norm
             print probs
             print trans

@@ -1442,7 +1442,7 @@ class Decoder(EncoderDecoderBase):
         elif mode == Decoder.BEAM_SEARCH:
             return self.output_layer(
                     state_below=readout.out,
-                    temp=T).out
+                    temp=T).preactiv
         elif mode == Decoder.EVALUATION:
             return (self.output_layer.train(
                     state_below=readout,
@@ -2267,9 +2267,10 @@ class Outsyscomb(object):
         self.b = TT.vector('b')
 
         self.inputs = [self.p, self.readout, self.h, self.b]
+
         #self.
 
-        
+
 
 
         self.predictions = (cost, grads)
