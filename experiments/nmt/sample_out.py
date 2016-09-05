@@ -101,14 +101,6 @@ class BeamSearch(object):
             
             probs = probs * h/self.state['num_systems']
             #print probs
-            psum = probs.sum(axis=1)
-            for i in range(probs.shape[0]):
-            	probs[i][self.state['empty_sym_target']] = 1- psum[i]
-            probs *= h
-            psum = probs.sum(axis=1)
-            for i in range(probs.shape[0]):
-            	probs[i] /= psum[i]
-            #print probs
             #print probs.sum(axis=1)
             #print probs/probs.sum(axis=0).reshape((probs.))
             log_probs = numpy.log(probs)
