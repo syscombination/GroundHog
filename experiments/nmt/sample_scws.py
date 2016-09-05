@@ -130,7 +130,10 @@ class BeamSearch(object):
                     zip(trans_indices, word_indices, costs)):
                 new_trans[i] = trans[orig_idx] + [next_word]
                 new_costs[i] = next_cost
-                new_last_refs[i] = last_refs[orig_idx]
+                if next_word == self.state['empty_sym_target']:
+                    new_last_refs[i] = last_refs[orig_idx]
+                else:
+                    new_last_refs[i] = next_word
                 for level in range(num_levels): 
                     old_states[level][i] = states[level][orig_idx]
                 inputs[i] = next_word
