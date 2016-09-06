@@ -133,6 +133,11 @@ for i in xrange(num_sentence):
 				#print pos,bone,newh
 				while len(tmpresult[pos]) == j+1:
 					pos += 1
+					if pos == len(tmpresult[pos]):
+						tail = []
+						for h in xrange(j):
+							tail.append('$')
+						tmpresult.append(tail)
 				if newh == '$':
 					ne = '$'
 				else:
