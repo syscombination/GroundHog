@@ -107,7 +107,7 @@ class BeamSearch(object):
             probs = probs/norm
 
             for i in range(probs.shape[0]):
-            	probs[i][self.state['empty_sym_target']] = 1/self.state['num_systems']
+            	probs[i][self.state['empty_sym_target']] = 1./self.state['num_systems']
             probs = probs * h/self.state['num_systems']
             #print probs
             #print probs.sum(axis=1)
