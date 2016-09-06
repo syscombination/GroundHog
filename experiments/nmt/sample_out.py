@@ -91,7 +91,7 @@ class BeamSearch(object):
             probs = self.comp_next_probs(c, k, last_refs, *states)[0]
             #print probs
             for i in range(probs.shape[0]):
-            	probs[i][self.state['empty_sym_target']] = 0
+            	probs[i][self.state['empty_sym_target']] = -numpy.inf
             #print trans
             #print states
             #print last_words
@@ -105,6 +105,9 @@ class BeamSearch(object):
             norm = probs.sum(axis=1)
             norm = norm.reshape((norm.shape[0],1))
             probs = probs/norm
+
+            for i in range(probs.shape[0]):
+            	probs[i][self.state['empty_sym_target']] = 1/self.state['num_systems']
             probs = probs * h/self.state['num_systems']
             #print probs
             #print probs.sum(axis=1)
