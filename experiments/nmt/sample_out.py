@@ -100,11 +100,12 @@ class BeamSearch(object):
             #    print costs
             #print probs.shape, h0.shape
             
-            probs = probs * h/self.state['num_systems']
+            
             probs = numpy.exp(probs)
             norm = probs.sum(axis=1)
             norm = norm.reshape((norm.shape[0],1))
             probs = probs/norm
+            probs = probs * h/self.state['num_systems']
             #print probs
             #print probs.sum(axis=1)
             #print probs/probs.sum(axis=0).reshape((probs.))
