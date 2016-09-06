@@ -2270,7 +2270,7 @@ class Outsyscomb(object):
 
         self.Wp = MultiLayer(self.rng,n_in=self.state['dim'],
                                 n_hids=1,activation=['lambda x:x'],
-                                name=
+                                name='emptyprob'
                                 )
         #self.
 
