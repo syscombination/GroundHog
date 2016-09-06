@@ -180,7 +180,10 @@ for i in xrange(num_sentence):
 								tmpresult[pos].append(ne)
 							pos += 1
 				else:
-					while tmpresult[pos][0][0] != bone:
+					while True: 
+						if tmpresult[pos][0] != '$':
+							if tmpresult[pos][0][0] == bone:
+								break
 						if len(tmpresult[pos]) < j+1:
 							tmpresult[pos].append('$')
 						pos += 1
