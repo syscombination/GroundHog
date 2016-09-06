@@ -63,14 +63,14 @@ def findpos(sentence, opos):
 			tmp += 1
 	return result
 
-def findalign(refs,newhs,source, pos):
+def findalign(refs,newhs,source, tpos):
 	sp = [0]*1000
-	for i in range(pos-1):
+	for i in range(tpos-1):
 		if refs[i] != '$':
 			idx = source[sp.index(0):].index(refs[i])+sp.index(0)
 			sp[idx] = 1
-	finalidx = source[sp.index(0):].index(refs[pos])+sp.index(0)
-	return (refs[pos], finalidx)
+	finalidx = source[sp.index(0):].index(refs[tpos])+sp.index(0)
+	return (refs[tpos], finalidx)
 
 for i in xrange(num_sentence):
 	try: 
@@ -210,7 +210,7 @@ for i in xrange(num_sentence):
 			result[j][-1] = ' '.join(result[j][-1])
 	except:
 		print traceback.print_exc()
-		print 'fail:', i
+		print 'fail:', i, j
 		print index
 		print aligns[index]
 		print tmpresult
