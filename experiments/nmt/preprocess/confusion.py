@@ -44,11 +44,11 @@ for i in xrange(num_systems):
 
 
 def getplainalign(align):
-	nodes = align.split(' ')
+	tnodes = align.split(' ')
 	refs = []
 	newhs = []
-	for i in range(len(nodes)):
-		bone, newh = getsplit(nodes[i])
+	for i in range(len(tnodes)):
+		bone, newh = getsplit(tnodes[i])
 		refs.append(bone)
 		newhs.append(newh)
 	return refs, newhs
@@ -127,7 +127,7 @@ for i in xrange(num_sentence):
 				#print refs, newhs
 				refss.append(refs)
 				newhss.append(newhs)
-			for k in xrange(len(nodes)):
+			for k in range(len(nodes)):
 				node = nodes[k]
 				bone, newh = getsplit(node)
 				#print bone,newh, tmpsentences[j]
