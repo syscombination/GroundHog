@@ -127,11 +127,10 @@ for i in xrange(num_sentence):
 				#print refs, newhs
 				refss.append(refs)
 				newhss.append(newhs)
-			print len(nodes),nodes
 			for k in range(len(nodes)):
 				node = nodes[k]
 				bone, newh = getsplit(node)
-				#print bone,newh, tmpsentences[j]
+				#print pos,bone,newh
 				while len(tmpresult[pos]) == j+1:
 					pos += 1
 				if newh == '$':
@@ -181,13 +180,26 @@ for i in xrange(num_sentence):
 								tmpresult[pos].append(ne)
 							pos += 1
 				else:
+					lastpos = pos
+					bad = False
 					while True: 
+						if pos == len(tmpresult):
+							bad= True
+							pos = lastpos
+							break
 						if tmpresult[pos][0] != '$':
 							if tmpresult[pos][0][0] == bone:
-								break
-						if len(tmpresult[pos]) < j+1:
-							tmpresult[pos].append('$')
+								#print lastpos,pos
+								break		
 						pos += 1
+					#print tmpresult[pos],ne
+					if bad:
+						continue
+					else:
+						for tm in range(lastpos,pos):
+							if len(tmpresult[tm]) < j+1:
+								tmpresult[tm].append('$')
+					#print tmpresult[pos],ne
 					tmpresult[pos].append(ne)
 					pos+=1
 			for p in range(len(tmpresult)):
