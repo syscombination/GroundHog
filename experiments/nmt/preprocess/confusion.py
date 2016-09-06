@@ -127,6 +127,7 @@ for i in xrange(num_sentence):
 				#print refs, newhs
 				refss.append(refs)
 				newhss.append(newhs)
+			print len(nodes),nodes
 			for k in range(len(nodes)):
 				node = nodes[k]
 				bone, newh = getsplit(node)
