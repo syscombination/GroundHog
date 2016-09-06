@@ -44,12 +44,33 @@ for i in xrange(num_systems):
 
 
 def getplainalign(align):
-
-
-def findalign(refs,newhs, newhpos):
+	nodes = align.split(' ')
 	refs = []
 	newhs = []
+	for i in range(len(nodes)):
+		bone, newh = getsplit(nodes[i])
+		refs.append(bone)
+		newhs.append(newh)
+	return refs, newhs
 
+
+def findpos(sentence, opos):
+	tmp = -1
+	result = -1
+	while tmp < opos:
+		result += 1
+		if sentence[result] != '$':
+			tmp += 1
+	return result
+
+def findalign(refs,newhs,source, pos):
+	sp = [0]*1000
+	for i in range(pos-1):
+		if refs[i] != '$':
+			idx = source[sp.index(0):].index(refs[i])+sp.index(0)
+			sp[idx] = 1
+	finalidx = source[sp.index(0):].index(refs[pos])+sp.index(0)
+	return (refs[pos], finalidx)
 
 for i in xrange(num_sentence):
 	try: 
@@ -67,7 +88,7 @@ for i in xrange(num_sentence):
 				bone, newh =getsplit(nodes[k])
 				if bone != '$':
 					tmpsentences[j].append(bone)
-		print tmpsentences
+		#print tmpsentences
 		#exit()
 		nodes = aligns[index].split(' ')
 		bonepos = 0
@@ -88,7 +109,7 @@ for i in xrange(num_sentence):
 				ne = (newh, np)
 				newpos[np] = 1
 			tmpresult.append([bo,ne])
-		print tmpresult
+		#print tmpresult
 		for j in range(2, num_systems):
 			index = num_align*i+j-1
 			newpos = [0]*1000
@@ -96,13 +117,20 @@ for i in xrange(num_sentence):
 			#print '-----'+str(j)+'-----'
 			pos = 0
 			nodes = aligns[index].split(' ')
-			s
+			refss = []
+			newhss = []
 			for ref in range(1, j):
-				secondindex = 
-				aligns
+				secondindex = num_align*i+(num_systems-1)*j+ref
+				#print aligns[7]
+				refs, newhs = getplainalign(aligns[secondindex])
+				#print secondindex
+				#print refs, newhs
+				refss.append(refs)
+				newhss.append(newhs)
 			for k in xrange(len(nodes)):
 				node = nodes[k]
 				bone, newh = getsplit(node)
+				#print bone,newh, tmpsentences[j]
 				while len(tmpresult[pos]) == j+1:
 					pos += 1
 				if newh == '$':
@@ -115,10 +143,24 @@ for i in xrange(num_sentence):
 				if bone == '$':
 					#judge if align to secondary hypothesis
 					aligned = -1
-					for ref in range(1, j):
-						if 
+					if newh != '$':
+						#print bone, newh, np, newpos
+						for ref in range(1, j):
+							spos = findpos(refss[ref-1],np)
+							if newhss[ref-1][spos] != '$':
+								
+								aligned = ref
+								dest = findalign(newhss[ref-1], refss[ref-1], tmpsentences[ref], spos)
+								#print j,spos,newh,dest
+								break
 					if aligned >= 0:
-						pass
+						for tmpp in range(len(tmpresult)):
+							if tmpresult[tmpp][aligned] == dest:
+								if len(tmpresult[tmpp]) == j+1:
+									tmpresult[tmpp][j] = ne
+								else:
+								#print 'ok'
+									tmpresult[tmpp].append(ne)
 					else:
 						if pos == len(tmpresult): 
 							tail = []
@@ -146,10 +188,12 @@ for i in xrange(num_sentence):
 					pos+=1
 			for p in range(len(tmpresult)):
 				if len(tmpresult[p]) < j+1:
+					#print p
 					tmpresult[p].append('$')
 			#while len(tmpresult[j]) < len(tmpresult[0]):
 			#	tmpresult[j].append('$')
 				#pos += 1
+		#print tmpresult
 		#print tmpresult
 		for j in range(num_systems):
 			result[j].append([])
