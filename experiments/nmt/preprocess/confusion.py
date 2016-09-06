@@ -131,6 +131,11 @@ for i in xrange(num_sentence):
 				node = nodes[k]
 				bone, newh = getsplit(node)
 				#print pos,bone,newh
+				if pos == len(tmpresult):
+					tail = []
+					for h in xrange(j):
+						tail.append('$')
+					tmpresult.append(tail)
 				while len(tmpresult[pos]) == j+1:
 					pos += 1
 					if pos == len(tmpresult):
