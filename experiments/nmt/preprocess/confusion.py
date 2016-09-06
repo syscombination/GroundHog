@@ -43,6 +43,14 @@ for i in xrange(num_systems):
 	result.append([])
 
 
+def getplainalign(align):
+
+
+def findalign(refs,newhs, newhpos):
+	refs = []
+	newhs = []
+
+
 for i in xrange(num_sentence):
 	try: 
 		if i % 10000 == 0:
@@ -88,6 +96,10 @@ for i in xrange(num_sentence):
 			#print '-----'+str(j)+'-----'
 			pos = 0
 			nodes = aligns[index].split(' ')
+			s
+			for ref in range(1, j):
+				secondindex = 
+				aligns
 			for k in xrange(len(nodes)):
 				node = nodes[k]
 				bone, newh = getsplit(node)
@@ -103,6 +115,8 @@ for i in xrange(num_sentence):
 				if bone == '$':
 					#judge if align to secondary hypothesis
 					aligned = -1
+					for ref in range(1, j):
+						if 
 					if aligned >= 0:
 						pass
 					else:
