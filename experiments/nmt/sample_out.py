@@ -79,7 +79,7 @@ class BeamSearch(object):
                     h[j][systems[i][k]] += 1.
                     m[j] *= 1-p[i]
                     m[j][systems[i][k]] *= p[i]/(1-p[i])
-            print m
+            #print m
             # Compute probabilities of the next words for
             # all the elements of the beam.
             
@@ -113,8 +113,8 @@ class BeamSearch(object):
 
             for i in range(probs.shape[0]):
             	probs[i][self.state['empty_sym_target']] = 1./self.state['num_systems']
-            #probs = probs * h/self.state['num_systems']
-            probs = probs * m/self.state['num_systems']
+            probs = probs * h0
+            probs = probs * m
             #print probs
             #print probs.sum(axis=1)
             #print probs/probs.sum(axis=0).reshape((probs.))
