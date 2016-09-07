@@ -2261,22 +2261,28 @@ class Outsyscomb(object):
 
     def build(self):
         logger.debug("Create input variables")
-        self.p = TT.matrix('p')
-        self.readout = TT.matrix('readout')
-        self.h = TT.matrix('h')
-        self.b = TT.vector('b')
+        self.p = TT.matrix('p') #bs*num_target
+        self.y = TT.scalar('y') 
+        self.readout = TT.matrix('readout') #bs*dim
+        self.h = []
+        for i in range(self.state['num_systems']):
+            self.h.append(TT.matrix('h'+str(i))) #bs*num_target
+        self.b = TT.vector('b') # bs
 
-        self.inputs = [self.p, self.readout, self.h, self.b]
+        self.inputs = [self.p, self.y,self.readout, self.b] + self.h
 
         self.Wp = MultiLayer(self.rng,n_in=self.state['dim'],
                                 n_hids=1,activation=['lambda x:x'],
                                 name='emptyprob'
                                 )
-        #self.
+        self.emptyscore = self.Wp(self.readout)
+        self.p_exp = TT.exp(self.p) #bs*num_target
+        self.empty_exp = TT.exp(self.emptyscore) #bs*1
+        normalizer = self.p_exp.sum(axis=1)+self.empty_exp.sum(axis=1)
+        self.probs = self.p_exp/normalizer
+        self.emptyexp /= self.normalizer/normalizer
 
-
-
-
+        cost = 
         self.predictions = (cost, grads)
 
 
@@ -2294,6 +2300,15 @@ class Outsyscomb(object):
         logger.debug("Model params:\n{}".format(
             pprint.pformat(sorted([p.name for p in self.lm_model.params]))))
         return self.lm_model
+
+    def get_probs_calculator(self):
+        if not hasattr(self, 'probs_calculator'):
+            self.probs_calculator = theano.function(
+                    inputs=[self.p, self.readout, self.b]+self.h,
+                    outputs=[self.probs, self.emptyprob],
+                    name="probs_calculator")
+        return self.probs_calculator
+
 
 
 class Decoder_syscombination(EncoderDecoderBase):
