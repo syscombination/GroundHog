@@ -47,6 +47,8 @@ class BeamSearch(object):
         self.comp_next_states = self.enc_dec.create_next_states_computer()
 
     def search(self, seq, systems, n_samples, empty_p=0.05,weight_m=1.,ignore_unk=False, minlen=1):
+        print 'empty_p:', empty_p
+        print 'weight_m:', weight_m
         #print seq, systems
 
         c = self.comp_repr(seq)[0]
