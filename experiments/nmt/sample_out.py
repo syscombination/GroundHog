@@ -61,6 +61,7 @@ class BeamSearch(object):
         trans = [[]]
 
         costs = [0.0]
+        p = [0.8]*4
         #print systems
 
         for k in xrange(len(systems[0])):
@@ -71,10 +72,14 @@ class BeamSearch(object):
             beam_size = len(trans)
             h0 = numpy.zeros((beam_size, self.state['n_sym_target']), dtype="float32")
             h = numpy.zeros((beam_size, self.state['n_sym_target']), dtype="float32")
+            m = numpy.ones((beam_size, self.state['n_sym_target']), dtype="float32")
             for i in xrange(self.state['num_systems']):
                 for j in xrange(beam_size):
                     h0[j][systems[i][k]] = 1.
                     h[j][systems[i][k]] += 1.
+                    m[j] *= 1-p[i]
+                    m[j][systems[i][k]] *= p[i]/(1-p[i])
+            print m
             # Compute probabilities of the next words for
             # all the elements of the beam.
             
@@ -108,7 +113,8 @@ class BeamSearch(object):
 
             for i in range(probs.shape[0]):
             	probs[i][self.state['empty_sym_target']] = 1./self.state['num_systems']
-            probs = probs * h/self.state['num_systems']
+            #probs = probs * h/self.state['num_systems']
+            probs = probs * m/self.state['num_systems']
             #print probs
             #print probs.sum(axis=1)
             #print probs/probs.sum(axis=0).reshape((probs.))
