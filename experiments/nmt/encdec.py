@@ -2282,7 +2282,7 @@ class Outsyscomb(object):
         self.probs = self.p_exp/normalizer
         self.emptyexp /= self.normalizer/normalizer
 
-        cost = 
+        #cost = 
         self.predictions = (cost, grads)
 
 
