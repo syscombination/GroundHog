@@ -46,7 +46,7 @@ class BeamSearch(object):
         self.comp_next_probs = self.enc_dec.create_next_probs_computer()
         self.comp_next_states = self.enc_dec.create_next_states_computer()
 
-    def search(self, seq, systems, n_samples, ignore_unk=False, minlen=1):
+    def search(self, seq, systems, n_samples, empty_p=0.05,weight_m=1.,ignore_unk=False, minlen=1):
         #print seq, systems
 
         c = self.comp_repr(seq)[0]
@@ -112,9 +112,9 @@ class BeamSearch(object):
             probs = probs/norm
 
             for i in range(probs.shape[0]):
-            	probs[i][self.state['empty_sym_target']] = 1./self.state['num_systems']
+            	probs[i][self.state['empty_sym_target']] = empty_p
             probs = probs * h0
-            probs = probs * m
+            probs = probs * (m**weight_m)
             #print probs
             #print probs.sum(axis=1)
             #print probs/probs.sum(axis=0).reshape((probs.))
@@ -218,11 +218,11 @@ def indices_to_words(i2w, seq):
 def sample(lm_model, seq, systems, n_samples,
         sampler=None, beam_search=None,
         ignore_unk=False, normalize=False,
-        alpha=1, verbose=False):
+        alpha=1, verbose=False, empty_p=0.05,weight_m=1.):
     if beam_search:
         sentences = []
         trans, costs = beam_search.search(seq, systems, n_samples,
-                ignore_unk=ignore_unk, minlen=len(seq) / 2)
+                ignore_unk=ignore_unk, minlen=len(seq) / 2, empty_p=empty_p,weight_m=weight_m)
         if normalize:
             counts = [len(s) for s in trans]
             costs = [co / cn for co, cn in zip(costs, counts)]
@@ -272,6 +272,10 @@ def parse_args():
             action="store_true", help="Beam size, turns on beam-search")
     parser.add_argument("--beam-size",
             type=int, help="Beam size")
+    parser.add_argument("--empty-p",
+            type=float)
+    parser.add_argument("--weight-m",
+            type=float)
     parser.add_argument("--ignore-unk",
             default=False, action="store_true",
             help="Ignore unknown words")
