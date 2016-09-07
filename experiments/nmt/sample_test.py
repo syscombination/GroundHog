@@ -47,8 +47,7 @@ class BeamSearch(object):
         self.comp_next_states = self.enc_dec.create_next_states_computer()
 
     def search(self, seq, systems, n_samples, empty_p=0.05,weight_m=1.,ignore_unk=False, minlen=1):
-        print 'empty_p:', empty_p
-        print 'weight_m:', weight_m
+
         #print seq, systems
 
         c = self.comp_repr(seq)[0]
@@ -302,6 +301,8 @@ def parse_args():
 
 def main():
     args = parse_args()
+    print 'empty_p:', args.empty_p
+    print 'weight_m:', args.weight_m
     print args.system
 
     state = prototype_state()
@@ -357,7 +358,7 @@ def main():
             if args.verbose:
                 print "Parsed Input:", parsed_in
             trans, costs, _ = sample(lm_model, seq, systems, n_samples, sampler=sampler,
-                    beam_search=beam_search, ignore_unk=args.ignore_unk, normalize=args.normalize)
+                    beam_search=beam_search, ignore_unk=args.ignore_unk, normalize=args.normalize, empty_p=empty_p,weight_m=weight_m)
             best = numpy.argmin(costs)
             print >>ftrans, trans[best]
             if args.verbose:
