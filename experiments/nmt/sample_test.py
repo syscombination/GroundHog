@@ -358,7 +358,7 @@ def main():
             if args.verbose:
                 print "Parsed Input:", parsed_in
             trans, costs, _ = sample(lm_model, seq, systems, n_samples, sampler=sampler,
-                    beam_search=beam_search, ignore_unk=args.ignore_unk, normalize=args.normalize, empty_p=empty_p,weight_m=weight_m)
+                    beam_search=beam_search, ignore_unk=args.ignore_unk, normalize=args.normalize, empty_p=args.empty_p,weight_m=args.weight_m)
             best = numpy.argmin(costs)
             print >>ftrans, trans[best]
             if args.verbose:
