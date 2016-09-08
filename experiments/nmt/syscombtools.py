@@ -1,41 +1,49 @@
 import numpy
 import math
 
+
 def get_oracle(y,h,empty):
+    delempty = {}
     length = len(h)
     num_systems = len(h[0])
     results = {}
     #print [str(i) for i in y]
     ref_dict,l = getRefDict([str(i) for i in y])
-    print l
+    #print l
     #print ref_dict
     #calBleu(['1','2','3','4','5'],ref_dict,5)
     #exit()
     for i in range(num_systems):
         if h[0][i] != empty:
+            delempty[str(h[0][i])] = str(h[0][i])
             results[str(h[0][i])]=calBleu([str(h[0][i])],ref_dict,l)
         else:
-            results[''] = calBleu([],ref_dict,l)
+            delempty[str(h[0][i])] = ''
+            results[str(h[0][i])]=calBleu([],ref_dict,l)
     for i in range(1,length):
-        print 'results:', results
+        #print 'results:', results
         tmpresult = {}
         for r in results:
             for k in range(num_systems):
                 if h[i][k] != empty:
-                    if r != '':
-                        tmpresult[r+' '+str(h[i][k])]=calBleu((r+' '+str(h[i][k])).split(' '),ref_dict,l)
+                    if delempty[r] == '':
+                        delempty[r+' '+str(h[i][k])] = str(h[i][k])
                     else:
-                        tmpresult[str(h[i][k])]=calBleu((str(h[i][k])).split(' '),ref_dict,l)
+                        delempty[r+' '+str(h[i][k])] = delempty[r]+' '+str(h[i][k])
+                    tmpresult[r+' '+str(h[i][k])]=calBleu(delempty[r+' '+str(h[i][k])].split(' '),ref_dict,l)
                 else:
-                    tmpresult[r]=results[r]
-        print 'tmpresult:',tmpresult
+                    delempty[r+' '+str(h[i][k])] = delempty[r]
+                    tmpresult[r+' '+str(h[i][k])]=results[r]
+        #print 'tmpresult:',tmpresult
         sort = sorted(tmpresult.items(),key=lambda t:t[1],reverse=True)
         #print sort
         results = {}
-        for j in range(min(num_systems*2,len(sort))):
+        for j in range(min(num_systems*4,len(sort))):
             results[sort[j][0]] = sort[j][1]
-    print results
-    return y
+    #print results
+    sort = sorted(results.items(),key=lambda t:t[1],reverse=True)
+    print sort[0][0], sort[0][1]
+    return sort[0][0].split(' ')
 
 def my_log(a):
     if a == 0:
