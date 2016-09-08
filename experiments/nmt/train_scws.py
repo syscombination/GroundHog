@@ -99,8 +99,8 @@ def main():
     lm_model = enc_dec.create_lm_model()
     if state['mrt']:
         train_sampler = enc_dec.create_sampler(many_samples=True)
-        beam_search = BeamSearch(enc_dec)
-        beam_search.compile()
+    beam_search = BeamSearch(enc_dec)
+    beam_search.compile()
 
     logger.debug("Load data")
     train_data = get_batch_iterator_syscombination(state)
