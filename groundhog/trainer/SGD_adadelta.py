@@ -167,7 +167,7 @@ class SGD(object):
         #print 'input h shape:',batch['h'].shape
 
         batch['ylast'] = batch['y']
-        for i in range(batch[y].shape[1]):
+        for i in range(batch['y'].shape[1]):
             if batch['y'][j][i] == self.state['empty_sym_target']:
                 batch['ylast'][0][i] = 0
             for j in range(1, batch['y'].shape[0]):
