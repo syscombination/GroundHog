@@ -28,6 +28,7 @@ from groundhog.datasets import PytablesBitextIterator
 from groundhog.utils import sample_zeros, sample_weights_orth, init_bias, sample_weights_classic
 import groundhog.utils as utils
 import json
+from syscombtool import get_oracle
 
 logger = logging.getLogger(__name__)
 
@@ -219,6 +220,10 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     mh = state['seqlen']
     c = time.time()
 
+    if state['oracle']:
+        for idx in xrange(len(y[0])):
+            y[0][idx] = get_oracle(y[0][idx],h[0][idx])
+
     if state['trim_batches']:
         # Similar length for all source sequences
         if x != None:
@@ -239,9 +244,6 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     Ymask = numpy.zeros((mhy, n), dtype='float32')
     Hmask = numpy.zeros((mhy, n), dtype='float32')
 
-    if self.state['oracle']:
-        for idx in xrange(len(y[0])):
-            y[0][idx] = get_oracle(y[0][idx],h[0][idx])
 
     # Fill X and Xmask
     if x != None:
@@ -270,6 +272,12 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
         Ymask[:len(y[0][idx]), idx] = 1.
         if len(y[0][idx]) < my:
             Ymask[len(y[0][idx]), idx] = 1.
+
+    if state['oracle']:
+        for idx in xrange(len(y[0])):
+            for pos in len(len(y)):
+                if Y[pos][idx] = state['empty_sym_target']:
+                    Ymask[pos][idx] = 0.
 
     for idx in xrange(len(h[0])):
         H[:len(h[0][idx]), idx] = h[0][idx][:mh]
