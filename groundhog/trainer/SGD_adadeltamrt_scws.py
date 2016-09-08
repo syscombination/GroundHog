@@ -355,7 +355,7 @@ def getYM(y,state,empty=-1):
             Ylast[0,i] = y[i][0]
         Ymask[0,i] = 1
         for j in range(1,ly):
-            if Y[j-1,i] != empty:
+            if Y[j,i] != empty:
                 Ymask[j,i] = 1
             if Y[j,i] == empty:
                 Ylast[j,i] = Ylast[j-1,i]

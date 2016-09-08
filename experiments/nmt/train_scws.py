@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 class RandomSamplePrinter(object):
 
-    def __init__(self, state, model, train_iter):
+    def __init__(self, state, model, train_iter, beam_search):
         args = dict(locals())
         args.pop('self')
         self.__dict__.update(**args)
@@ -57,7 +57,10 @@ class RandomSamplePrinter(object):
                     print "System "+str(i)+':'," ".join(oh_words)
                 print "Target: {}".format(" ".join(y_words))
                 #print h_words
-                self.model.get_samples(self.state['seqlen'] + 1, self.state['n_samples'], x[:len(x_words)],h[:,:])
+                trans,costs=self.beam_search.search(x[:len(x_words)],h[:,:],10)
+                best = numpy.argmin(costs)
+                print "Output:", trans[best]
+                #self.model.get_samples(self.state['seqlen'] + 1, self.state['n_samples'], x[:len(x_words)],h[:,:])
                 sample_idx += 1
 
 def parse_args():
@@ -88,12 +91,12 @@ def main():
 
     rng = numpy.random.RandomState(state['seed'])
     enc_dec = Syscombination_withsource(state, rng, args.skip_init)
-    enc_dec.build()
+    enc_dec.build() 
+    lm_model = enc_dec.create_lm_model()
     if state['mrt']:
         train_sampler = enc_dec.create_sampler(many_samples=True)
-        beam_search = BeamSearch(enc_dec)
+        beam_search = BeamSearch(enc_dec, lm_model=lm_model,train_iter=train_data)
         beam_search.compile()
-    lm_model = enc_dec.create_lm_model()
 
     logger.debug("Load data")
     train_data = get_batch_iterator_syscombination(state)
@@ -105,7 +108,7 @@ def main():
     logger.debug("Run training")
     main = MainLoop(train_data, None, None, lm_model, algo, state, None,
             reset=state['reset'],
-            hooks=[RandomSamplePrinter(state, lm_model, train_data)]
+            hooks=[RandomSamplePrinter(state, lm_model, train_data, beam_search)]
                 if state['hookFreq'] >= 0
                 else None)
     if state['reload']:
