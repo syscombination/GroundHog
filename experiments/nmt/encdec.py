@@ -28,7 +28,7 @@ from groundhog.datasets import PytablesBitextIterator
 from groundhog.utils import sample_zeros, sample_weights_orth, init_bias, sample_weights_classic
 import groundhog.utils as utils
 import json
-from syscombtool import get_oracle
+from syscombtools import get_oracle
 
 logger = logging.getLogger(__name__)
 
