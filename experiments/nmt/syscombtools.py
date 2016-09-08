@@ -1,7 +1,7 @@
 import numpy
 
 def get_oracle(y,h,empty):
-	'''
+	
 	length = len(h)
 	num_systems = len(h[0])
 	results = []
@@ -18,7 +18,7 @@ def get_oracle(y,h,empty):
 		sort = sorted(tmpresult,key=lambda t:t[1],reverse=True)
 		for j in range(num_systems):
 			results[j] = tmpresult[j][0]
-	'''
+	print results
 	return y
 
 def my_log(a):
@@ -77,5 +77,5 @@ def calBleu(x,ref_dict,lens):
     now_bleu = brev_penalty*math.exp((my_log(bleu[0]) + my_log(bleu[1]) + my_log(bleu[2]) + my_log(bleu[3]))/4)
     return now_bleu
 
-#if __name__ == "__main__":
-#	get_oracle([],[[],[],[],[]],10)
+if __name__ == "__main__":
+	get_oracle([1,2,3,4,5],[[10,2,10,10,3,5,10],[1,2,10,10,3,4,5],[1,10,10,4,3,10,5]],10)
