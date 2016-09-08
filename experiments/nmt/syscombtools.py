@@ -4,24 +4,26 @@ import math
 def get_oracle(y,h,empty):
     length = len(h)
     num_systems = len(h[0])
-    results = []
+    results = {}
     ref_dict = getRefDict([str(i) for i in y])
     for i in range(num_systems):
         if h[0][i] != empty:
-            results.append([h[0][i]])
+            results[str(h[0][i])]=calBleu([str(h[0][i])],ref_dict,length)
+        else:
+            results[''] = calBleu([],ref_dict,length)
+    print results
     for i in range(1,length):
-        tmpresult = []
+        tmpresult = {}
         emp = False
         for j in range(len(results)):
             for k in range(num_systems):
                 if h[i][k] != empty:
-                    tmpresult.append((results[j]+[h[i][k]], \
-                        calBleu([str(m) for m in results[j]+[h[i][k]]],ref_dict,length)))
+                    tmpresult[results[j]+' '+h[i][k]]=calBleu((results[j]+' '+h[i][k]).split(' '),ref_dict,length)
                 else:
                     if not empty:
                         empty = True
                         tmpresult.append((results[j], \
-                            calBleu([str(m) for m in results[j],ref_dict,length)))
+                            calBleu([str(m) for m in results[j]],ref_dict,length)))
         print tmpresult
         sort = sorted(tmpresult,key=lambda t:t[1],reverse=True)
         for j in range(min(num_systems,len(tmpresult))):
@@ -57,6 +59,8 @@ def getRefDict(words):
 def calBleu(x,ref_dict,lens):
 
     length_trans = len(x)
+    if length_trans == 0:
+        return 0.5
     words = x
     closet_length = lens
     sent_dict = {}
