@@ -42,7 +42,7 @@ def get_oracle(y,h,empty):
             results[sort[j][0]] = sort[j][1]
     #print results
     sort = sorted(results.items(),key=lambda t:t[1],reverse=True)
-    #print sort[0][0], sort[0][1]
+    print sort[0][0], sort[0][1]
     if sort[0][0].split(' ') == [str(empty)]*length:
         return sort[1][0].split(' ')
     else:
@@ -112,5 +112,5 @@ def calBleu(x,ref_dict,lens):
 
 if __name__ == "__main__":
     y = numpy.asarray([1,2,3,4,5],dtype=int)
-    h = numpy.asarray([[10,1,1],[2,2,10],[10,10,2],[10,10,4],[3,3,3],[5,4,10],[10,5,5]],dtype=int)
+    h = numpy.asarray([[1,1],[10,2],[6,10],[3,3],[4,10],[5,5]],dtype=int)
     get_oracle(y,h,10)
