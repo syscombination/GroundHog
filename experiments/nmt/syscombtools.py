@@ -8,7 +8,7 @@ def get_oracle(y,h,empty,null):
     num_systems = len(h[0])
     results = {}
     #print [str(i) for i in y]
-    y = cutSen(y,null)
+    y = cutSen(y.tolist(),null)
     ref_dict,l = getRefDict([str(i) for i in y])
     #print l
     #print ref_dict

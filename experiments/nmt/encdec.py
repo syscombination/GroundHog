@@ -275,7 +275,7 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
 
     if state['oracle']:
         for idx in xrange(len(y[0])):
-            for pos in len(len(y)):
+            for pos in range(len(y)):
                 if Y[pos][idx] == state['empty_sym_target']:
                     Ymask[pos][idx] = 0.
 
