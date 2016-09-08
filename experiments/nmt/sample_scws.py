@@ -160,7 +160,7 @@ class BeamSearch(object):
                     last_refs.append(new_last_refs[i])
                     indices.append(i)
                 else:
-                    if k == xrange(len(systems[0]))-1: 
+                    if k == len(systems[0])-1: 
                         n_samples -= 1
                         fin_trans.append(new_trans[i])
                         fin_costs.append(new_costs[i])

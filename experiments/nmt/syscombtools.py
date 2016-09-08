@@ -14,6 +14,10 @@ def get_oracle(y,h,empty):
 			for k in range(num_systems):
 				tmpresult.append((results[j]+[h[i][k]], \
 					calBleu([str(m) for m in results[j]+[h[i][k]]],re)))
+		print tmpresult
+		sort = sorted(tmpresult,key=lambda t:t[1],reverse=True)
+		for j in range(num_systems):
+			results[j] = tmpresult[j][0]
 	'''
 	return y
 
