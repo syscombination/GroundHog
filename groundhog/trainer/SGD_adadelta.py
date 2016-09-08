@@ -174,6 +174,7 @@ class SGD(object):
                 if batch['y'][j][i] == self.state['empty_sym_target']:
                     batch['ylast'][j][i] = batch['ylast'][j-1][i]
 
+        print batch['y'], batch['oh'], batch['ym'],batch['ylast'],
         # Perturb the data (! and the model)
         if isinstance(batch, dict):
             batch = self.model.perturb(**batch)
