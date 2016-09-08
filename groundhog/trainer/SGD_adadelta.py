@@ -166,7 +166,7 @@ class SGD(object):
         #print 'input y shape:',batch['y'].shape
         #print 'input h shape:',batch['h'].shape
 
-        print 'before',batch['y']
+        #print 'before',batch['y']
         batch['ylast'] = numpy.zeros(batch['y'].shape, dtype='int64')
         for i in range(batch['y'].shape[1]):
             if batch['y'][0][i] == self.state['empty_sym_target']:
@@ -182,7 +182,7 @@ class SGD(object):
                     batch['ylast'][j][i] = batch['y'][j][i]
 
 
-        print batch['y'], batch['oh'], batch['y_mask'],batch['ylast'],
+        #print batch['y'], batch['oh'], batch['y_mask'],batch['ylast'],
         # Perturb the data (! and the model)
         if isinstance(batch, dict):
             batch = self.model.perturb(**batch)
