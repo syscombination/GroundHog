@@ -311,11 +311,11 @@ def getUnique(samples, y, co, state, H = None,empty=-1):
         while str(empty) in words:
             words.remove(str(empty))
     dic[' '.join(str(t) for t in oracle)] = calBleu(words, ref, lens)
-    print y, oracle, calBleu(words, ref, lens)
+    print 'oracle', y, oracle, calBleu(words, ref, lens)
     #print 'oracle:',oracle, calBleu([str(t) for t in oracle], ref, lens)
     for i in range(len(H[0,0])):
         #print H[:,0,i]
-        words = [str(i) for i in H[:,0,i]]
+        words = [str(t) for t in H[:,0,i]]
         if empty >= 0:
             while str(empty) in words:
                 words.remove(str(empty))
