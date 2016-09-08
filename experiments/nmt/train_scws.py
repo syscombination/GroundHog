@@ -57,7 +57,7 @@ class RandomSamplePrinter(object):
                     print "System "+str(i)+':'," ".join(oh_words)
                 print "Target: {}".format(" ".join(y_words))
                 #print h_words
-                trans,costs=self.beam_search.search(x[:len(x_words)],h[:,:],10)
+                trans,costs=self.beam_search.search(x[:len(x_words)],oh[:,:],10)
                 best = numpy.argmin(costs)
                 print "Output:", trans[best]
                 #self.model.get_samples(self.state['seqlen'] + 1, self.state['n_samples'], x[:len(x_words)],h[:,:])
