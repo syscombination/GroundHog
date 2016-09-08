@@ -162,9 +162,17 @@ class SGD(object):
     def __call__(self):
         batch = self.data.next()
         assert batch
-        print 'input x shape:',batch['x'].shape
-        print 'input y shape:',batch['y'].shape
-        print 'input h shape:',batch['h'].shape
+        #print 'input x shape:',batch['x'].shape
+        #print 'input y shape:',batch['y'].shape
+        #print 'input h shape:',batch['h'].shape
+
+        batch['ylast'] = batch['y']
+        for i in range(batch[y].shape[1]):
+            if batch['y'][j][i] == self.state['empty_sym_target']:
+                batch['ylast'][0][i] = 0
+            for j in range(1, batch[y].shape[0]):
+                if batch['y'][j][i] == self.state['empty_sym_target']:
+                    batch['ylast'][j][i] = batch['ylast'][j-1][i]
 
         # Perturb the data (! and the model)
         if isinstance(batch, dict):
