@@ -269,7 +269,11 @@ class SGD(object):
         g_ed = time.time()
         self.state['lr'] = float(self.lr)
         cost = rvals[-1]
-        print rvals
+        #print rvals
+        #grad nan
+        if rvals[0] != rvals[0]:
+            print 'grad is nan'
+            print batch['y'],batch['oh'],y,b
         self.old_cost = cost
         whole_time = time.time() - self.step_timer
         if self.step % self.state['trainFreq'] == 0:
