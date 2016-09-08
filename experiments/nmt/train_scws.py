@@ -61,7 +61,7 @@ class RandomSamplePrinter(object):
                 if trans.shape[0] > 0:
                     best = numpy.argmin(costs)
                     out_words = cut_eol(map(lambda w_idx : self.model.word_indxs[w_idx], trans[best]))
-                    print "Output:", out_words
+                    print "Output:", " ".join(out_words)
                 else:
                     print 'Failed'
                 #self.model.get_samples(self.state['seqlen'] + 1, self.state['n_samples'], x[:len(x_words)],h[:,:])
