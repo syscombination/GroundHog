@@ -305,7 +305,7 @@ def getUnique(samples, y, co, state, H = None,empty=-1):
     ref,lens = getRefDict(words)
     #dic[' '.join(words)]=1.0
     #print 'hshape:', H.shape
-    oracle = get_oracle(y[:,0],H[:,0,:],empty)
+    oracle = get_oracle(y[:,0],H[:,0,:],empty,state['null_sym_target'])
     words = [str(i) for i in oracle]
     if empty >= 0:
         while str(empty) in words:

@@ -2,12 +2,13 @@ import numpy
 import math
 
 
-def get_oracle(y,h,empty):
+def get_oracle(y,h,empty,null):
     delempty = {}
     length = len(h)
     num_systems = len(h[0])
     results = {}
     #print [str(i) for i in y]
+    y = cutSen(y,null)
     ref_dict,l = getRefDict([str(i) for i in y])
     #print l
     #print ref_dict
@@ -52,11 +53,11 @@ def my_log(a):
     if a == 0:
         return -100000
     return math.log(a)
-def cutSen(x,state):
-    if state['null_sym_target'] not in x:
+def cutSen(x,null):
+    if null not in x:
         return x
     else:
-        return x[:x.index(state['null_sym_target'])+1]
+        return x[:x.index(null)+1]
 
 def getRefDict(words):
     lens = len(words)
