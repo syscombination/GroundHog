@@ -239,6 +239,10 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     Ymask = numpy.zeros((mhy, n), dtype='float32')
     Hmask = numpy.zeros((mhy, n), dtype='float32')
 
+    if self.state['oracle']:
+        for idx in xrange(len(y[0])):
+            y[0][idx] = get_oracle(y[0][idx],h[0][idx])
+
     # Fill X and Xmask
     if x != None:
         for idx in xrange(len(x[0])):
@@ -321,7 +325,10 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     for i in xrange(Ht.shape[0]):
         for j in xrange(Ht.shape[1]):
             for k in xrange(state['num_systems']):
-                H[i][j][Ht[i][j][k]] = 1.  
+                H[i][j][Ht[i][j][k]] = 1.
+
+    
+
 
     b = time.time()
     print 'batch prepare time', b-c,'sec'
