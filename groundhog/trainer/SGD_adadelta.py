@@ -166,7 +166,8 @@ class SGD(object):
         #print 'input y shape:',batch['y'].shape
         #print 'input h shape:',batch['h'].shape
 
-        batch['ylast'] = batch['y']
+        print 'before',batch['y']
+        batch['ylast'] = numpy.asarray(batch['y'])
         for i in range(batch['y'].shape[1]):
             if batch['y'][0][i] == self.state['empty_sym_target']:
                 batch['ylast'][0][i] = 0
