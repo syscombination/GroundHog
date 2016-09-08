@@ -189,7 +189,7 @@ class SGD(object):
         samples, costs = self.beam_search.search(batch['x'].squeeze(), batch['oh'].squeeze().transpose(),sampleN)
         #print samples
         samples = samples.transpose()
-        print samples,costs
+        #print samples,costs
         t2 = time.time()
         print 'beam_search:', t2-t1, 'sec'
         y,b = getUnique(samples, batch['y'],costs, self.state, H=batch['oh'],empty=self.state['empty_sym_target'])

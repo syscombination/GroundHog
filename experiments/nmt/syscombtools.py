@@ -5,32 +5,35 @@ def get_oracle(y,h,empty):
     length = len(h)
     num_systems = len(h[0])
     results = {}
-    ref_dict = getRefDict([str(i) for i in y])
+    #print [str(i) for i in y]
+    ref_dict,l = getRefDict([str(i) for i in y])
+    print l
+    #print ref_dict
+    #calBleu(['1','2','3','4','5'],ref_dict,5)
+    #exit()
     for i in range(num_systems):
         if h[0][i] != empty:
-            results[str(h[0][i])]=calBleu([str(h[0][i])],ref_dict,length)
+            results[str(h[0][i])]=calBleu([str(h[0][i])],ref_dict,l)
         else:
-            results[''] = calBleu([],ref_dict,length)
-    print results
+            results[''] = calBleu([],ref_dict,l)
     for i in range(1,length):
+        print 'results:', results
         tmpresult = {}
-        emp = False
-        for j in range(len(results)):
+        for r in results:
             for k in range(num_systems):
                 if h[i][k] != empty:
-                    tmpresult[results[j]+' '+h[i][k]]=calBleu((results[j]+' '+h[i][k]).split(' '),ref_dict,length)
+                    if r != '':
+                        tmpresult[r+' '+str(h[i][k])]=calBleu((r+' '+str(h[i][k])).split(' '),ref_dict,l)
+                    else:
+                        tmpresult[str(h[i][k])]=calBleu((str(h[i][k])).split(' '),ref_dict,l)
                 else:
-                    if not empty:
-                        empty = True
-                        tmpresult.append((results[j], \
-                            calBleu([str(m) for m in results[j]],ref_dict,length)))
-        print tmpresult
-        sort = sorted(tmpresult,key=lambda t:t[1],reverse=True)
-        for j in range(min(num_systems,len(tmpresult))):
-            if j == len(results):
-                results.append(tmpresult[j][0])
-            else:
-                results[j] = tmpresult[j][0]
+                    tmpresult[r]=results[r]
+        print 'tmpresult:',tmpresult
+        sort = sorted(tmpresult.items(),key=lambda t:t[1],reverse=True)
+        #print sort
+        results = {}
+        for j in range(min(num_systems*2,len(sort))):
+            results[sort[j][0]] = sort[j][1]
     print results
     return y
 
@@ -85,11 +88,15 @@ def calBleu(x,ref_dict,lens):
         if length_trans > j:
             bleu[j] = 1.*(correct_gram[j]+smooth)/(length_trans - j + smooth)
         else:
-            bleu[j] = 1
+            bleu[j] = 0.01
+
     brev_penalty = 1
     if length_trans < closet_length:
-        brev_penalty = math.exp(1 - closet_length*1./length_trans)
+        brev_penalty = math.exp(1 - closet_length*1./length_trans) 
+    #brev_penalty = 1
+
     now_bleu = brev_penalty*math.exp((my_log(bleu[0]) + my_log(bleu[1]) + my_log(bleu[2]) + my_log(bleu[3]))/4)
+    #print x,bleu, brev_penalty,now_bleu,closet_length,length_trans
     return now_bleu
 
 if __name__ == "__main__":
