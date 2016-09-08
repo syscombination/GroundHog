@@ -42,7 +42,7 @@ def get_oracle(y,h,empty):
             results[sort[j][0]] = sort[j][1]
     #print results
     sort = sorted(results.items(),key=lambda t:t[1],reverse=True)
-    print sort[0][0], sort[0][1]
+    #print sort[0][0], sort[0][1]
     return sort[0][0].split(' ')
 
 def my_log(a):
