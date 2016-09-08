@@ -206,6 +206,7 @@ class SGD(object):
 #        print b.mean()
 #        print (b*p).mean()
         print 'y:',batch['y']
+        print 'h:',batch['oh']
         print 'sample&bleu:',y,b 
         Y,YM, Yl = getYM(y, self.state, empty=self.state['empty_sym_target'])
         #print Y, YM, Yl
@@ -304,7 +305,7 @@ def getUnique(samples, y, co, state, H = None,empty=-1):
     ref,lens = getRefDict(words)
     #dic[' '.join(words)]=1.0
     print 'hshape:', H.shape
-    oracle = get_oracle(y,H[:,0,:].transpose(),empty)
+    oracle = get_oracle(y,H[:,0,:],empty)
     dic[' '.join(str(t) for t in oracle)] = calBleu([str(t) for t in oracle], ref, lens)
     print 'oracle:',oracle, calBleu([str(t) for t in oracle], ref, lens)
     for i in range(len(H[0,0])):
