@@ -310,7 +310,7 @@ def getUnique(samples, y, co, state, H = None,empty=-1):
     #print 'samples:', n
     
     for i in range(n):
-        if co[i] < -1000000.:
+        if abs(co[i]) > 1000000.:
             continue
         sen = samples[:,i]
         sen = cutSen(sen.tolist(), state)

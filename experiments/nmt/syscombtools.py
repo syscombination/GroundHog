@@ -11,14 +11,24 @@ def get_oracle(y,h,empty):
             results.append([h[0][i]])
     for i in range(1,length):
         tmpresult = []
+        emp = False
         for j in range(len(results)):
             for k in range(num_systems):
-                tmpresult.append((results[j]+[h[i][k]], \
-                    calBleu([str(m) for m in results[j]+[h[i][k]]],ref_dict,length)))
+                if h[i][k] != empty:
+                    tmpresult.append((results[j]+[h[i][k]], \
+                        calBleu([str(m) for m in results[j]+[h[i][k]]],ref_dict,length)))
+                else:
+                    if not empty:
+                        empty = True
+                        tmpresult.append((results[j], \
+                            calBleu([str(m) for m in results[j],ref_dict,length)))
         print tmpresult
         sort = sorted(tmpresult,key=lambda t:t[1],reverse=True)
         for j in range(min(num_systems,len(tmpresult))):
-            results[j] = tmpresult[j][0]
+            if j == len(results):
+                results.append(tmpresult[j][0])
+            else:
+                results[j] = tmpresult[j][0]
     print results
     return y
 
