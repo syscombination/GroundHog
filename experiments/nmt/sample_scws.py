@@ -72,7 +72,7 @@ class BeamSearch(object):
             h0 = numpy.zeros((beam_size, self.state['n_sym_target']), dtype="float32")
             for i in xrange(self.state['num_systems']):
                 for j in xrange(beam_size):
-                    h0[j][systems[i][k]] += 1.
+                    h0[j][systems[i][k]] = 1.
             # Compute probabilities of the next words for
             # all the elements of the beam.
             
@@ -160,9 +160,10 @@ class BeamSearch(object):
                     last_refs.append(new_last_refs[i])
                     indices.append(i)
                 else:
-                    n_samples -= 1
-                    fin_trans.append(new_trans[i])
-                    fin_costs.append(new_costs[i])
+                    if k == xrange(len(systems[0]))-1: 
+                        n_samples -= 1
+                        fin_trans.append(new_trans[i])
+                        fin_costs.append(new_costs[i])
             states = map(lambda x : x[indices], new_states)
             last_refs = numpy.asarray(last_refs, dtype='int64')
 

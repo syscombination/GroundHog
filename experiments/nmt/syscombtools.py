@@ -5,9 +5,15 @@ def get_oracle(y,h,empty):
 	length = len(h)
 	num_systems = len(h[0])
 	results = []
-	for i in results:
+	ref_dict = getRefDict([str(i) for i in y])
+	for i in range(num_systems):
 		results.append(h[0][i])
 	for i in range(1,length):
+		tmpresult = []
+		for j in range(num_systems):
+			for k in range(num_systems):
+				tmpresult.append((results[j]+[h[i][k]], \
+					calBleu([str(m) for m in results[j]+[h[i][k]]],re)))
 	'''
 	return y
 
