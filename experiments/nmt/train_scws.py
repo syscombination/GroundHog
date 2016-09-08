@@ -58,8 +58,11 @@ class RandomSamplePrinter(object):
                 print "Target: {}".format(" ".join(y_words))
                 #print h_words
                 trans,costs=self.beam_search.search(x[:len(x_words)],oh[:,:],10)
-                best = numpy.argmin(costs)
-                print "Output:", trans[best]
+                if trans.shape[0] > 0:
+                    best = numpy.argmin(costs)
+                    print "Output:", trans[best]
+                else:
+                    print 'Failed'
                 #self.model.get_samples(self.state['seqlen'] + 1, self.state['n_samples'], x[:len(x_words)],h[:,:])
                 sample_idx += 1
 

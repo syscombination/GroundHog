@@ -1,25 +1,26 @@
 import numpy
+import math
 
 def get_oracle(y,h,empty):
-	
-	length = len(h)
-	num_systems = len(h[0])
-	results = []
-	ref_dict = getRefDict([str(i) for i in y])
-	for i in range(num_systems):
-		results.append(h[0][i])
-	for i in range(1,length):
-		tmpresult = []
-		for j in range(num_systems):
-			for k in range(num_systems):
-				tmpresult.append((results[j]+[h[i][k]], \
-					calBleu([str(m) for m in results[j]+[h[i][k]]],re)))
-		print tmpresult
-		sort = sorted(tmpresult,key=lambda t:t[1],reverse=True)
-		for j in range(num_systems):
-			results[j] = tmpresult[j][0]
-	print results
-	return y
+    length = len(h)
+    num_systems = len(h[0])
+    results = []
+    ref_dict = getRefDict([str(i) for i in y])
+    for i in range(num_systems):
+        if h[0][i] != empty:
+            results.append([h[0][i]])
+    for i in range(1,length):
+        tmpresult = []
+        for j in range(len(results)):
+            for k in range(num_systems):
+                tmpresult.append((results[j]+[h[i][k]], \
+                    calBleu([str(m) for m in results[j]+[h[i][k]]],ref_dict,length)))
+        print tmpresult
+        sort = sorted(tmpresult,key=lambda t:t[1],reverse=True)
+        for j in range(min(num_systems,len(tmpresult))):
+            results[j] = tmpresult[j][0]
+    print results
+    return y
 
 def my_log(a):
     if a == 0:
@@ -78,4 +79,6 @@ def calBleu(x,ref_dict,lens):
     return now_bleu
 
 if __name__ == "__main__":
-	get_oracle([1,2,3,4,5],[[10,2,10,10,3,5,10],[1,2,10,10,3,4,5],[1,10,10,4,3,10,5]],10)
+    y = numpy.asarray([1,2,3,4,5],dtype=int)
+    h = numpy.asarray([[10,1,1],[2,2,10],[10,10,2],[10,10,4],[3,3,3],[5,4,10],[10,5,5]],dtype=int)
+    get_oracle(y,h,10)
