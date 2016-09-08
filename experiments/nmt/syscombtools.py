@@ -8,7 +8,9 @@ def get_oracle(y,h,empty,null):
     num_systems = len(h[0])
     results = {}
     #print [str(i) for i in y]
-    y = cutSen(y.tolist(),null)
+    if type(y) != list:
+        y = y.tolist()
+    y = cutSen(y,null)
     ref_dict,l = getRefDict([str(i) for i in y])
     #print l
     #print ref_dict
@@ -43,7 +45,7 @@ def get_oracle(y,h,empty,null):
             results[sort[j][0]] = sort[j][1]
     #print results
     sort = sorted(results.items(),key=lambda t:t[1],reverse=True)
-    print sort[0][0], sort[0][1]
+    #print sort[0][0], sort[0][1]
     if sort[0][0].split(' ') == [str(empty)]*length:
         return sort[1][0].split(' ')
     else:
