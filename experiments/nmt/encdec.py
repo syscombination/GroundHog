@@ -374,10 +374,10 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
 
     
     if return_dict:
-        if x != None:
+        if yo != None:
             return {'x' : X, 'x_mask' : Xmask, 'y': Y, 'y_mask' : Ymask, 'yo': Yo, 'yo_mask' : Yomask,'h': H, 'h_mask': Hmask, 'oh':Ht}
         else:
-            return {'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask, 'oh':Ht}
+            return {'x' : X, 'x_mask' : Xmask, 'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask, 'oh':Ht}
     else:
         if x != None:
             return X, Xmask, Y, Ymask, H, Hmask
@@ -415,7 +415,11 @@ def get_batch_iterator_syscombination(state):
                 hypos = numpy.asarray([self.hypos[startid:endid]])
             
             #print 'prepare batch...'
-            batch = create_padded_batch_syscombination(self.state, y, hypos, x=x, return_dict=True)
+            if self.state.has_key('oracle'):
+                yo = numpy.asarray([self.oracle[startid:endid]])
+                batch = create_padded_batch_syscombination(self.state, y, hypos, yo=yo, x=x, return_dict=True)
+            else:
+                batch = create_padded_batch_syscombination(self.state, y, hypos, x=x, return_dict=True)
             self.next_offset = endid
             if not batch:
                 return self.next()
@@ -441,6 +445,8 @@ def get_batch_iterator_syscombination(state):
                 self.have_source = True
                 self.source = read_sentences(self.state['source'])
                 assert len(self.target) == len(self.source)
+            if self.state.has_key('oracle'):
+                self.oracle = read_sentences(self.state['oracle'])
             self.num_sentences = len(self.source)
 
         '''
