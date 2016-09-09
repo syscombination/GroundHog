@@ -191,7 +191,7 @@ def get_batch_iterator(state):
         max_len=state['seqlen'])
     return train_data
 
-def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
+def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict=False):
     """A callback given to the iterator to transform data in suitable format
 
     :type x: list
@@ -232,6 +232,9 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
         my = numpy.minimum(state['seqlen'], max([len(xx) for xx in y[0]]))+1
         mh = numpy.minimum(state['seqlen'], max([len(xx) for xx in h[0]]))+1
 
+    if mh != my:
+        print 'bad batch'
+        return None
     mhy = numpy.maximum(mh, my)
     # Batch size
     n = y[0].shape[0]
@@ -287,6 +290,14 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
         Hmask[:len(h[0][idx]), idx] = 1.
         if len(h[0][idx]) < mh:
             Hmask[len(h[0][idx]), idx] = 1.
+
+    if yo != None:
+        myo = state['seqlen']
+        if state['trim_batches']:
+            myo = numpy.minimum(state['seqlen'], max([len(xx) for xx in yo[0]]))+1
+        Yo = numpy.zeros((myo, n), dtype='int64')
+        Yomask = numpy.zeros((myo, n), dtype='float32')
+
 
     null_inputs = numpy.zeros(Y.shape[1])
 

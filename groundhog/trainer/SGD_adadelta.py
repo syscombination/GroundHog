@@ -208,6 +208,9 @@ class SGD(object):
         g_ed = time.time()
         self.state['lr'] = float(self.lr)
         cost = rvals[-1]
+        if rvals[0] != rvals[0]:
+            print 'grad is nan'
+            print batch['y'],batch['oh'],batch['ylast'], batch['y_mask']
         #print rvals
         self.old_cost = cost
         whole_time = time.time() - self.step_timer
