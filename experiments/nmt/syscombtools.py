@@ -1,7 +1,7 @@
 import numpy
 import math
 
-'''
+
 def get_oracle(y,h,empty,null,verbose=False):
     #print 'y&h:',y,h
     delempty = {}
@@ -57,7 +57,7 @@ def get_oracle(y,h,empty,null,verbose=False):
             return sort[0][0].split(' '), sort[0][1]
         else:
             return sort[0][0].split(' ')
-
+'''
 def get_oracle(y,h,empty,null,verbose=False):
     result = [-1]*len(h)
     result_noempty = []
