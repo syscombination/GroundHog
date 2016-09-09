@@ -308,11 +308,11 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
             Yomask[:len(yo[0][idx]), idx] = 1.
             if len(yo[0][idx]) < myo:
                 Yomask[len(yo[0][idx]), idx] = 1.
-        print myo
-        print Yo
+        #print myo
+        #print Yo
 
-    print my,mh
-    print 'y&h', Y,H
+    #print my,mh
+    #print 'y&h', Y,H
     null_inputs = numpy.zeros(Y.shape[1])
 
     # We say that an input pair is valid if both:
@@ -421,6 +421,7 @@ def get_batch_iterator_syscombination(state):
             #print 'prepare batch...'
             if self.state.has_key('oracle'):
                 yo = numpy.asarray([self.oracle[startid:endid]])
+                print y,hypos,yo
                 batch = create_padded_batch_syscombination(self.state, y, hypos, yo=yo, x=x, return_dict=True)
             else:
                 batch = create_padded_batch_syscombination(self.state, y, hypos, x=x, return_dict=True)
@@ -451,6 +452,7 @@ def get_batch_iterator_syscombination(state):
                 assert len(self.target) == len(self.source)
             if self.state.has_key('oracle'):
                 self.oracle = read_sentences(self.state['oracle'])
+                assert len(self.oracle) == len(self.source)
             self.num_sentences = len(self.source)
 
         '''

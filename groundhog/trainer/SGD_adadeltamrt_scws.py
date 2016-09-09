@@ -198,7 +198,7 @@ class SGD(object):
         t3 = time.time()
         print 'bleu time:', t3-t2, 'sec'
         b = numpy.array(b,dtype='float32')
-        print 'y&b', y,b,batch['y'],batch['oh'], batch['yo']
+        #print 'y&b', y,b,batch['y'],batch['oh'], batch['yo']
 #        p = probs.sum(axis=0)
 #        p = [math.exp(-i) for i in p]
 #        p = [i/sum(p) for i in p]
