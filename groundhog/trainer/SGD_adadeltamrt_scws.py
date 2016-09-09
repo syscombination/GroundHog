@@ -193,9 +193,10 @@ class SGD(object):
         samples = samples.transpose()
         #print samples,costs
         t2 = time.time()
-        print 'beam_search:', t2-t1, 'sec'
+        print 'beam search time:', t2-t1, 'sec'
         y,b = getUnique(samples, batch['y'],costs, self.state, H=batch['oh'],empty=self.state['empty_sym_target'])
-
+        t3 = time.time()
+        print 'bleu time:', t3-t2, 'sec'
         b = numpy.array(b,dtype='float32')
         #print b
 #        p = probs.sum(axis=0)
@@ -213,7 +214,7 @@ class SGD(object):
 #        print b
 #        print Y
 #        print YM
-        #t3 = time.time()
+        
         #print 'bleu time:', t3-t2, 'sec'
         diffN = len(b)
 
@@ -310,7 +311,10 @@ def getUnique(samples, y, co, state, H = None,empty=-1):
     ref,lens = getRefDict(words)
     #dic[' '.join(words)]=1.0
     #print 'hshape:', H.shape
-    oracle = get_oracle(y[:,0],H[:,0,:],empty,state['null_sym_target'])
+    a = time.time()
+    oracle, oracle_bleu = get_oracle(y[:,0],H[:,0,:],empty,state['null_sym_target'],verbose=True)
+    b = time.time()
+    print 'get oracle time:', b-a, 'sec, oracle bleu:', oracle_bleu 
     words = [str(i) for i in oracle]
     if empty >= 0:
         while str(empty) in words:

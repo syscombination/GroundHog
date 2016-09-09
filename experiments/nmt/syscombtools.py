@@ -2,7 +2,7 @@ import numpy
 import math
 
 
-def get_oracle(y,h,empty,null):
+def get_oracle(y,h,empty,null,verbose=False):
     #print 'y&h:',y,h
     delempty = {}
     length = len(h)
@@ -48,9 +48,15 @@ def get_oracle(y,h,empty,null):
     sort = sorted(results.items(),key=lambda t:t[1],reverse=True)
     #print 'oracle:',sort[0][0], sort[0][1]
     if sort[0][0].split(' ') == [str(empty)]*length:
-        return sort[1][0].split(' ')
+        if verbose:
+            return sort[1][0].split(' '), sort[1][1]
+        else:
+            return sort[1][0].split(' ')
     else:
-        return sort[0][0].split(' ')
+        if verbose:
+            return sort[0][0].split(' '), sort[0][1]
+        else:
+            return sort[0][0].split(' ')
 
 def my_log(a):
     if a == 0:
