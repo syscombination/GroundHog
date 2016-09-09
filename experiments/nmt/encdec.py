@@ -293,6 +293,7 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
 
     if yo != None:
         myo = state['seqlen']
+        print yo
         if state['trim_batches']:
             myo = numpy.minimum(state['seqlen'], max([len(xx) for xx in yo[0]]))+1
         if mh != myo:
