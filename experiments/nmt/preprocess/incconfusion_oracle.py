@@ -119,14 +119,15 @@ for i in xrange(num_sentence):
 				k += 1
 			#delete all empty positions 
 			pos = 0
-			while pos < len(tmpresult):
+			while pos < len(tmpresult[0]):
 				allempty = True
-				for k in range(num_systems):
+				for k in range(j+1):
 					if tmpresult[k][pos] != '$':
 						allempty = False
 						break
 				if allempty:
-					for k in range(num_systems):
+					#print 'del',pos
+					for k in range(j+1):
 						del tmpresult[k][pos]
 					pos -=1
 				pos+=1 
