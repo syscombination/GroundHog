@@ -403,7 +403,7 @@ def get_batch_iterator_syscombination(state):
         def next(self, peek=False):
             startid = self.next_offset
             endid = self.next_offset+self.state['bs']
-            #print 'start:',startid,'end:',endid
+            print 'start:',startid,'end:',endid
             if endid >= self.num_sentences:
                 endid -= self.num_sentences
                 x = None
@@ -411,17 +411,19 @@ def get_batch_iterator_syscombination(state):
                     x = numpy.asarray([self.source[startid:]+self.source[:endid]])
                 y = numpy.asarray([self.target[startid:]+self.target[:endid]])
                 hypos = numpy.asarray([self.hypos[startid:]+self.hypos[:endid]])
+                if self.state.has_key('oracle'):
+                    yo = numpy.asarray([self.oracle[startid:]+self.oracle[:endid]])
             else:
                 x = None
                 if self.have_source:
                     x = numpy.asarray([self.source[startid:endid]])
                 y = numpy.asarray([self.target[startid:endid]])
                 hypos = numpy.asarray([self.hypos[startid:endid]])
+                if self.state.has_key('oracle'):
+                    yo = numpy.asarray([self.oracle[startid:endid]])
             
             #print 'prepare batch...'
             if self.state.has_key('oracle'):
-                yo = numpy.asarray([self.oracle[startid:endid]])
-                print y,hypos,yo
                 batch = create_padded_batch_syscombination(self.state, y, hypos, yo=yo, x=x, return_dict=True)
             else:
                 batch = create_padded_batch_syscombination(self.state, y, hypos, x=x, return_dict=True)
