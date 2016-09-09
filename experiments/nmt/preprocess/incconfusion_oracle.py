@@ -159,6 +159,15 @@ for i in xrange(num_sentence):
 						#print ref
 						tmporacle[pos] = ref
 			del miss[0]
+		#final check
+		for pos in range(len(tmpresult[0])):
+			avail = False
+			for snum in range(num_systems):
+				if tmporacle[pos] == tmpresult[snum][pos]:
+					avail = True
+					break
+			if not avail:
+				tmporacle[pos] = tmpresult[0][pos]
 		oracle.append(' '.join(tmporacle))
 		#print oracle
 	except:
