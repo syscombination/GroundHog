@@ -235,17 +235,17 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
     if yo == None and mh != my:
         print 'bad batch'
         return None
-    mhy = numpy.maximum(mh, my)
+    #mhy = numpy.maximum(mh, my)
     # Batch size
     n = y[0].shape[0]
     
 
     X = numpy.zeros((mx, n), dtype='int64')
-    Y = numpy.zeros((mhy, n), dtype='int64')
-    H = numpy.zeros((mhy, n, state['num_systems']), dtype='int64')
+    Y = numpy.zeros((my, n), dtype='int64')
+    H = numpy.zeros((mh, n, state['num_systems']), dtype='int64')
     Xmask = numpy.zeros((mx, n), dtype='float32')
-    Ymask = numpy.zeros((mhy, n), dtype='float32')
-    Hmask = numpy.zeros((mhy, n), dtype='float32')
+    Ymask = numpy.zeros((my, n), dtype='float32')
+    Hmask = numpy.zeros((mh, n), dtype='float32')
 
 
     # Fill X and Xmask
