@@ -1,7 +1,7 @@
 import numpy
 import math
 
-
+'''
 def get_oracle(y,h,empty,null,verbose=False):
     #print 'y&h:',y,h
     delempty = {}
@@ -57,6 +57,32 @@ def get_oracle(y,h,empty,null,verbose=False):
             return sort[0][0].split(' '), sort[0][1]
         else:
             return sort[0][0].split(' ')
+
+def get_oracle(y,h,empty,null,verbose=False):
+    result = [-1]*len(h)
+    result_noempty = []
+    for i in range(len(y)):
+        index = []
+        for j in len(h):
+            if y[i] in h[j]:
+                index.append(j)
+        grams = [1]*len(index)
+        leftindex = [-1]*len(index)
+        for j in len(index):
+            leftindex = index[j]
+            for k in range(index[j]-1,-1,-1):
+                if grams[j] == 4:
+                    break
+                if result[k] == result_noempty[-grams[j]]:
+                    grams[j] += 1
+                    leftindex[j] = k
+                elif result[k] != -1 and result[k] != empty:
+                    break
+        sort = sorted(zip(index,grams,leftindex),key=lambda t:t[1],reverse=True)
+'''
+
+
+
 
 def my_log(a):
     if a == 0:
