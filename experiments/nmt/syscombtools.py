@@ -42,7 +42,7 @@ def get_oracle(y,h,empty,null,verbose=False):
         sort = sorted(tmpresult.items(),key=lambda t:t[1],reverse=True)
         #print sort
         results = {}
-        for j in range(min(num_systems*100,len(sort))):
+        for j in range(min(100,len(sort))):
             results[sort[j][0]] = sort[j][1]
     #print results
     sort = sorted(results.items(),key=lambda t:t[1],reverse=True)

@@ -189,7 +189,7 @@ class SGD(object):
         #samples, probs = self.sampler(sampleN,myL,1,batch['x'].squeeze(),batch['h'].squeeze())
         #print samples
         samples, costs = self.beam_search.search(batch['x'].squeeze(), batch['oh'].squeeze().transpose(),sampleN)
-        #print samples
+        print 'sample shape:', samples
         samples = samples.transpose()
         #print samples,costs
         t2 = time.time()
