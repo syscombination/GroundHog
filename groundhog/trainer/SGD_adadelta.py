@@ -182,7 +182,7 @@ class SGD(object):
                 else:
                     batch['ylast'][j][i] = batch['y'][j][i]
         b =time.time()
-        print 'ylast&mask prepare time', d-c,'sec'
+        print 'ylast&mask prepare time', b-a,'sec'
 
         #print batch['y'], batch['oh'], batch['y_mask'],batch['ylast'],
         # Perturb the data (! and the model)
