@@ -57,7 +57,7 @@ class RandomSamplePrinter(object):
                     print "System "+str(i)+':'," ".join(oh_words)
                 print "Target: {}".format(" ".join(y_words))
                 #print h_words
-                trans,costs=self.beam_search.search(x[:len(x_words)],oh[:,:].transpose(),10)
+                trans,costs=self.beam_search.search(x[:len(x_words)],oh[:,:len(oh_words)].transpose(),10)
                 if trans.shape[0] > 0:
                     best = numpy.argmin(costs)
                     out_words = cut_eol(map(lambda w_idx : self.model.word_indxs[w_idx], trans[best]))
