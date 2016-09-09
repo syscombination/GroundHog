@@ -6,8 +6,9 @@ import traceback
 alignfile = sys.argv[1]
 num_systems = string.atoi(sys.argv[2])
 outputfile = sys.argv[3]
+oraclefile = sys.argv[4]
 
-num_align = num_systems*(num_systems-1)
+num_align = num_systems*(num_systems+1)
 #num_align = (num_systems-1)
 aligns = open(alignfile, 'r').read().split('\n')
 if aligns[-1] == '':
@@ -18,6 +19,26 @@ print 'sentence num:',num_sentence
 assert num_sentence*num_align == len(aligns)
 
 result = []
+oracle = []
+
+def getalignedwords(node):
+	if len(node.split('|')) >= 3:
+		if node.split('|')[0] == '$':
+			newh = '$'
+			bone = '|'.join(node.split('|')[1:])
+		elif  node.split('|')[-1] == '$':
+			newh = '|'.join(node.split('|')[:-1])
+			bone = '$'
+		elif node.split('|')[0] != '':
+			bone = '|'
+			newh = node.split('|')[0]
+		elif  node.split('|')[-1] != '':
+			bone = node.split('|')[-1]
+			newh = '|'		
+	else:
+		bone = node.split('|')[1]
+		newh = node.split('|')[0]
+	return bone,newh
 
 for i in xrange(num_systems):
 	result.append([])
@@ -26,7 +47,7 @@ for i in xrange(num_sentence):
 	try: 
 		if i % 10000 == 0:
 			print 'sentence:',i
-		index = num_align*i
+		index = num_align*i+num_systems+1
 		#print 'index:', index
 		tmpresult = []
 		for j in xrange(num_systems):
@@ -40,29 +61,14 @@ for i in xrange(num_sentence):
 		#print len(tmpresult[0])
 		#print len(tmpresult[1])
 		for j in range(2, num_systems):
-			index = num_align*i+j-1
+			index = num_align*i+num_systems+j
 			#print 'index:', index
 			#print '-----'+str(j)+'-----'
 			pos = 0
 			nodes = aligns[index].split(' ')
 			for k in xrange(len(nodes)):
 				node = nodes[k]
-				if len(node.split('|')) >= 3:
-					if node.split('|')[0] == '$':
-						newh = '$'
-						bone = '|'.join(node.split('|')[1:])
-					elif  node.split('|')[-1] == '$':
-						newh = '|'.join(node.split('|')[:-1])
-						bone = '$'
-					elif node.split('|')[0] != '':
-						bone = '|'
-						newh = node.split('|')[0]
-					elif  node.split('|')[-1] != '':
-						bone = node.split('|')[-1]
-						newh = '|'		
-				else:
-					bone = node.split('|')[1]
-					newh = node.split('|')[0]
+				bone, newh = getalignedwords(node)
 				#print node,str(k)+'/'+str(len(nodes)), pos, len(tmpresult[0]), len(tmpresult[1])
 				if bone == '$':
 					if pos == len(tmpresult[0]): 
@@ -125,8 +131,35 @@ for i in xrange(num_sentence):
 					pos -=1
 				pos+=1 
 		#print tmpresult
-		for i in xrange(num_systems):
-			result[i].append(' '.join(tmpresult[i]))
+		for tmpn in xrange(num_systems):
+			result[tmpn].append(' '.join(tmpresult[tmpn]))
+		#calculate oracle path
+		tmporacle = ['$']*len(tmpresult[0])
+		index = num_align*i+num_systems
+		pos = 0
+		nodes = aligns[index].split(' ')
+		miss = []
+		for k in xrange(len(nodes)):
+			node = nodes[k]
+			bone, ref = getalignedwords(node)
+			if bone == '$':
+				miss.append(ref)
+			else:
+				while tmpresult[0][pos] != bone:
+					pos += 1
+				tmporacle[pos] = ref
+		#print tmporacle
+		#print miss
+		while len(miss) > 0:
+			ref = miss[0]
+			for pos in range(len(tmpresult[0])):
+				for snum in range(num_systems):
+					if tmpresult[snum][pos] == ref and tmpresult[snum][pos] != tmporacle[pos]:
+						#print ref
+						tmporacle[pos] = ref
+			del miss[0]
+		oracle.append(' '.join(tmporacle))
+		#print oracle
 	except:
 		print traceback.print_exc()
 		print 'fail:', i
@@ -144,3 +177,6 @@ for i in xrange(num_systems):
 	output = open(outputfile+str(i),'w')
 	output.write('\n'.join(result[i])+'\n')
 	output.close()
+output = open(oraclefile,'w')
+output.write('\n'.join(oracle)+'\n')
+output.close()
