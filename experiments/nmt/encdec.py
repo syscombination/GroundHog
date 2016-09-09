@@ -309,9 +309,10 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
             if len(yo[0][idx]) < myo:
                 Yomask[len(yo[0][idx]), idx] = 1.
         print myo
+        print Yo
 
     print my,mh
-    print 'y&h', Y,H,Yo
+    print 'y&h', Y,H
     null_inputs = numpy.zeros(Y.shape[1])
 
     # We say that an input pair is valid if both:
