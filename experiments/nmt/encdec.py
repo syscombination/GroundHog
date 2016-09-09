@@ -219,12 +219,11 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
     my = state['seqlen']
     mh = state['seqlen']
     c = time.time()
-
+    '''
     if state['oracle']:
         for idx in xrange(len(y[0])):
             y[0][idx] = get_oracle(y[0][idx],h[0][idx],state['empty_sym_target'],state['null_sym_target'])
-    d = time.time()
-    print 'oracle prepare time', d-c,'sec'
+    '''
     if state['trim_batches']:
         # Similar length for all source sequences
         if x != None:
@@ -273,12 +272,13 @@ def create_padded_batch_syscombination(state, y, h, x=None, return_dict=False):
         Ymask[:len(y[0][idx]), idx] = 1.
         if len(y[0][idx]) < my:
             Ymask[len(y[0][idx]), idx] = 1.
-
+    '''
     if state['oracle']:
         for idx in xrange(len(y[0])):
             for pos in range(len(y)):
                 if Y[pos][idx] == state['empty_sym_target']:
                     Ymask[pos][idx] = 0.
+    '''
 
     for idx in xrange(len(h[0])):
         H[:len(h[0][idx]), idx] = h[0][idx][:mh]
