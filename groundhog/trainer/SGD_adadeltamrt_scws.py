@@ -198,7 +198,7 @@ class SGD(object):
         t3 = time.time()
         print 'bleu time:', t3-t2, 'sec'
         b = numpy.array(b,dtype='float32')
-        #print b
+        print 'y&b', y,b
 #        p = probs.sum(axis=0)
 #        p = [math.exp(-i) for i in p]
 #        p = [i/sum(p) for i in p]
@@ -298,7 +298,7 @@ class SGD(object):
 
 
 
-def getUnique(samples, y, co, state, H = None,empty=-1):
+def getUnique(samples, y, co, state, yo = None, H = None,empty=-1):
     dic = {}
     ty = y.squeeze().tolist()
     words = cutSen(ty, state)
@@ -311,15 +311,12 @@ def getUnique(samples, y, co, state, H = None,empty=-1):
     ref,lens = getRefDict(words)
     #dic[' '.join(words)]=1.0
     #print 'hshape:', H.shape
-    a = time.time()
-    oracle, oracle_bleu = get_oracle(y[:,0],H[:,0,:],empty,state['null_sym_target'],verbose=True)
-    b = time.time()
-    print 'get oracle time:', b-a, 'sec, oracle bleu:', oracle_bleu 
-    words = [str(i) for i in oracle]
+    tyo = cutSen(yo.squeeze().tolist(), state)
+    words = [str(i) for i in tyo]
     if empty >= 0:
         while str(empty) in words:
             words.remove(str(empty))
-    dic[' '.join(str(t) for t in oracle)] = calBleu(words, ref, lens)
+    dic[' '.join(str(t) for t in tyo)] = calBleu(words, ref, lens)
     #print 'oracle', y, oracle, calBleu(words, ref, lens)
     #print 'oracle:',oracle, calBleu([str(t) for t in oracle], ref, lens)
     for i in range(len(H[0,0])):

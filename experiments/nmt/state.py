@@ -308,7 +308,6 @@ def prototype_syscombination_state():
     state['word_indx'] = ''
     state['num_systems'] = 2
     state['search'] = False
-    state['oracle'] = False
     state['empty_sym_source'] = 29999
     state['empty_sym_target'] = 29999
     state['null_sym_source'] = 30000
