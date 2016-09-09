@@ -308,8 +308,9 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
             Yomask[:len(yo[0][idx]), idx] = 1.
             if len(yo[0][idx]) < myo:
                 Yomask[len(yo[0][idx]), idx] = 1.
+        print myo
 
-    print my,mh,myo
+    print my,mh
     print 'y&h', Y,H,Yo
     null_inputs = numpy.zeros(Y.shape[1])
 
