@@ -232,7 +232,7 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
         my = numpy.minimum(state['seqlen'], max([len(xx) for xx in y[0]]))+1
         mh = numpy.minimum(state['seqlen'], max([len(xx) for xx in h[0]]))+1
 
-    if mh != my:
+    if yo == None and mh != my:
         print 'bad batch'
         return None
     mhy = numpy.maximum(mh, my)
@@ -295,8 +295,18 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
         myo = state['seqlen']
         if state['trim_batches']:
             myo = numpy.minimum(state['seqlen'], max([len(xx) for xx in yo[0]]))+1
+        if mh != myo:
+            print 'bad batch'
+            return None
         Yo = numpy.zeros((myo, n), dtype='int64')
         Yomask = numpy.zeros((myo, n), dtype='float32')
+        for idx in xrange(len(yo[0])):
+            Yo[:len(yo[0][idx]), idx] = yo[0][idx][:myo]
+            if len(yo[0][idx]) < myo:
+                Yo[len(yo[0][idx]):, idx] = state['null_sym_target']
+            Yomask[:len(yo[0][idx]), idx] = 1.
+            if len(yo[0][idx]) < myo:
+                Yomask[len(yo[0][idx]), idx] = 1.
 
 
     null_inputs = numpy.zeros(Y.shape[1])
@@ -314,6 +324,9 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
                 null_inputs[idx] = 1
         if Ymask[-1,idx] and Y[-1,idx] != state['null_sym_target']:
             null_inputs[idx] = 1
+        if yo != None:
+            if Yomask[-1,idx] and Yo[-1,idx] != state['null_sym_target']:
+                null_inputs[idx] = 1
         if Hmask[-1,idx] and not numpy.array_equal(H[-1,idx],[state['null_sym_target']]*state['num_systems']):
             null_inputs[idx] = 1
 
@@ -336,6 +349,11 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
     Y[Y >= state['n_sym_target']] = state['unk_sym_target']
     H[H >= state['n_sym_target']] = state['unk_sym_target']
 
+    if yo != None:
+        Yo = Yo[:,valid_inputs.nonzero()[0]]
+        Yomask = Yomask[:,valid_inputs.nonzero()[0]]
+        Yo[Yo >= state['n_sym_target']] = state['unk_sym_target']
+
     #print 'generating H mask'
     a = time.time()
     
@@ -357,7 +375,7 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
     
     if return_dict:
         if x != None:
-            return {'x' : X, 'x_mask' : Xmask, 'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask, 'oh':Ht}
+            return {'x' : X, 'x_mask' : Xmask, 'y': Y, 'y_mask' : Ymask, 'yo': Yo, 'yo_mask' : Yomask,'h': H, 'h_mask': Hmask, 'oh':Ht}
         else:
             return {'y': Y, 'y_mask' : Ymask, 'h': H, 'h_mask': Hmask, 'oh':Ht}
     else:
