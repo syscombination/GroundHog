@@ -74,32 +74,34 @@ class BeamSearch(object):
                 break
 
             #calculate available next word
+            h0 = numpy.zeros((n_samples, self.state['n_sym_target']), dtype="float32")
             words = []
+            for i in range(n_samples):
+                words.append({})
+                for i in range(len(lastpos)):
+                    pos = lastpos[i]+1
+                    while pos < systems.shape[0]:
+                        canempty = False
+                        for snum in range(num_systems):
+                            word = systems[pos][snum]
+                            if word == empty:
+                                canempty = True
+                            elif not word in nowwords:
+                                if words[i].has_key(word):
+                                    if not pos in words[i][word]:
+                                        words[i][word].append(pos)
+                                else:
+                                    words[i][word]=[pos]
+                                    h0[i][word] = 1.
+                        if not canempty:
+                            break
+                        pos += 1
 
-            words = {}
-            for i in range(len(lastpos)):
-                pos = lastpos[i]+1
-                while pos < systems.shape[0]:
-                    canempty = False
-                    for snum in range(num_systems):
-                        word = systems[pos][snum]
-                        if word == empty:
-                            canempty = True
-                        elif not word in nowwords:
-                            if words.has_key(word):
-                                if not pos in words[word]:
-                                    words[word].append(pos)
-                            else:
-                                words[word]=[pos]
-                    if not canempty:
-                        break
-                    pos += 1
-
-            beam_size = len(trans)
-            h0 = numpy.zeros((beam_size, self.state['n_sym_target']), dtype="float32")
-            for i in xrange(self.state['num_systems']):
-                for j in xrange(beam_size):
-                    h0[j][systems[i][k]] = 1.
+            #beam_size = len(trans)
+            #h0 = numpy.zeros((n_samples, self.state['n_sym_target']), dtype="float32")
+            #for i in xrange(self.state['num_systems']):
+            #    for j in xrange(n_samples):
+            #        h0[j][systems[i][k]] = 1.
             # Compute probabilities of the next words for
             # all the elements of the beam.
             

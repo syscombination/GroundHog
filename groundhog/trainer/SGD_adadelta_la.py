@@ -165,7 +165,10 @@ class SGD(object):
         #print 'input x shape:',batch['x'].shape
         #print 'input y shape:',batch['y'].shape
         #print 'input h shape:',batch['h'].shape
+        a = time.time()
         batch['ylast'] = batch['y']
+        b = time.time()
+        print 'ylast time', b-a,'sec'
 
         # Perturb the data (! and the model)
         if isinstance(batch, dict):

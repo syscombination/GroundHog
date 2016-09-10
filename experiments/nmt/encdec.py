@@ -566,17 +566,17 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
     print H.shape
     #print 'shape:', Ht.shape[0], Ht.shape[1], state['n_sym_target']
     for j in range(n):
-        l = len(h[0][j])
+        l = min(len(h[0][j]),my)
         for i in range(l):
             nums = len(h[0][j][i])
-            for k in range(min(nums,my)):
+            for k in range(nums):
                 H[i,j,h[0][j][i][k]] = 1.
         if l < my:
             H[l:,j,state['null_sym_target']] = 1.
 
     b = time.time()
-    print 'batch prepare time', b-c,'sec'
-    #print 'generate time:',b-a,'sec'
+    
+    print 'generate H time:',b-a,'sec'
 
     if yo != None:
         myo = state['seqlen']
@@ -631,6 +631,8 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
     if len(valid_inputs.nonzero()[0]) <= 0:
         return None
 
+    d = time.time()
+    print 'prepare batch time', d-c,'sec'
     # Unknown words
     if x != None:
         X[X >= state['n_sym_source']] = state['unk_sym_source']
