@@ -47,7 +47,7 @@ class BeamSearch(object):
         self.comp_next_states = self.enc_dec.create_next_states_computer()
 
     def search(self, seq, systems, n_samples, ignore_unk=False, minlen=1):
-        print 'beam search:',seq, systems
+        #print 'beam search:',seq, systems
 
         c = self.comp_repr(seq)[0]
         states = map(lambda x : x[None, :], self.comp_init_states(c))
@@ -96,7 +96,7 @@ class BeamSearch(object):
                         if not canempty:
                             break
                         pos += 1
-            print words
+            #print 'words:',words
             
             #h0 = numpy.zeros((n_samples, self.state['n_sym_target']), dtype="float32")
             #for i in xrange(self.state['num_systems']):
@@ -180,7 +180,7 @@ class BeamSearch(object):
             indices = []
             last_refs = []
             lastpos = []
-            #print new_trans
+            #print 'newtrans', new_trans
             for i in range(min(n_samples, len(new_trans))):
                 if new_trans[i][-1] != self.enc_dec.state['null_sym_target']:
                     trans.append(new_trans[i])
@@ -368,7 +368,7 @@ def main():
             if args.verbose:
                 print "Translation:", trans[best]
             total_cost += costs[best]
-            exit()
+            #exit()
             if (i + 1)  % 100 == 0:
                 ftrans.flush()
                 logger.debug("Current speed is {} per sentence".
