@@ -173,7 +173,7 @@ class BeamSearch(object):
             indices = []
             last_refs = []
             lastpos = []
-            for i in range(n_samples):
+            for i in range(min(n_samples, len(new_trans))):
                 if new_trans[i][-1] != self.enc_dec.state['null_sym_target']:
                     trans.append(new_trans[i])
                     costs.append(new_costs[i])
