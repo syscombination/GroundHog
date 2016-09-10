@@ -621,6 +621,8 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
 
     valid_inputs = 1. - null_inputs
 
+    e = time.time()
+    print 'e-b time', e-b,'sec'
     # Leave only valid inputs
     if x != None:
         X = X[:,valid_inputs.nonzero()[0]]
@@ -631,8 +633,8 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
     if len(valid_inputs.nonzero()[0]) <= 0:
         return None
 
-    d = time.time()
-    print 'prepare batch time', d-c,'sec'
+    f = time.time()
+    print 'f-e time', f-e,'sec'
     # Unknown words
     if x != None:
         X[X >= state['n_sym_source']] = state['unk_sym_source']
@@ -644,7 +646,9 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
         Yomask = Yomask[:,valid_inputs.nonzero()[0]]
         Yo[Yo >= state['n_sym_target']] = state['unk_sym_target']
 
-    
+    d = time.time()
+    print 'd-d time', d-f,'sec'
+    print 'prepare batch time', d-c,'sec'
 
     
     if return_dict:

@@ -73,10 +73,11 @@ class BeamSearch(object):
             if n_samples == 0:
                 break
 
+            beam_size = len(trans)
             #calculate available next word
-            h0 = numpy.zeros((n_samples, self.state['n_sym_target']), dtype="float32")
+            h0 = numpy.zeros((beam_size, self.state['n_sym_target']), dtype="float32")
             words = []
-            for n in range(n_samples):
+            for n in range(beam_size):
                 words.append({})
                 for i in range(len(lastpos[n])):
                     pos = lastpos[n][i]+1
@@ -96,7 +97,7 @@ class BeamSearch(object):
                             break
                         pos += 1
 
-            #beam_size = len(trans)
+            
             #h0 = numpy.zeros((n_samples, self.state['n_sym_target']), dtype="float32")
             #for i in xrange(self.state['num_systems']):
             #    for j in xrange(n_samples):
