@@ -106,7 +106,7 @@ class BeamSearch(object):
             # all the elements of the beam.
             
 
-            last_words = (numpy.array(map(lambda t : t[-1], trans),dtype="int64")
+            last_words = (numpy.array(map(lambda t : t[-1], trans))
                     if k > 0
                     else numpy.zeros(beam_size, dtype="int64"))
             probs = self.comp_next_probs(c, h0, k, last_words,last_words, *states)[0]

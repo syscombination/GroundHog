@@ -615,8 +615,6 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
     if len(valid_inputs.nonzero()[0]) <= 0:
         return None
 
-    f = time.time()
-    print 'f-e time', f-e,'sec'
     
     #print 'generating H mask'
     a = time.time()
@@ -653,7 +651,6 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
         Yo[Yo >= state['n_sym_target']] = state['unk_sym_target']
 
     d = time.time()
-    print 'd-d time', d-f,'sec'
     print 'prepare batch time', d-c,'sec'
 
     
