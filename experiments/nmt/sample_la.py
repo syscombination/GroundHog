@@ -148,6 +148,7 @@ class BeamSearch(object):
             old_states = [numpy.zeros((n_samples, dim), dtype="float32") for level
                     in range(num_levels)]
             new_last_refs = numpy.zeros(n_samples, dtype="int64")
+            new_lastpos = [[]] * n_samples
             inputs = numpy.zeros(n_samples, dtype="int64")
             for i, (orig_idx, next_word, next_cost) in enumerate(
                     zip(trans_indices, word_indices, costs)):
@@ -159,8 +160,9 @@ class BeamSearch(object):
                     new_last_refs[i] = next_word
                 for level in range(num_levels): 
                     old_states[level][i] = states[level][orig_idx]
+                new_lastpos[i] = lastpos[orig_idx]
                 inputs[i] = next_word
-            new_states = self.comp_next_states(c, h0, k, new_last_refs,inputs, *old_states)
+            new_states = self.comp_next_states(c, h0, k, inputs,inputs, *old_states)
             
 
             # Filter the sequences that end with end-of-sequence character

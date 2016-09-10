@@ -561,6 +561,7 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
 
     #print 'generating H mask'
     a = time.time()
+    print 'before H time:',a-c,'sec'
     
     H = numpy.zeros((my, n, state['n_sym_target']), dtype='float32')
     print H.shape
