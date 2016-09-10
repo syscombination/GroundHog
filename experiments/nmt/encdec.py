@@ -618,8 +618,6 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
         if yo != None:
             if Yomask[-1,idx] and Yo[-1,idx] != state['null_sym_target']:
                 null_inputs[idx] = 1
-        if Hmask[-1,idx] and not numpy.array_equal(H[-1,idx],[state['null_sym_target']]*state['num_systems']):
-            null_inputs[idx] = 1
 
     valid_inputs = 1. - null_inputs
 
@@ -630,7 +628,6 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
     Y = Y[:,valid_inputs.nonzero()[0]]
     Ymask = Ymask[:,valid_inputs.nonzero()[0]]
     H = H[:,valid_inputs.nonzero()[0],:]
-    Hmask = Hmask[:,valid_inputs.nonzero()[0]]
     if len(valid_inputs.nonzero()[0]) <= 0:
         return None
 
@@ -655,9 +652,9 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
             return {'x' : X, 'x_mask' : Xmask, 'y': Y, 'y_mask' : Ymask, 'h': H}
     else:
         if x != None:
-            return X, Xmask, Y, Ymask, H, Hmask
+            return X, Xmask, Y, Ymask, H
         else:
-            return Y, Ymask, H, Hmask
+            return Y, Ymask, H
 
 def get_batch_iterator_la(state):
 
