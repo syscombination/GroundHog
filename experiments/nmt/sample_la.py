@@ -152,6 +152,8 @@ class BeamSearch(object):
             inputs = numpy.zeros(n_samples, dtype="int64")
             for i, (orig_idx, next_word, next_cost) in enumerate(
                     zip(trans_indices, word_indices, costs)):
+                if not next_word in words[orig_idx]:
+                    continue
                 new_trans[i] = trans[orig_idx] + [next_word]
                 new_costs[i] = next_cost
                 if next_word == self.state['empty_sym_target']:
