@@ -86,13 +86,12 @@ class BeamSearch(object):
                             word = systems[pos][snum]
                             if word == self.state['empty_sym_target']:
                                 canempty = True
-                            elif not word in nowwords:
-                                if words[n].has_key(word):
-                                    if not pos in words[n][word]:
-                                        words[n][word].append(pos)
-                                else:
-                                    words[n][word]=[pos]
-                                    h0[n][word] = 1.
+                            elif words[n].has_key(word):
+                                if not pos in words[n][word]:
+                                    words[n][word].append(pos)
+                            else:
+                                words[n][word]=[pos]
+                                h0[n][word] = 1.
                         if not canempty:
                             break
                         pos += 1
