@@ -160,7 +160,7 @@ class BeamSearch(object):
                     new_last_refs[i] = next_word
                 for level in range(num_levels): 
                     old_states[level][i] = states[level][orig_idx]
-                new_lastpos[i] = lastpos[orig_idx]
+                new_lastpos[i] = words[orig_idx][next_word]
                 inputs[i] = next_word
             new_states = self.comp_next_states(c, h0, k, inputs,inputs, *old_states)
             
@@ -170,12 +170,14 @@ class BeamSearch(object):
             costs = []
             indices = []
             last_refs = []
+            lastpos = []
             for i in range(n_samples):
                 if new_trans[i][-1] != self.enc_dec.state['null_sym_target']:
                     trans.append(new_trans[i])
                     costs.append(new_costs[i])
                     last_refs.append(new_last_refs[i])
                     indices.append(i)
+                    lastpos.append(new_lastpos[i])
                 else:
                     n_samples -= 1
                     if k == len(systems[0])-1: 
