@@ -653,7 +653,7 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
         else:
             return Y, Ymask, H, Hmask
 
-def get_batch_iterator_syscombination(state):
+def get_batch_iterator_la(state):
 
     class Iterator():
 
