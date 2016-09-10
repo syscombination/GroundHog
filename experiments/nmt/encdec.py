@@ -569,7 +569,7 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
         l = len(h[0][j])
         for i in range(l):
             nums = len(h[0][j][i])
-            for k in range(nums):
+            for k in range(min(nums,my)):
                 H[i,j,h[0][j][i][k]] = 1.
         if l < my:
             H[l:,j,state['null_sym_target']] = 1.

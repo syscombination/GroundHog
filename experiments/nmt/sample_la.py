@@ -61,7 +61,10 @@ class BeamSearch(object):
         trans = [[]]
 
         costs = [0.0]
-        lastpos = [-1]
+        lastpos = []
+        for i in range(n_samples):
+            lastpos.append([-1])
+        systems = numpy.asarray(systems, dtype="int64").transpose()
         num_systems = len(systems[0])
         #print systems
 
@@ -71,11 +74,26 @@ class BeamSearch(object):
                 break
 
             #calculate available next word
+            words = []
+
             words = {}
             for i in range(len(lastpos)):
-                canempty = False
-                for snum in range(num_systems):
-                    word = systems[snum]
+                pos = lastpos[i]+1
+                while pos < systems.shape[0]:
+                    canempty = False
+                    for snum in range(num_systems):
+                        word = systems[pos][snum]
+                        if word == empty:
+                            canempty = True
+                        elif not word in nowwords:
+                            if words.has_key(word):
+                                if not pos in words[word]:
+                                    words[word].append(pos)
+                            else:
+                                words[word]=[pos]
+                    if not canempty:
+                        break
+                    pos += 1
 
             beam_size = len(trans)
             h0 = numpy.zeros((beam_size, self.state['n_sym_target']), dtype="float32")
