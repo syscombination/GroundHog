@@ -78,7 +78,7 @@ class BeamSearch(object):
             words = []
             for i in range(n_samples):
                 words.append({})
-                for i in range(len(lastpos)):
+                for i in range(len(lastpos[i])):
                     pos = lastpos[i]+1
                     while pos < systems.shape[0]:
                         canempty = False
