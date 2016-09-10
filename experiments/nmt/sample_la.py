@@ -299,6 +299,8 @@ def main():
     with open(args.state) as src:
         state.update(cPickle.load(src))
     state.update(eval("dict({})".format(args.changes)))
+    if 'num_systems' not in state:
+        state['num_systems'] = 4
 
     logging.basicConfig(level=getattr(logging, state['level']), format="%(asctime)s: %(name)s: %(levelname)s: %(message)s")
 
