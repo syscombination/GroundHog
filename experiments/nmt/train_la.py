@@ -35,12 +35,12 @@ class RandomSamplePrinter(object):
         sample_idx = 0
         while sample_idx < self.state['n_examples']:
             batch = self.train_iter.next(peek=True)
-            xs, ys, hs = batch['x'], batch['y'], batch['h'], batch['oh']
+            xs, ys, hs = batch['x'], batch['y'], batch['h']
             for seq_idx in range(xs.shape[1]):
                 if sample_idx == self.state['n_examples']:
                     break
 
-                x, y, h, oh= xs[:, seq_idx], ys[:, seq_idx], hs[:, seq_idx, :]
+                x, y, h= xs[:, seq_idx], ys[:, seq_idx], hs[:, seq_idx, :]
                 x_words = cut_eol(map(lambda w_idx : self.model.word_indxs_src[w_idx], x))
                 y_words = cut_eol(map(lambda w_idx : self.model.word_indxs[w_idx], y))
                 if len(x_words) == 0:
