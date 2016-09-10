@@ -515,6 +515,7 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
     print 'x:', numpy.asarray(x).shape
     print 'y:', numpy.asarray(y).shape
     print 'h:', numpy.asarray(h).shape
+    print x,y,h
     
 
     X = numpy.zeros((mx, n), dtype='int64')
