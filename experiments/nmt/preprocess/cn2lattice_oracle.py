@@ -12,12 +12,14 @@ null = empty+1
 hypos = json.loads(open(hypofile,'r').read())
 oracles = json.loads(open(oraclefile,'r').read())
 
+
 num_systems = len(hypos[0][0])
 assert len(hypos) == len(oracles)
 
 print 'sentences:', len(oracles)
 print 'num_systems:', len(hypos[0][0])
 lattice = []
+oracles_delempty = []
 for i in range(len(oracles)):
 	if (i+1) % 10000 == 0:
 		print i+1
@@ -28,9 +30,11 @@ for i in range(len(oracles)):
 	assert len(hypo) == len(oracle)
 	lastpos = [-1]
 	tmpl = []
+	tmpo = []
 	for j in range(len(oracle)):
 		if oracle[j] == empty:
 			continue
+		tmpo.append(oracle[j])
 		lastpos = sorted(lastpos)
 		nextpos = []
 		nowwords = []
@@ -54,10 +58,16 @@ for i in range(len(oracles)):
 		lastpos = nextpos
 		tmpl.append(nowwords)
 		#print tmpl 
+	del tmpo[-1]
+	oracles_delempty.append(tmpo)
 	lattice.append(tmpl)
 
 assert len(lattice) == len(oracles)
+assert len(oracles_delempty) == len(oracles)
 output = open(sys.argv[4], 'w')
+output.write(json.dumps(oracles_delempty))
+output.close()
+output = open(sys.argv[5], 'w')
 output.write(json.dumps(lattice))
 output.close()
 
