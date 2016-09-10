@@ -133,14 +133,6 @@ class BeamSearch(object):
                 inputs[i] = next_word
             new_states = self.comp_next_states(c, h0, k, new_last_refs,inputs, *old_states)
             
-            #print new_last_refs
-            for i in range(n_samples):
-                if new_trans[i][-1] == self.state['empty_sym_target']:
-                    #print i
-                    for level in range(num_levels): 
-                        new_states[level][i] = old_states[level][i] 
-            #print new_states[0].shape
-            #print new_trans
 
             # Filter the sequences that end with end-of-sequence character
             trans = []
@@ -300,7 +292,7 @@ def main():
         # Actually only beam search is currently supported here
         assert beam_search
         assert args.beam_size
-        assert len(args.system) == state['num_systems']
+        #assert len(args.system) == state['num_systems']
 
         fsrc = open(args.source, 'r')
         ftrans = open(args.trans, 'w')

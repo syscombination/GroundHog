@@ -13,7 +13,7 @@ from groundhog.trainer.SGD_momentum import SGD as SGD_momentum
 from groundhog.trainer.SGD_adadeltamrt import SGD as SGD_adadeltamrt
 from groundhog.mainLoop import MainLoop
 from experiments.nmt import\
-        RNNEncoderDecoder, Syscombination_withsource, prototype_state, get_batch_iterator, get_batch_iterator_syscombination
+        RNNEncoderDecoder, Syscombination_withsource, prototype_state, get_batch_iterator, get_batch_iterator_la
 import experiments.nmt
 
 logger = logging.getLogger(__name__)
@@ -85,7 +85,7 @@ def main():
         train_sampler = enc_dec.create_sampler(many_samples=True)
 
     logger.debug("Load data")
-    train_data = get_batch_iterator_syscombination(state)
+    train_data = get_batch_iterator_la(state)
     logger.debug("Compile trainer")
     if state['mrt']:
         algo = eval(state['algo'])(lm_model, state, train_data, train_sampler)
