@@ -61,12 +61,21 @@ class BeamSearch(object):
         trans = [[]]
 
         costs = [0.0]
+        lastpos = [-1]
+        num_systems = len(systems[0])
         #print systems
 
         for k in xrange(len(systems[0])):
             #print '-----',k,'-----'
             if n_samples == 0:
                 break
+
+            #calculate available next word
+            words = {}
+            for i in range(len(lastpos)):
+                canempty = False
+                for snum in range(num_systems):
+                    word = systems[snum]
 
             beam_size = len(trans)
             h0 = numpy.zeros((beam_size, self.state['n_sym_target']), dtype="float32")

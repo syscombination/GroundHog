@@ -32,6 +32,7 @@ for i in range(len(oracles)):
 	tmpl = []
 	tmpo = []
 	for j in range(len(oracle)):
+		#print j, lastpos
 		if oracle[j] == empty:
 			continue
 		tmpo.append(oracle[j])
@@ -51,7 +52,8 @@ for i in range(len(oracles)):
 					elif not word in nowwords:
 						nowwords.append(word)
 					if word == oracle[j]:
-						nextpos.append(pos)
+						if not pos in nextpos:
+							nextpos.append(pos)
 				if not canempty:
 					break
 				pos += 1
