@@ -76,10 +76,10 @@ class BeamSearch(object):
             #calculate available next word
             h0 = numpy.zeros((n_samples, self.state['n_sym_target']), dtype="float32")
             words = []
-            for i in range(n_samples):
+            for n in range(n_samples):
                 words.append({})
-                for i in range(len(lastpos[i])):
-                    pos = lastpos[i]+1
+                for i in range(len(lastpos[n])):
+                    pos = lastpos[n][i]+1
                     while pos < systems.shape[0]:
                         canempty = False
                         for snum in range(num_systems):
@@ -87,12 +87,12 @@ class BeamSearch(object):
                             if word == empty:
                                 canempty = True
                             elif not word in nowwords:
-                                if words[i].has_key(word):
-                                    if not pos in words[i][word]:
-                                        words[i][word].append(pos)
+                                if words[n].has_key(word):
+                                    if not pos in words[n][word]:
+                                        words[n][word].append(pos)
                                 else:
-                                    words[i][word]=[pos]
-                                    h0[i][word] = 1.
+                                    words[n][word]=[pos]
+                                    h0[n][word] = 1.
                         if not canempty:
                             break
                         pos += 1
