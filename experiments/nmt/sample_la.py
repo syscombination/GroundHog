@@ -47,7 +47,7 @@ class BeamSearch(object):
         self.comp_next_states = self.enc_dec.create_next_states_computer()
 
     def search(self, seq, systems, n_samples, ignore_unk=False, minlen=1):
-        print 'beam search:',seq, systems
+        #print 'beam search:',seq, systems
 
         c = self.comp_repr(seq)[0]
         states = map(lambda x : x[None, :], self.comp_init_states(c))
@@ -96,7 +96,7 @@ class BeamSearch(object):
                         if not canempty:
                             break
                         pos += 1
-            print words
+            #print words
             
             #h0 = numpy.zeros((n_samples, self.state['n_sym_target']), dtype="float32")
             #for i in xrange(self.state['num_systems']):
