@@ -607,7 +607,8 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
     # - either source sequence or target sequence is non-empty
     # - source sequence and target sequence have null_sym ending
     # Why did not we filter them earlier?
-    
+    e = time.time()
+    print 'cpe time', e-b,'sec'
     for idx in xrange(Y.shape[1]):
         if numpy.sum(Xmask[:,idx]) == 0 and numpy.sum(Ymask[:,idx]) == 0:
             null_inputs[idx] = 1
@@ -621,7 +622,8 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
                 null_inputs[idx] = 1
 
     valid_inputs = 1. - null_inputs
-
+    f = time.time()
+    print 'cpf time', f-e,'sec'
     # Leave only valid inputs
     if x != None:
         X = X[:,valid_inputs.nonzero()[0]]
