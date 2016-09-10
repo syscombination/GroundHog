@@ -559,24 +559,7 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
                     Ymask[pos][idx] = 0.
     '''
 
-    #print 'generating H mask'
-    a = time.time()
-    
-    H = numpy.zeros((my, n, state['n_sym_target']), dtype='float32')
-    print H.shape
-    #print 'shape:', Ht.shape[0], Ht.shape[1], state['n_sym_target']
-    for j in range(n):
-        l = min(len(h[0][j]),my)
-        for i in range(l):
-            nums = len(h[0][j][i])
-            for k in range(nums):
-                H[i,j,h[0][j][i][k]] = 1.
-        if l < my:
-            H[l:,j,state['null_sym_target']] = 1.
 
-    b = time.time()
-    
-    print 'generate H time:',b-a,'sec'
 
     if yo != None:
         myo = state['seqlen']
@@ -622,7 +605,6 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
     valid_inputs = 1. - null_inputs
 
     e = time.time()
-    print 'e-b time', e-b,'sec'
     # Leave only valid inputs
     if x != None:
         X = X[:,valid_inputs.nonzero()[0]]
@@ -635,11 +617,34 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
 
     f = time.time()
     print 'f-e time', f-e,'sec'
+    
+    #print 'generating H mask'
+    a = time.time()
+    
+    H = numpy.zeros((my, n, state['n_sym_target']), dtype='float32')
+    print H.shape
+    #print 'shape:', Ht.shape[0], Ht.shape[1], state['n_sym_target']
+    for j in range(n):
+        l = min(len(h[0][j]),my)
+        for i in range(l):
+            nums = len(h[0][j][i])
+            for k in range(nums):
+                H[i,j,h[0][j][i][k]] = 1.
+        if l < my:
+            H[l:,j,state['null_sym_target']] = 1.
+
+    b = time.time()
+    
+    print 'generate H time:',b-a,'sec'
+
     # Unknown words
     if x != None:
         X[X >= state['n_sym_source']] = state['unk_sym_source']
     Y[Y >= state['n_sym_target']] = state['unk_sym_target']
-    #H[H >= state['n_sym_target']] = state['unk_sym_target']
+    H[H >= state['n_sym_target']] = state['unk_sym_target']
+
+
+
 
     if yo != None:
         Yo = Yo[:,valid_inputs.nonzero()[0]]

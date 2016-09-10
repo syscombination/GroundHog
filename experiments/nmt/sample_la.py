@@ -143,27 +143,34 @@ class BeamSearch(object):
             costs = flat_next_costs[best_costs_indices]
 
             # Form a beam for the next iteration
-            new_trans = [[]] * n_samples
-            new_costs = numpy.zeros(n_samples)
-            old_states = [numpy.zeros((n_samples, dim), dtype="float32") for level
+            availcount = 0
+            availindex = [-1]*n_samples
+            for i, (orig_idx, next_word, next_cost) in enumerate(
+                    zip(trans_indices, word_indices, costs)):
+                if next_word in words[orig_idx]:
+                    availindex[i]= availcount
+                    availcount += 1
+            new_trans = [[]] * availcount
+            new_costs = numpy.zeros(availcount)
+            old_states = [numpy.zeros((availcount, dim), dtype="float32") for level
                     in range(num_levels)]
-            new_last_refs = numpy.zeros(n_samples, dtype="int64")
-            new_lastpos = [[]] * n_samples
-            inputs = numpy.zeros(n_samples, dtype="int64")
+            new_last_refs = numpy.zeros(availcount, dtype="int64")
+            new_lastpos = [[]] * availcount
+            inputs = numpy.zeros(availcount, dtype="int64")
             for i, (orig_idx, next_word, next_cost) in enumerate(
                     zip(trans_indices, word_indices, costs)):
                 if not next_word in words[orig_idx]:
                     continue
-                new_trans[i] = trans[orig_idx] + [next_word]
-                new_costs[i] = next_cost
+                new_trans[availindex[i]] = trans[orig_idx] + [next_word]
+                new_costs[availindex[i]] = next_cost
                 if next_word == self.state['empty_sym_target']:
-                    new_last_refs[i] = last_refs[orig_idx]
+                    new_last_refs[availindex[i]] = last_refs[orig_idx]
                 else:
-                    new_last_refs[i] = next_word
+                    new_last_refs[availindex[i]] = next_word
                 for level in range(num_levels): 
-                    old_states[level][i] = states[level][orig_idx]
-                new_lastpos[i] = words[orig_idx][next_word]
-                inputs[i] = next_word
+                    old_states[level][availindex[i]] = states[level][orig_idx]
+                new_lastpos[availindex[i]] = words[orig_idx][next_word]
+                inputs[availindex[i]] = next_word
             new_states = self.comp_next_states(c, h0, k, inputs,inputs, *old_states)
             
 
@@ -173,6 +180,7 @@ class BeamSearch(object):
             indices = []
             last_refs = []
             lastpos = []
+            #print new_trans
             for i in range(min(n_samples, len(new_trans))):
                 if new_trans[i][-1] != self.enc_dec.state['null_sym_target']:
                     trans.append(new_trans[i])
