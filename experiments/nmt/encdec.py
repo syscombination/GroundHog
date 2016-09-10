@@ -561,7 +561,6 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
 
     #print 'generating H mask'
     a = time.time()
-    print 'before H time:',a-c,'sec'
     
     H = numpy.zeros((my, n, state['n_sym_target']), dtype='float32')
     print H.shape
@@ -607,8 +606,7 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
     # - either source sequence or target sequence is non-empty
     # - source sequence and target sequence have null_sym ending
     # Why did not we filter them earlier?
-    e = time.time()
-    print 'cpe time', e-b,'sec'
+
     for idx in xrange(Y.shape[1]):
         if numpy.sum(Xmask[:,idx]) == 0 and numpy.sum(Ymask[:,idx]) == 0:
             null_inputs[idx] = 1
@@ -622,8 +620,7 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
                 null_inputs[idx] = 1
 
     valid_inputs = 1. - null_inputs
-    f = time.time()
-    print 'cpf time', f-e,'sec'
+
     # Leave only valid inputs
     if x != None:
         X = X[:,valid_inputs.nonzero()[0]]
@@ -640,7 +637,7 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
     if x != None:
         X[X >= state['n_sym_source']] = state['unk_sym_source']
     Y[Y >= state['n_sym_target']] = state['unk_sym_target']
-    H[H >= state['n_sym_target']] = state['unk_sym_target']
+    #H[H >= state['n_sym_target']] = state['unk_sym_target']
 
     if yo != None:
         Yo = Yo[:,valid_inputs.nonzero()[0]]

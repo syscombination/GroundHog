@@ -84,7 +84,7 @@ class BeamSearch(object):
                         canempty = False
                         for snum in range(num_systems):
                             word = systems[pos][snum]
-                            if word == empty:
+                            if word == self.state['empty_sym_target':
                                 canempty = True
                             elif not word in nowwords:
                                 if words[n].has_key(word):
