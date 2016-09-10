@@ -232,9 +232,9 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
         my = numpy.minimum(state['seqlen'], max([len(xx) for xx in y[0]]))+1
         mh = numpy.minimum(state['seqlen'], max([len(xx) for xx in h[0]]))+1
 
-    if yo == None and mh != my:
-        print 'bad batch'
-        return None
+    #if yo == None and mh != my:
+    #   print 'bad batch'
+    #    return None
     #mhy = numpy.maximum(mh, my)
     # Batch size
     n = y[0].shape[0]
@@ -366,7 +366,7 @@ def create_padded_batch_syscombination(state, y, h, yo=None, x=None, return_dict
     #print 'shape:', Ht.shape[0], Ht.shape[1], state['n_sym_target']
     for i in xrange(Ht.shape[0]):
         for j in xrange(Ht.shape[1]):
-            for k in xrange(state['num_systems']):
+            for k in xrange(Ht.shape[2]):
                 H[i][j][Ht[i][j][k]] = 1.
 
     
