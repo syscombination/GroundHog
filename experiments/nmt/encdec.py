@@ -611,7 +611,7 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
         Xmask = Xmask[:,valid_inputs.nonzero()[0]]
     Y = Y[:,valid_inputs.nonzero()[0]]
     Ymask = Ymask[:,valid_inputs.nonzero()[0]]
-    H = H[:,valid_inputs.nonzero()[0],:]
+    #H = H[:,valid_inputs.nonzero()[0],:]
     if len(valid_inputs.nonzero()[0]) <= 0:
         return None
 
@@ -621,10 +621,10 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
     #print 'generating H mask'
     a = time.time()
     
-    H = numpy.zeros((my, n, state['n_sym_target']), dtype='float32')
+    H = numpy.zeros((my, Y.shape[1], state['n_sym_target']), dtype='float32')
     print H.shape
     #print 'shape:', Ht.shape[0], Ht.shape[1], state['n_sym_target']
-    for j in range(n):
+    for j in valid_inputs.nonzero()[0]:
         l = min(len(h[0][j]),my)
         for i in range(l):
             nums = len(h[0][j][i])
