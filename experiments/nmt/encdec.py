@@ -563,15 +563,16 @@ def create_padded_batch_la(state, y, h, yo=None, x=None, return_dict=False):
     a = time.time()
     
     H = numpy.zeros((my, n, state['n_sym_target']), dtype='float32')
+    print H.shape
     #print 'shape:', Ht.shape[0], Ht.shape[1], state['n_sym_target']
     for j in range(n):
-        l = len(h[j])
+        l = len(h[0][j])
         for i in range(l):
-            nums = len(h[j][i])
+            nums = len(h[0][j][i])
             for k in range(nums):
-                H[i][j][h[j][i][k]] = 1.
+                H[i,j,h[0][j][i][k]] = 1.
         if l < my:
-            H[l:][j][state['null_sym_target']] = 1.
+            H[l:,j,state['null_sym_target']] = 1.
 
     b = time.time()
     print 'batch prepare time', b-c,'sec'
