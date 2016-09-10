@@ -13,7 +13,7 @@ from groundhog.trainer.SGD_momentum import SGD as SGD_momentum
 from groundhog.trainer.SGD_adadeltamrt import SGD as SGD_adadeltamrt
 from groundhog.mainLoop import MainLoop
 from experiments.nmt import\
-        RNNEncoderDecoder, prototype_state, get_batch_iterator, get_batch_iterator_syscombination
+        RNNEncoderDecoder, Syscombination_withsource, prototype_state, get_batch_iterator, get_batch_iterator_syscombination
 import experiments.nmt
 
 logger = logging.getLogger(__name__)
