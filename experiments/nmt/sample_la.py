@@ -139,6 +139,7 @@ class BeamSearch(object):
             next_costs = numpy.array(costs)[:, None] - log_probs
             print 'next_costs', next_costs.shape
             flat_next_costs = next_costs.flatten()
+            print 'next_costs', flat_next_costs.shape
             best_costs_indices = argpartition(
                     flat_next_costs.flatten(),
                     n_samples)[:n_samples]
