@@ -134,6 +134,8 @@ class BeamSearch(object):
                 log_probs[:,self.eos_id] = -numpy.inf
 
             # Find the best options by calling argpartition of flatten array
+            print 'costs',costs.shape
+            print 'log_probs', log_probs.shape
             next_costs = numpy.array(costs)[:, None] - log_probs
             flat_next_costs = next_costs.flatten()
             best_costs_indices = argpartition(
