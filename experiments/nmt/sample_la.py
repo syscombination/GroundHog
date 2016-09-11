@@ -312,7 +312,7 @@ def main():
     if 'num_systems' not in state:
         state['num_systems'] = 4
     if 'empty_sym_target' not in state:
-        state['empty_sym_target'] = 29999
+        state['empty_sym_target'] = 136
 
     logging.basicConfig(level=getattr(logging, state['level']), format="%(asctime)s: %(name)s: %(levelname)s: %(message)s")
 
