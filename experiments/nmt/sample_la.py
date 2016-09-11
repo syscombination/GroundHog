@@ -99,7 +99,7 @@ class BeamSearch(object):
                         if not canempty:
                             break
                         pos += 1
-            print 'words:',words
+            #print 'words:',words
             
             #h0 = numpy.zeros((n_samples, self.state['n_sym_target']), dtype="float32")
             #for i in xrange(self.state['num_systems']):
@@ -134,12 +134,12 @@ class BeamSearch(object):
                 log_probs[:,self.eos_id] = -numpy.inf
 
             # Find the best options by calling argpartition of flatten array
-            print 'costs',numpy.array(costs).shape
-            print 'log_probs', log_probs.shape
+            #print 'costs',numpy.array(costs).shape
+            #print 'log_probs', log_probs.shape
             next_costs = numpy.array(costs)[:, None] - log_probs
-            print 'next_costs', next_costs.shape
+            #print 'next_costs', next_costs.shape
             flat_next_costs = next_costs.flatten()
-            print 'next_costs', flat_next_costs.shape
+            #print 'next_costs', flat_next_costs.shape
             best_costs_indices = argpartition(
                     flat_next_costs.flatten(),
                     n_samples)[:n_samples]
@@ -149,8 +149,8 @@ class BeamSearch(object):
             trans_indices = best_costs_indices / voc_size
             word_indices = best_costs_indices % voc_size
             costs = flat_next_costs[best_costs_indices]
-            print trans_indices
-            print word_indices
+            #print trans_indices
+            #print word_indices
 
             # Form a beam for the next iteration
             availcount = 0
@@ -373,11 +373,15 @@ def main():
                 print "Parsed Input:", parsed_in
             trans, costs, _ = sample(lm_model, seq, systems, n_samples, sampler=sampler,
                     beam_search=beam_search, ignore_unk=args.ignore_unk, normalize=args.normalize)
-            best = numpy.argmin(costs)
-            print >>ftrans, trans[best]
+            try:
+                best = numpy.argmin(costs)
+                print >>ftrans, trans[best]
+                total_cost += costs[best]
+            except:
+                print >> ftrans, "FAIL"
             if args.verbose:
                 print "Translation:", trans[best]
-            total_cost += costs[best]
+            
             #exit()
             if (i + 1)  % 100 == 0:
                 ftrans.flush()
