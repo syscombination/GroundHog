@@ -47,7 +47,7 @@ class BeamSearch(object):
         self.comp_next_states = self.enc_dec.create_next_states_computer()
 
     def search(self, seq, systems, n_samples, ignore_unk=False, minlen=1):
-        #print 'beam search:',seq, systems
+        print 'beam search:',seq, systems
 
         c = self.comp_repr(seq)[0]
         states = map(lambda x : x[None, :], self.comp_init_states(c))
@@ -66,10 +66,10 @@ class BeamSearch(object):
             lastpos.append([-1])
         systems = numpy.asarray(systems, dtype="int64").transpose()
         num_systems = len(systems[0])
-        #print systems
+        print 'systems',systems
 
         for k in range(len(systems)):
-            #print '-----',k,'-----'
+            print '-----',k,'-----'
             if n_samples == 0:
                 break
 
@@ -109,7 +109,7 @@ class BeamSearch(object):
             last_words = (numpy.asarray(map(lambda t : t[-1], trans))
                     if k > 0
                     else numpy.zeros(beam_size, dtype="int64"))
-            print last_words
+            print 'last_words', last_words
             probs = self.comp_next_probs(c, h0, k, last_words,last_words, *states)[0]
             #print trans
             #print last_words
