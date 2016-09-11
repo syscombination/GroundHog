@@ -97,7 +97,7 @@ class BeamSearch(object):
                         if not canempty:
                             break
                         pos += 1
-            #print 'words:',words
+            print 'words:',words
             
             #h0 = numpy.zeros((n_samples, self.state['n_sym_target']), dtype="float32")
             #for i in xrange(self.state['num_systems']):
