@@ -69,6 +69,8 @@ class BeamSearch(object):
         print 'systems',systems
 
         for k in range(len(systems)):
+            if len(trans) == 0:
+                break
             print '-----',k,'-----'
             print 'trans:',trans
             if n_samples == 0:
