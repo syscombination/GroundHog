@@ -6,6 +6,7 @@ import traceback
 import logging
 import time
 import sys
+import copy
 
 import numpy
 
@@ -104,8 +105,9 @@ class BeamSearch(object):
                             break
                         pos += 1
             htmp = hsys.sum(axis=1)
-            for i in range(beam_size):
-                for j in 
+            h0 = copy.deepcopy(htmp)
+            h0[h0 > 0] = 1
+
             #print 'words:',words
 
             
