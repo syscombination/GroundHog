@@ -17,7 +17,7 @@ num_sentence = len(aligns)/num_align
 print 'sentence num:',num_sentence
 assert num_sentence*num_align == len(aligns)
 
-sequence = [2,3,4,1]
+sequence = [3,1,4,2]
 result = []
 
 for i in xrange(num_systems):
