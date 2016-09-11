@@ -81,8 +81,9 @@ class BeamSearch(object):
             beam_size = len(trans)
             #calculate available next word
             hsys = numpy.zeros((beam_size, num_systems,self.state['n_sym_target']), dtype="float32")
+            h1 = numpy.ones((beam_size, self.state['n_sym_target']), dtype="float32")
             h0 = numpy.zeros((beam_size, self.state['n_sym_target']), dtype="float32")
-            h = numpy.zeros((beam_size, self.state['n_sym_target']), dtype="float32")
+            h = numpy.ones((beam_size, self.state['n_sym_target']), dtype="float32")
             words = []
             for n in range(beam_size):
                 words.append({})
@@ -108,6 +109,7 @@ class BeamSearch(object):
             h0 = copy.deepcopy(htmp)
             h0[h0 > 0] = 1
 
+
             #print 'words:',words
 
             
@@ -123,7 +125,8 @@ class BeamSearch(object):
                     if k > 0
                     else numpy.zeros(beam_size, dtype="int64"))
             #print 'last_words', last_words
-            probs = self.comp_next_probs(c, h0, k, last_words,last_words, *states)[0]
+            probs = self.comp_next_probs(c, h1, k, last_words,last_words, *states)[0]
+            probs *= h0
             #print trans
             #print last_words
             #print last_refs
