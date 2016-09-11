@@ -108,6 +108,7 @@ class BeamSearch(object):
             htmp = hsys.sum(axis=1)
             h0 = copy.deepcopy(htmp)
             h0[h0 > 0] = 1
+            h *= h0
 
 
             #print 'words:',words
@@ -390,6 +391,7 @@ def main():
                 best = numpy.argmin(costs)
                 print >>ftrans, trans[best]
                 total_cost += costs[best]
+                print i, costs[best]
             except:
                 print "translation fail"
                 print >> ftrans, "FAIL"
