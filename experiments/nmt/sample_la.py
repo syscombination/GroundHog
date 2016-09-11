@@ -99,7 +99,7 @@ class BeamSearch(object):
                         if not canempty:
                             break
                         pos += 1
-            #print 'words:',words
+            print 'words:',words
             
             #h0 = numpy.zeros((n_samples, self.state['n_sym_target']), dtype="float32")
             #for i in xrange(self.state['num_systems']):
@@ -149,6 +149,8 @@ class BeamSearch(object):
             trans_indices = best_costs_indices / voc_size
             word_indices = best_costs_indices % voc_size
             costs = flat_next_costs[best_costs_indices]
+            print trans_indices
+            print word_indices
 
             # Form a beam for the next iteration
             availcount = 0
