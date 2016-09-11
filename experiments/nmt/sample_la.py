@@ -70,7 +70,7 @@ class BeamSearch(object):
 
         for k in range(len(systems)):
             print '-----',k,'-----'
-            print 'trans:,'trans
+            print 'trans:',trans
             if n_samples == 0:
                 break
 
