@@ -48,7 +48,10 @@ for i in xrange(num_sentence):
 	try: 
 		if i % 10000 == 0:
 			print 'sentence:',i
-		index = num_align*i+num_systems*sequence[0]+sequence[1]-1
+		if sequence[0] < sequence[1]:
+			index = num_align*i+num_systems*sequence[0]+sequence[1]-1
+		else:
+			index = num_align*i+num_systems*sequence[0]+sequence[1]
 		#print 'index:', index
 		tmpresult = []
 		for j in xrange(num_systems):
@@ -62,7 +65,10 @@ for i in xrange(num_sentence):
 		#print len(tmpresult[0])
 		#print len(tmpresult[1])
 		for j in range(2, num_systems):
-			index = num_align*i+num_systems*sequence[0]+sequence[j]-1
+			if sequence[0] < sequence[j]:
+				index = num_align*i+num_systems*sequence[0]+sequence[j]-1
+			else:
+				index = num_align*i+num_systems*sequence[0]+sequence[j]
 			#print 'index:', index
 			#print '-----'+str(j)+'-----'
 			pos = 0
