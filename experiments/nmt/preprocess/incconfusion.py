@@ -44,7 +44,7 @@ for i in xrange(num_sentence):
 		#print len(tmpresult[0])
 		#print len(tmpresult[1])
 		for j in range(2, num_systems):
-			if sequence[0] < sequence[1]:
+			if sequence[0] < sequence[j]:
 				index = num_align*i+(num_systems-1)*(sequence[0]-1)+sequence[j]-2 #+j-1
 			else:
 				index = num_align*i+(num_systems-1)*(sequence[0]-1)+sequence[j]-1
