@@ -378,6 +378,7 @@ def main():
                 print >>ftrans, trans[best]
                 total_cost += costs[best]
             except:
+                print "translation fail"
                 print >> ftrans, "FAIL"
             if args.verbose:
                 print "Translation:", trans[best]
