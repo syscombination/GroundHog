@@ -324,8 +324,8 @@ def main():
             seqin = line.strip()
             seq, parsed_in = parse_input(state, indx_word, seqin, idx2word=idict_src)
             systems = []
-            for i in xrange(state['num_systems']):
-                systems.append(parse_input(state, indx_word_t, fsystems[i].readline(), idx2word=idict_tgt)[0])
+            for s in xrange(state['num_systems']):
+                systems.append(parse_input(state, indx_word_t, fsystems[s].readline(), idx2word=idict_tgt)[0])
             if args.verbose:
                 print "Parsed Input:", parsed_in
             trans, costs, _ = sample(lm_model, seq, systems, n_samples, sampler=sampler,
