@@ -391,7 +391,7 @@ def main():
                 best = numpy.argmin(costs)
                 print >>ftrans, trans[best]
                 total_cost += costs[best]
-                print i, costs[best]
+                print i, costs[best], total_cost
             except:
                 print "translation fail"
                 print >> ftrans, "FAIL"
